@@ -1,80 +1,61 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import styles from '@/styles/components/home/ToursSection.module.css';
+import type { Tour } from '@/types/tour.types';
 
-const staticTours = [
-  {
-    id: '1',
-    slug: 'pyramids-of-giza-tour',
-    title: 'Egyptian Pyramids Tour',
-    category: 'Ancient Wonders',
-    duration: '1 Day',
-    rating: 4.8,
-    price: '$299',
-    image: '/images/tours/pyramid-sky-desert-ancient.jpg',
-    description:
-      'Explore the ancient Pyramids of Giza, Sphinx, and other wonders of ancient Egypt.',
-  },
-  {
-    id: '2',
-    slug: 'red-sea-diving-adventure',
-    title: 'Red Sea Diving Adventure',
-    category: 'Water Sports',
-    duration: '2 Days',
-    rating: 4.9,
-    price: '$499',
-    image: '/images/tours/istockphoto-1085592710-612x612.webp',
-    description: 'Experience world-class diving in the crystal clear waters of the Red Sea.',
-  },
-  {
-    id: '3',
-    slug: 'luxury-resort-stay',
-    title: 'Luxury Resort Stay',
-    category: 'Beach Resort',
-    duration: '3 Days',
-    rating: 4.7,
-    price: '$699',
-    image: '/images/tours/iStock-508838512-1-scaled.webp',
-    description: "Indulge in luxury at one of Hurghada's finest beach resorts.",
-  },
-  {
-    id: '4',
-    slug: 'nile-cruise-experience',
-    title: 'Nile River Cruise',
-    category: 'Cultural',
-    duration: '4 Days',
-    rating: 4.9,
-    price: '$899',
-    image: '/images/tours/08.webp',
-    description: 'Sail along the legendary Nile River visiting ancient temples and monuments.',
-  },
-  {
-    id: '5',
-    slug: 'desert-safari-adventure',
-    title: 'Desert Safari Experience',
-    category: 'Adventure',
-    duration: '1 Day',
-    rating: 4.6,
-    price: '$199',
-    image: '/images/tours/pyramid-sky-desert-ancient.jpg',
-    description: 'Experience the thrill of desert safari with quad biking and Bedouin hospitality.',
-  },
-  {
-    id: '6',
-    slug: 'luxor-temples-tour',
-    title: 'Luxor Temples & Valley of Kings',
-    category: 'Historical',
-    duration: '2 Days',
-    rating: 4.8,
-    price: '$399',
-    image: '/images/tours/istockphoto-1085592710-612x612.webp',
-    description: 'Discover the magnificent temples of Luxor and the Valley of Kings.',
-  },
-];
+interface TourCard {
+  id: string;
+  slug: string;
+  title: string;
+  category: string;
+  duration: string;
+  rating: number;
+  price: string;
+  image: string;
+  description: string;
+}
 
 export function ToursSection() {
+  const [tours, setTours] = useState<TourCard[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTours = async () => {
+      try {
+        const response = await fetch('/api/tours?onSale=false&limit=12');
+        if (!response.ok) {
+          throw new Error('Failed to fetch tours');
+        }
+        const data = await response.json();
+        const apiTours: Tour[] = data.data.tours;
+
+        // Map API tours to TourCard format
+        const mappedTours: TourCard[] = apiTours.map((tour: Tour) => ({
+          id: tour._id,
+          slug: tour.slug,
+          title: tour.title,
+          category: tour.category,
+          duration: tour.travelType,
+          rating: 4.8, // Default rating since not in API
+          price: `$${tour.price}`,
+          image: tour.image1 || '/images/placeholder-tour.jpg', // Use uploaded image or placeholder
+          description: tour.description,
+        }));
+
+        setTours(mappedTours);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load tours');
+        console.error('Error fetching tours:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTours();
+  }, []);
   return (
     <section className={styles.section} id="tours-section">
       <div className={styles.container}>
@@ -119,45 +100,53 @@ export function ToursSection() {
 
         {/* Tours Grid */}
         <div className={styles.grid}>
-          {staticTours.map((tour) => (
-            <div key={tour.id} className={styles.card}>
-              <div className={styles.imageWrapper}>
-                <Image
-                  src={tour.image}
-                  alt={tour.title}
-                  fill
-                  className={styles.image}
-                  loading="lazy"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-                <div className={styles.categoryBadge}>{tour.category}</div>
-              </div>
-
-              <div className={styles.cardContent}>
-                <h3 className={styles.cardTitle}>{tour.title}</h3>
-
-                <p className={styles.cardDescription}>{tour.description}</p>
-
-                <div className={styles.cardMeta}>
-                  <span className={styles.metaItem}>
-                    <span className={styles.metaIcon}>⏱️</span>
-                    {tour.duration}
-                  </span>
-                  <span className={styles.metaItem}>
-                    <span className={styles.metaIcon}>⭐</span>
-                    {tour.rating}
-                  </span>
-                </div>
-
-                <div className={styles.cardFooter}>
-                  <span className={styles.price}>{tour.price}</span>
-                  <Link href={`/tours/${tour.slug}`}>
-                    <button className={styles.bookButton}>Book Now</button>
-                  </Link>
-                </div>
-              </div>
+          {tours.length === 0 && !loading ? (
+            <div style={{ textAlign: 'center', padding: '2rem', gridColumn: '1 / -1' }}>
+              {error ? <span style={{ color: 'red' }}>{error}</span> : 'No tours available.'}
             </div>
-          ))}
+          ) : (
+            tours.map((tour) => (
+              <div key={tour.id} className={styles.card}>
+                <div className={styles.imageWrapper}>
+                  <img
+                    src={tour.image}
+                    alt={tour.title}
+                    className={styles.image}
+                    loading="lazy"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src =
+                        '/images/tours/pyramid-sky-desert-ancient.jpg';
+                    }}
+                  />
+                  <div className={styles.categoryBadge}>{tour.category}</div>
+                </div>
+
+                <div className={styles.cardContent}>
+                  <h3 className={styles.cardTitle}>{tour.title}</h3>
+
+                  <p className={styles.cardDescription}>{tour.description}</p>
+
+                  <div className={styles.cardMeta}>
+                    <span className={styles.metaItem}>
+                      <span className={styles.metaIcon}>⏱️</span>
+                      {tour.duration}
+                    </span>
+                    <span className={styles.metaItem}>
+                      <span className={styles.metaIcon}>⭐</span>
+                      {tour.rating}
+                    </span>
+                  </div>
+
+                  <div className={styles.cardFooter}>
+                    <span className={styles.price}>{tour.price}</span>
+                    <Link href={`/tours/${tour.slug}`}>
+                      <button className={styles.bookButton}>Book Now</button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </section>

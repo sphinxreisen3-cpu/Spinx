@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { FaPlus, FaTrash, FaEye, FaTimes, FaSave, FaUpload } from 'react-icons/fa';
 import styles from '@/styles/pages/admin/AdminPage.module.css';
 import formStyles from '@/styles/components/admin/TourForm.module.css';
@@ -127,7 +127,7 @@ const emptyTour: Omit<TourFull, '_id' | 'createdAt' | 'updatedAt'> = {
   location5_de: '',
   location6: '',
   location6_de: '',
-  image1: '/images/tours/sample1.jpg',
+  image1: '',
   image2: '',
   image3: '',
   image4: '',
@@ -135,191 +135,6 @@ const emptyTour: Omit<TourFull, '_id' | 'createdAt' | 'updatedAt'> = {
   onSale: false,
   discount: 0,
 };
-
-// Mock data
-const initialTours: TourFull[] = [
-  {
-    _id: '1',
-    title: 'Paris Adventure',
-    title_de: 'Paris Abenteuer',
-    category: 'Cultural',
-    category_de: 'Kulturell',
-    travelType: '1 week',
-    travelType_de: '1 Woche',
-    price: 1299,
-    description:
-      'Explore the city of lights with guided tours to the Eiffel Tower, Louvre, and more.',
-    description_de:
-      'Entdecken Sie die Stadt der Lichter mit Führungen zum Eiffelturm, Louvre und mehr.',
-    transportation: 'Premium coach and Metro passes included',
-    transportation_de: 'Premium-Bus und Metro-Pässe inklusive',
-    location: 'Paris, France',
-    location_de: 'Paris, Frankreich',
-    details: 'Small group tours with professional guides',
-    details_de: 'Kleingruppentouren mit professionellen Guides',
-    description2: 'Perfect for couples and solo travelers',
-    description2_de: 'Perfekt für Paare und Alleinreisende',
-    daysAndDurations:
-      'Day 1: Arrival, Day 2-3: Louvre & Montmartre, Day 4-5: Versailles, Day 6-7: Free time',
-    daysAndDurations_de:
-      'Tag 1: Ankunft, Tag 2-3: Louvre & Montmartre, Tag 4-5: Versailles, Tag 6-7: Freizeit',
-    pickup: 'Hotel pickup at 8:00 AM',
-    pickup_de: 'Abholung vom Hotel um 8:00 Uhr',
-    briefing: 'Welcome briefing at 6:00 PM on Day 1',
-    briefing_de: 'Willkommensbriefing um 18:00 Uhr am Tag 1',
-    trip: 'All-inclusive cultural experience',
-    trip_de: 'All-inclusive Kulturerlebnis',
-    program: 'Morning tours, afternoon free time, evening activities',
-    program_de: 'Vormittagstouren, Nachmittag Freizeit, Abendaktivitäten',
-    foodAndBeverages: 'Daily breakfast, 3 gourmet dinners',
-    foodAndBeverages_de: 'Tägliches Frühstück, 3 Gourmet-Abendessen',
-    whatToTake: 'Comfortable shoes, camera, light jacket',
-    whatToTake_de: 'Bequeme Schuhe, Kamera, leichte Jacke',
-    pickupLocation: 'Hotel lobby',
-    pickupLocation_de: 'Hotellobby',
-    vanLocation: 'Near Louvre entrance',
-    vanLocation_de: 'In der Nähe des Louvre-Eingangs',
-    location1: 'Eiffel Tower',
-    location1_de: 'Eiffelturm',
-    location2: 'Louvre Museum',
-    location2_de: 'Louvre Museum',
-    location3: 'Montmartre',
-    location3_de: 'Montmartre',
-    location4: 'Versailles',
-    location4_de: 'Versailles',
-    location5: 'Seine River',
-    location5_de: 'Seine Fluss',
-    location6: 'Champs-Élysées',
-    location6_de: 'Champs-Élysées',
-    image1: '/images/tours/paris.jpg',
-    image2: '/images/tours/paris2.jpg',
-    image3: '/images/tours/paris3.jpg',
-    image4: '/images/tours/paris4.jpg',
-    isActive: true,
-    onSale: false,
-    discount: 0,
-    createdAt: '2026-01-01T10:00:00.000Z',
-    updatedAt: '2026-01-15T14:30:00.000Z',
-  },
-  {
-    _id: '2',
-    title: 'Safari Experience',
-    title_de: 'Safari Erlebnis',
-    category: 'Adventure',
-    category_de: 'Abenteuer',
-    travelType: '1 week',
-    travelType_de: '1 Woche',
-    price: 2499,
-    description: 'Wildlife adventure in Africa with expert guides and luxury lodges.',
-    description_de: 'Wildtierabenteuer in Afrika mit Expertenführern und Luxus-Lodges.',
-    transportation: '4x4 Safari vehicles',
-    transportation_de: '4x4 Safari-Fahrzeuge',
-    location: 'Kenya & Tanzania',
-    location_de: 'Kenia & Tansania',
-    details: 'Witness the great migration',
-    details_de: 'Erleben Sie die große Migration',
-    description2: 'Includes all park fees and permits',
-    description2_de: 'Alle Parkgebühren und Genehmigungen inklusive',
-    daysAndDurations: 'Day 1-2: Nairobi, Day 3-5: Masai Mara, Day 6-7: Serengeti',
-    daysAndDurations_de: 'Tag 1-2: Nairobi, Tag 3-5: Masai Mara, Tag 6-7: Serengeti',
-    pickup: 'Airport pickup included',
-    pickup_de: 'Flughafentransfer inklusive',
-    briefing: 'Safari briefing on arrival day',
-    briefing_de: 'Safari-Briefing am Ankunftstag',
-    trip: 'Once-in-a-lifetime wildlife experience',
-    trip_de: 'Einmaliges Wildtiererlebnis',
-    program: 'Early morning and evening game drives',
-    program_de: 'Frühmorgendliche und abendliche Pirschfahrten',
-    foodAndBeverages: 'Full board with bush dinners',
-    foodAndBeverages_de: 'Vollpension mit Bush-Dinner',
-    whatToTake: 'Binoculars, neutral colored clothing, sunscreen',
-    whatToTake_de: 'Fernglas, neutral farbene Kleidung, Sonnenschutz',
-    pickupLocation: 'Jomo Kenyatta Airport',
-    pickupLocation_de: 'Jomo Kenyatta Flughafen',
-    vanLocation: 'Safari camp meeting point',
-    vanLocation_de: 'Safari-Camp Treffpunkt',
-    location1: 'Nairobi',
-    location1_de: 'Nairobi',
-    location2: 'Masai Mara',
-    location2_de: 'Masai Mara',
-    location3: 'Serengeti',
-    location3_de: 'Serengeti',
-    location4: 'Ngorongoro',
-    location4_de: 'Ngorongoro',
-    location5: '',
-    location5_de: '',
-    location6: '',
-    location6_de: '',
-    image1: '/images/tours/safari.jpg',
-    image2: '/images/tours/safari2.jpg',
-    image3: '',
-    image4: '',
-    isActive: true,
-    onSale: true,
-    discount: 20,
-    createdAt: '2026-01-05T09:00:00.000Z',
-    updatedAt: '2026-01-18T11:00:00.000Z',
-  },
-  {
-    _id: '3',
-    title: 'Egyptian Pyramids Tour',
-    title_de: 'Ägyptische Pyramiden Tour',
-    category: 'Historical',
-    category_de: 'Historisch',
-    travelType: '3 days',
-    travelType_de: '3 Tage',
-    price: 599,
-    description: 'Explore ancient wonders with expert Egyptologists.',
-    description_de: 'Erkunden Sie antike Wunder mit Expertenägyptologen.',
-    transportation: 'Air-conditioned coach',
-    transportation_de: 'Klimatisierter Bus',
-    location: 'Cairo & Giza, Egypt',
-    location_de: 'Kairo & Gizeh, Ägypten',
-    details: 'Skip-the-line access to all sites',
-    details_de: 'Ohne Anstehen Zugang zu allen Sehenswürdigkeiten',
-    description2: 'Hotel accommodation included',
-    description2_de: 'Hotelunterkunft inklusive',
-    daysAndDurations: 'Day 1: Cairo Museum, Day 2: Pyramids & Sphinx, Day 3: Memphis & Saqqara',
-    daysAndDurations_de: 'Tag 1: Kairo Museum, Tag 2: Pyramiden & Sphinx, Tag 3: Memphis & Saqqara',
-    pickup: 'Hotel pickup at 7:00 AM',
-    pickup_de: 'Abholung vom Hotel um 7:00 Uhr',
-    briefing: 'Evening briefing at hotel',
-    briefing_de: 'Abendbriefing im Hotel',
-    trip: 'Journey through ancient history',
-    trip_de: 'Reise durch die antike Geschichte',
-    program: 'Full day tours with lunch breaks',
-    program_de: 'Ganztägige Touren mit Mittagspausen',
-    foodAndBeverages: 'Breakfast and lunch included',
-    foodAndBeverages_de: 'Frühstück und Mittagessen inklusive',
-    whatToTake: 'Sun hat, water bottle, comfortable shoes',
-    whatToTake_de: 'Sonnenhut, Wasserflasche, bequeme Schuhe',
-    pickupLocation: 'Cairo hotels',
-    pickupLocation_de: 'Kairoer Hotels',
-    vanLocation: 'Giza entrance',
-    vanLocation_de: 'Gizeh Eingang',
-    location1: 'Giza Pyramids',
-    location1_de: 'Pyramiden von Gizeh',
-    location2: 'Sphinx',
-    location2_de: 'Sphinx',
-    location3: 'Cairo Museum',
-    location3_de: 'Kairo Museum',
-    location4: 'Memphis',
-    location4_de: 'Memphis',
-    location5: 'Saqqara',
-    location5_de: 'Saqqara',
-    location6: '',
-    location6_de: '',
-    image1: '/images/tours/pyramids.jpg',
-    image2: '/images/tours/sphinx.jpg',
-    image3: '/images/tours/cairo.jpg',
-    image4: '',
-    isActive: false,
-    onSale: false,
-    discount: 0,
-    createdAt: '2026-01-10T08:00:00.000Z',
-    updatedAt: '2026-01-12T16:00:00.000Z',
-  },
-];
 
 function formatDate(dateString: string) {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -341,7 +156,7 @@ function getCategoryColor(category: string) {
 }
 
 export function ToursAdminPage() {
-  const [tours, setTours] = useState<TourFull[]>(initialTours);
+  const [tours, setTours] = useState<TourFull[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [_showForm, setShowForm] = useState(true);
@@ -371,16 +186,52 @@ export function ToursAdminPage() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleImageChange = (index: number, file: File | null) => {
+  const handleImageChange = async (index: number, file: File | null) => {
     if (file) {
-      const url = URL.createObjectURL(file);
+      try {
+        // Create form data for upload
+        const formData = new FormData();
+        formData.append('files', file);
+
+        // Upload the file
+        const uploadResponse = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!uploadResponse.ok) {
+          const errorData = await uploadResponse.json().catch(() => ({}));
+          throw new Error(
+            `Upload failed: ${errorData.message || uploadResponse.statusText || 'Unknown error'}`
+          );
+        }
+
+        const uploadResult = await uploadResponse.json();
+        const uploadedUrl = uploadResult.data.urls[0];
+
+        // Update preview
+        setImagePreview((prev) => {
+          const newPreviews = [...prev];
+          newPreviews[index] = uploadedUrl;
+          return newPreviews;
+        });
+
+        // Save URL to form data
+        handleFormChange(`image${index + 1}`, uploadedUrl);
+
+        console.log(`Image ${index + 1} uploaded successfully:`, uploadedUrl);
+      } catch (error) {
+        console.error('Upload failed:', error);
+        alert(`Failed to upload image ${index + 1}. Please try again.`);
+      }
+    } else {
+      // Clear the image
       setImagePreview((prev) => {
         const newPreviews = [...prev];
-        newPreviews[index] = url;
+        newPreviews[index] = null;
         return newPreviews;
       });
-      // In real implementation, this would upload the file
-      handleFormChange(`image${index + 1}`, url);
+      handleFormChange(`image${index + 1}`, '');
     }
   };
 
@@ -390,34 +241,129 @@ export function ToursAdminPage() {
     setImagePreview([null, null, null, null]);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Fetch tours from API on mount
+  const fetchTours = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/tours?isActive=false&limit=100');
+      const result = await response.json();
+      if (result.success && result.data?.tours) {
+        // Map API response to TourFull type
+        const apiTours = result.data.tours.map((tour: Record<string, unknown>) => ({
+          ...tour,
+          _id: (tour._id as string) || (tour.id as string),
+        }));
+        setTours(apiTours);
+      }
+    } catch (error) {
+      console.error('Error fetching tours:', error);
+      // Keep mock data on error
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Load tours on component mount
+  useEffect(() => {
+    fetchTours();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      if (editingTour) {
-        // Update existing tour
-        setTours((prev) =>
-          prev.map((t) =>
-            t._id === editingTour._id
-              ? { ...t, ...formData, updatedAt: new Date().toISOString() }
-              : t
-          )
-        );
+    try {
+      const url = editingTour ? `/api/tours/${editingTour._id}` : '/api/tours';
+      const method = editingTour ? 'PUT' : 'POST';
+
+      // Prepare data for API
+      const tourData = {
+        title: formData.title,
+        title_de: formData.title_de || undefined,
+        price: Number(formData.price),
+        travelType: formData.travelType,
+        travelType_de: formData.travelType_de || undefined,
+        category: formData.category,
+        category_de: formData.category_de || undefined,
+        description: formData.description,
+        description_de: formData.description_de || undefined,
+        transportation: formData.transportation || undefined,
+        transportation_de: formData.transportation_de || undefined,
+        location: formData.location || undefined,
+        location_de: formData.location_de || undefined,
+        details: formData.details || undefined,
+        details_de: formData.details_de || undefined,
+        description2: formData.description2 || undefined,
+        description2_de: formData.description2_de || undefined,
+        daysAndDurations: formData.daysAndDurations || undefined,
+        daysAndDurations_de: formData.daysAndDurations_de || undefined,
+        pickup: formData.pickup || undefined,
+        pickup_de: formData.pickup_de || undefined,
+        briefing: formData.briefing || undefined,
+        briefing_de: formData.briefing_de || undefined,
+        trip: formData.trip || undefined,
+        trip_de: formData.trip_de || undefined,
+        program: formData.program || undefined,
+        program_de: formData.program_de || undefined,
+        foodAndBeverages: formData.foodAndBeverages || undefined,
+        foodAndBeverages_de: formData.foodAndBeverages_de || undefined,
+        whatToTake: formData.whatToTake || undefined,
+        whatToTake_de: formData.whatToTake_de || undefined,
+        pickupLocation: formData.pickupLocation || undefined,
+        pickupLocation_de: formData.pickupLocation_de || undefined,
+        vanLocation: formData.vanLocation || undefined,
+        vanLocation_de: formData.vanLocation_de || undefined,
+        location1: formData.location1 || undefined,
+        location1_de: formData.location1_de || undefined,
+        location2: formData.location2 || undefined,
+        location2_de: formData.location2_de || undefined,
+        location3: formData.location3 || undefined,
+        location3_de: formData.location3_de || undefined,
+        location4: formData.location4 || undefined,
+        location4_de: formData.location4_de || undefined,
+        location5: formData.location5 || undefined,
+        location5_de: formData.location5_de || undefined,
+        location6: formData.location6 || undefined,
+        location6_de: formData.location6_de || undefined,
+        image1: formData.image1 || undefined,
+        image2: formData.image2 || undefined,
+        image3: formData.image3 || undefined,
+        image4: formData.image4 || undefined,
+        isActive: formData.isActive,
+        onSale: formData.onSale,
+        discount: Number(formData.discount) || 0,
+      };
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(tourData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Refresh tours list
+        await fetchTours();
+        clearForm();
+        alert(editingTour ? 'Tour updated successfully!' : 'Tour created successfully!');
       } else {
-        // Add new tour
-        const newTour: TourFull = {
-          ...formData,
-          _id: `tour-${Date.now()}`,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-        setTours((prev) => [newTour, ...prev]);
+        // Show error message
+        const errorMsg = result.errors
+          ? result.errors
+              .map((e: { field: string; message: string }) => `${e.field}: ${e.message}`)
+              .join('\n')
+          : result.error || 'Failed to save tour';
+        alert('Error: ' + errorMsg);
       }
-      clearForm();
+    } catch (error) {
+      console.error('Error saving tour:', error);
+      alert('Error saving tour. Check console for details.');
+    } finally {
       setIsLoading(false);
-    }, 500);
+    }
   };
 
   const startEdit = (tour: TourFull) => {
@@ -428,37 +374,107 @@ export function ToursAdminPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (deleteModal) {
-      setTours((prev) => prev.filter((t) => t._id !== deleteModal._id));
-      setDeleteModal(null);
+      try {
+        setIsLoading(true);
+        const response = await fetch(`/api/tours/${deleteModal._id}`, {
+          method: 'DELETE',
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          setTours((prev) => prev.filter((t) => t._id !== deleteModal._id));
+          setDeleteModal(null);
+          alert('Tour deleted successfully!');
+        } else {
+          alert('Error: ' + (result.error || 'Failed to delete tour'));
+        }
+      } catch (error) {
+        console.error('Error deleting tour:', error);
+        alert('Error deleting tour. Check console for details.');
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
-  const toggleActive = (tourId: string) => {
-    setTours((prev) => prev.map((t) => (t._id === tourId ? { ...t, isActive: !t.isActive } : t)));
+  const toggleActive = async (tourId: string) => {
+    const tour = tours.find((t) => t._id === tourId);
+    if (!tour) return;
+
+    try {
+      const response = await fetch(`/api/tours/${tourId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isActive: !tour.isActive }),
+      });
+      const result = await response.json();
+
+      if (result.success) {
+        setTours((prev) =>
+          prev.map((t) => (t._id === tourId ? { ...t, isActive: !t.isActive } : t))
+        );
+      } else {
+        alert('Error: ' + (result.error || 'Failed to update tour status'));
+      }
+    } catch (error) {
+      console.error('Error toggling tour status:', error);
+    }
   };
 
-  const handleSaleToggle = (tour: TourFull) => {
+  const handleSaleToggle = async (tour: TourFull) => {
     if (tour.onSale) {
-      // Turn off sale
-      setTours((prev) =>
-        prev.map((t) => (t._id === tour._id ? { ...t, onSale: false, discount: 0 } : t))
-      );
+      // Turn off sale via API
+      try {
+        const response = await fetch(`/api/tours/${tour._id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ onSale: false, discount: 0 }),
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          setTours((prev) =>
+            prev.map((t) => (t._id === tour._id ? { ...t, onSale: false, discount: 0 } : t))
+          );
+        } else {
+          alert('Error: ' + (result.error || 'Failed to update sale status'));
+        }
+      } catch (error) {
+        console.error('Error toggling sale:', error);
+      }
     } else {
       // Open modal to set discount
       setSaleModal({ tour, discount: 10 });
     }
   };
 
-  const confirmSale = () => {
+  const confirmSale = async () => {
     if (saleModal) {
-      setTours((prev) =>
-        prev.map((t) =>
-          t._id === saleModal.tour._id ? { ...t, onSale: true, discount: saleModal.discount } : t
-        )
-      );
-      setSaleModal(null);
+      try {
+        const response = await fetch(`/api/tours/${saleModal.tour._id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ onSale: true, discount: saleModal.discount }),
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          setTours((prev) =>
+            prev.map((t) =>
+              t._id === saleModal.tour._id
+                ? { ...t, onSale: true, discount: saleModal.discount }
+                : t
+            )
+          );
+          setSaleModal(null);
+        } else {
+          alert('Error: ' + (result.error || 'Failed to set sale'));
+        }
+      } catch (error) {
+        console.error('Error setting sale:', error);
+      }
     }
   };
 
@@ -538,15 +554,23 @@ export function ToursAdminPage() {
               </div>
               <div className={formStyles.formGroup}>
                 <label className={formStyles.label}>Category *</label>
-                <input
-                  type="text"
-                  className={formStyles.input}
+                <select
+                  className={formStyles.select}
                   value={formData.category}
                   onChange={(e) => handleFormChange('category', e.target.value)}
-                  placeholder="e.g., Adventure, Cultural, Luxury"
-                  maxLength={50}
                   required
-                />
+                >
+                  <option value="">Select category</option>
+                  <option value="Adventure">Adventure</option>
+                  <option value="Cultural">Cultural</option>
+                  <option value="Historical">Historical</option>
+                  <option value="Beach">Beach</option>
+                  <option value="Desert">Desert</option>
+                  <option value="Cruise">Cruise</option>
+                  <option value="Luxury">Luxury</option>
+                  <option value="Family">Family</option>
+                  <option value="Romantic">Romantic</option>
+                </select>
               </div>
               <div className={formStyles.formGroup}>
                 <label className={formStyles.label}>Duration *</label>

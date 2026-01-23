@@ -10,8 +10,10 @@ export interface IBooking extends Document {
   travelDate: Date;
   confirmTrip: string;
   tourTitle?: string;
+  message?: string;
   notes?: string;
   pickupLocation?: string;
+  pickupLocationOutside?: string;
   requirements?: string;
   totalPrice: number;
   currency: 'USD' | 'EUR';
@@ -32,8 +34,10 @@ const BookingSchema = new Schema<IBooking>(
     travelDate: { type: Date, required: true },
     confirmTrip: { type: String, required: true },
     tourTitle: { type: String },
+    message: { type: String, maxlength: 1000 },
     notes: { type: String, maxlength: 1000 },
     pickupLocation: { type: String, maxlength: 200 },
+    pickupLocationOutside: { type: String, maxlength: 200 },
     requirements: { type: String, maxlength: 100 },
     totalPrice: { type: Number, required: true },
     currency: { type: String, enum: ['USD', 'EUR'], default: 'USD' },
@@ -45,6 +49,7 @@ const BookingSchema = new Schema<IBooking>(
 
 BookingSchema.index({ email: 1 });
 BookingSchema.index({ status: 1, createdAt: -1 });
+BookingSchema.index({ travelDate: 1 });
 
 export const Booking: Model<IBooking> =
   mongoose.models.Booking || mongoose.model<IBooking>('Booking', BookingSchema);

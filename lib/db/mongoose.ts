@@ -1,9 +1,14 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/sphinx-reisen';
+// Get MongoDB URI from environment - evaluated at runtime
+function getMongoDBUri(): string {
+  const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/sphinx-reisen';
 
-if (!MONGODB_URI) {
-  throw new Error('Please define MONGODB_URI environment variable');
+  if (!uri) {
+    throw new Error('Please define MONGODB_URI environment variable');
+  }
+
+  return uri;
 }
 
 interface MongooseCache {
@@ -33,6 +38,8 @@ export async function connectDB() {
       maxPoolSize: 10,
     };
 
+    // Get URI at connection time, not module load time
+    const MONGODB_URI = getMongoDBUri();
     cached.promise = mongoose.connect(MONGODB_URI, opts);
   }
 

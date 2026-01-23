@@ -2,28 +2,24 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import type { Tour } from '@/types/tour.types';
 
 export default function TourDetailsPage() {
+  const params = useParams();
+  const slug = params.slug as string;
+
+  const [tour, setTour] = useState<Tour | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [infants, setInfants] = useState(0);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const sliderImages = [
-    { src: '/images/tours/pyramid-sky-desert-ancient.jpg', alt: 'Egyptian Pyramids' },
-    { src: '/images/tours/08.webp', alt: 'Ancient Egyptian Temple' },
-    { src: '/images/tours/iStock-508838512-1-scaled.webp', alt: 'Great Sphinx of Giza' },
-    { src: '/images/tours/istockphoto-1085592710-612x612.webp', alt: 'Nile River Sailboat' },
-  ];
-
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % sliderImages.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [sliderImages.length]);
   const [reviews, setReviews] = useState([
     {
       id: 1,
@@ -47,6 +43,59 @@ export default function TourDetailsPage() {
       text: 'Really enjoyed the tour overall. The itinerary was well-planned and not too rushed. Would have appreciated more time at the temple, but the photography opportunities were excellent.',
     },
   ]);
+
+  // Fetch tour data
+  useEffect(() => {
+    const fetchTour = async () => {
+      try {
+        const response = await fetch(`/api/tours/${slug}`);
+        if (!response.ok) {
+          throw new Error('Tour not found');
+        }
+        const data = await response.json();
+        setTour(data.data.tour);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load tour');
+        console.error('Error fetching tour:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (slug) {
+      fetchTour();
+    }
+  }, [slug]);
+
+  // Image slider setup
+  const sliderImages: { src: string; alt: string }[] = [];
+  if (tour) {
+    if (tour.image1) sliderImages.push({ src: tour.image1, alt: tour.title });
+    if (tour.image2) sliderImages.push({ src: tour.image2, alt: tour.title });
+    if (tour.image3) sliderImages.push({ src: tour.image3, alt: tour.title });
+    if (tour.image4) sliderImages.push({ src: tour.image4, alt: tour.title });
+  }
+
+  useEffect(() => {
+    if (sliderImages.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % sliderImages.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [sliderImages.length]);
+
+  if (loading) {
+    return <div style={{ textAlign: 'center', padding: '2rem' }}>Loading tour...</div>;
+  }
+
+  if (error || !tour) {
+    return (
+      <div style={{ textAlign: 'center', padding: '2rem', color: 'red' }}>
+        {error || 'Tour not found'}
+      </div>
+    );
+  }
 
   const pricePerAdult = 150;
   const pricePerChild = 75;
@@ -278,17 +327,7 @@ export default function TourDetailsPage() {
         </div>
       </section>
 
-      {/* Section 4: Company Branding Section */}
-      <section className="branding-section">
-        <div className="branding-content">
-          <h2 className="branding-tagline">Your Dream Journey Awaits</h2>
-          <p className="branding-subtitle">
-            Experience the wonders of Egypt with our expert guides
-          </p>
-        </div>
-      </section>
-
-      {/* Section 5: Tour Information & Itinerary */}
+      {/* Section 4: Tour Information & Itinerary */}
       <section className="tour-info-section">
         <div className="tour-info-container">
           <div className="tour-details-column">
@@ -296,113 +335,166 @@ export default function TourDetailsPage() {
             <div className="details-table">
               <div className="detail-row">
                 <span className="detail-label">🎫 Tour Title</span>
-                <span className="detail-value">Egyptian Pyramids & Sphinx Experience</span>
+                <span className="detail-value">{tour.title}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">🏷️ Category</span>
+                <span className="detail-value">{tour.category}</span>
               </div>
               <div className="detail-row highlight">
                 <span className="detail-label">💰 Price</span>
-                <span className="detail-value price-value">From $150 per person</span>
+                <span className="detail-value price-value">${tour.price} per person</span>
               </div>
               <div className="detail-row">
                 <span className="detail-label">📝 Description</span>
                 <span className="detail-value">
-                  Embark on an unforgettable journey through ancient Egypt. Visit the iconic
-                  Pyramids of Giza, marvel at the Great Sphinx, and explore the rich cultural
-                  heritage of one of the world&apos;s oldest civilizations.
+                  {tour.description}
+                  {tour.longDescription && (
+                    <>
+                      <br />
+                      <br />
+                      {tour.longDescription}
+                    </>
+                  )}
                 </span>
               </div>
-              <div className="detail-row">
-                <span className="detail-label">🚗 Transportation</span>
-                <span className="detail-value">
-                  Air-conditioned vehicle with professional driver and tour guide
-                </span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">📍 Location</span>
-                <span className="detail-value">Cairo, Egypt - Giza Plateau</span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">ℹ️ Tour Details</span>
-                <span className="detail-value">
-                  Guided tour with expert Egyptologist, camel riding opportunity, and photo stops
-                </span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">🏨 Pickup Location</span>
-                <span className="detail-value">
-                  Hotel pickup available within Cairo city center
-                </span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">🎯 Program</span>
-                <span className="detail-value">
-                  Full-day tour starting at 8:00 AM, returning by 6:00 PM
-                </span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">🍽️ Inclusions</span>
-                <span className="detail-value">
-                  Lunch, bottled water, and light snacks throughout the day
-                </span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">🎒 What to Bring</span>
-                <span className="detail-value">
-                  Sunscreen, hat, comfortable walking shoes, and camera
-                </span>
-              </div>
+              {tour.transportation && (
+                <div className="detail-row">
+                  <span className="detail-label">🚗 Transportation</span>
+                  <span className="detail-value">{tour.transportation}</span>
+                </div>
+              )}
+              {tour.pickup && (
+                <div className="detail-row">
+                  <span className="detail-label">🚐 Pickup Information</span>
+                  <span className="detail-value">{tour.pickup}</span>
+                </div>
+              )}
+              {tour.briefing && (
+                <div className="detail-row">
+                  <span className="detail-label">📣 Welcome Briefing</span>
+                  <span className="detail-value">{tour.briefing}</span>
+                </div>
+              )}
+              {tour.daysAndDurations && (
+                <div className="detail-row">
+                  <span className="detail-label">📅 Days & Durations</span>
+                  <span className="detail-value">{tour.daysAndDurations}</span>
+                </div>
+              )}
+              {(tour.location || tour.location1) && (
+                <div className="detail-row">
+                  <span className="detail-label">📍 Location</span>
+                  <span className="detail-value">
+                    {tour.location ||
+                      [
+                        tour.location1,
+                        tour.location2,
+                        tour.location3,
+                        tour.location4,
+                        tour.location5,
+                        tour.location6,
+                      ]
+                        .filter(Boolean)
+                        .join(', ')}
+                  </span>
+                </div>
+              )}
+              {tour.program && (
+                <div className="detail-row">
+                  <span className="detail-label">🎯 Program</span>
+                  <span className="detail-value">{tour.program}</span>
+                </div>
+              )}
+              {tour.foodAndBeverages && (
+                <div className="detail-row">
+                  <span className="detail-label">🍽️ Inclusions</span>
+                  <span className="detail-value">{tour.foodAndBeverages}</span>
+                </div>
+              )}
+              {tour.whatToTake && (
+                <div className="detail-row">
+                  <span className="detail-label">🎒 What to Bring</span>
+                  <span className="detail-value">{tour.whatToTake}</span>
+                </div>
+              )}
               <div className="detail-row">
                 <span className="detail-label">⏱️ Duration</span>
-                <span className="detail-value">10 hours (8:00 AM - 6:00 PM)</span>
+                <span className="detail-value">{tour.travelType}</span>
               </div>
+              {tour.highlights && tour.highlights.length > 0 && (
+                <div className="detail-row">
+                  <span className="detail-label">✨ Highlights</span>
+                  <span className="detail-value">
+                    <ul style={{ margin: 0, paddingLeft: '1.2em' }}>
+                      {tour.highlights.map((highlight, index) => (
+                        <li key={index}>{highlight}</li>
+                      ))}
+                    </ul>
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
           <div className="itinerary-column">
             <h2 className="section-title">Itinerary</h2>
             <div className="itinerary-list">
-              <div className="itinerary-item">
-                <span className="itinerary-number">1</span>
-                <span className="itinerary-text">
-                  Hotel Pickup - Meet your guide and begin your Egyptian adventure
-                </span>
-              </div>
-              <div className="itinerary-item">
-                <span className="itinerary-number">2</span>
-                <span className="itinerary-text">
-                  Travel to Giza Plateau - Scenic drive through Cairo with historical commentary
-                </span>
-              </div>
-              <div className="itinerary-item">
-                <span className="itinerary-number">3</span>
-                <span className="itinerary-text">
-                  Pyramids of Giza - Explore the ancient tombs and learn about pharaohs
-                </span>
-              </div>
-              <div className="itinerary-item">
-                <span className="itinerary-number">4</span>
-                <span className="itinerary-text">
-                  Great Sphinx - Stand before the legendary monument and capture amazing photos
-                </span>
-              </div>
-              <div className="itinerary-item">
-                <span className="itinerary-number">5</span>
-                <span className="itinerary-text">
-                  Lunch Break - Enjoy traditional Egyptian cuisine at a local restaurant
-                </span>
-              </div>
-              <div className="itinerary-item">
-                <span className="itinerary-number">6</span>
-                <span className="itinerary-text">
-                  Valley Temple & Camel Ride - Experience the desert and ride camels like ancient
-                  travelers
-                </span>
-              </div>
-              <div className="itinerary-item">
-                <span className="itinerary-number">7</span>
-                <span className="itinerary-text">
-                  Return Journey - Scenic drive back to your hotel with final views of the pyramids
-                </span>
-              </div>
+              {/* Display location stops */}
+              {[
+                tour.location1,
+                tour.location2,
+                tour.location3,
+                tour.location4,
+                tour.location5,
+                tour.location6,
+              ]
+                .filter(Boolean)
+                .map((location, index) => (
+                  <div key={`location-${index}`} className="itinerary-item">
+                    <span className="itinerary-number">{index + 1}</span>
+                    <span className="itinerary-text">{location}</span>
+                  </div>
+                ))}
+
+              {/* Display trip highlights if available */}
+              {tour.trip && (
+                <div className="itinerary-item">
+                  <span className="itinerary-number">
+                    {[
+                      tour.location1,
+                      tour.location2,
+                      tour.location3,
+                      tour.location4,
+                      tour.location5,
+                      tour.location6,
+                    ].filter(Boolean).length + 1}
+                  </span>
+                  <span className="itinerary-text">
+                    <strong>Trip Highlights:</strong> {tour.trip}
+                  </span>
+                </div>
+              )}
+
+              {/* Show message if no itinerary data */}
+              {(() => {
+                const locationStops = [
+                  tour.location1,
+                  tour.location2,
+                  tour.location3,
+                  tour.location4,
+                  tour.location5,
+                  tour.location6,
+                ].filter(Boolean);
+
+                return locationStops.length === 0 && !tour.trip ? (
+                  <div className="itinerary-item">
+                    <span className="itinerary-text" style={{ fontStyle: 'italic', color: '#666' }}>
+                      Itinerary details will be provided upon booking.
+                    </span>
+                  </div>
+                ) : null;
+              })()}
             </div>
           </div>
         </div>

@@ -80,6 +80,8 @@
 .image {
   object-fit: cover;
   transition: transform 300ms ease;
+  width: 100%;
+  height: auto;
 }
 
 .card:hover .image {

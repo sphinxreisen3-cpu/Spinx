@@ -60,10 +60,36 @@ export function TourForm({ tour, onSubmit }: TourFormProps) {
     const submitData: CreateTourInput = {
       ...formData,
       highlights: highlightsText.split('\n').filter((h) => h.trim()),
+      ...images,
+      ...locations,
+      isActive,
+      onSale,
+      discount,
     };
 
-    // TODO: Add API call
-    console.log('Submit data:', { ...submitData, isActive, onSale, discount, images, locations });
+    try {
+      const response = await fetch('/api/tours', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submitData),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Tour created successfully:', result);
+        // Redirect to tours list or show success message
+        window.location.href = '/admin/tours';
+      } else {
+        const error = await response.json();
+        console.error('Failed to create tour:', error);
+        alert(`Failed to create tour: ${error.message || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error creating tour:', error);
+      alert('Error creating tour. Please try again.');
+    }
 
     if (onSubmit) {
       await onSubmit(submitData);

@@ -1,7 +1,6 @@
 import dynamic from 'next/dynamic';
 import { HeroSlider } from '@/components/home/HeroSlider';
 import { TravelTicker } from '@/components/home/TravelTicker';
-import { SpecialDeals } from '@/components/home/SpecialDeals';
 import { ServicesSection } from '@/components/home/ServicesSection';
 import { LatestTrips } from '@/components/home/LatestTrips';
 import { CTASection } from '@/components/home/CTASection';
@@ -16,6 +15,49 @@ const skeletonStyle = {
 };
 
 // Dynamically import heavy components with lazy loading
+const SpecialDeals = dynamic(
+  () => import('@/components/home/SpecialDeals').then((mod) => ({ default: mod.SpecialDeals })),
+  {
+    loading: () => (
+      <section style={{ padding: '80px 20px', minHeight: '600px', background: '#1a1a1a' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <div
+              style={{
+                ...skeletonStyle,
+                height: '60px',
+                width: '300px',
+                margin: '0 auto 1rem',
+                background: '#333',
+              }}
+            />
+            <div
+              style={{
+                ...skeletonStyle,
+                height: '30px',
+                width: '400px',
+                margin: '0 auto',
+                background: '#333',
+              }}
+            />
+          </div>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: '2rem',
+            }}
+          >
+            {[1, 2, 3].map((i) => (
+              <div key={i} style={{ ...skeletonStyle, height: '400px', background: '#333' }} />
+            ))}
+          </div>
+        </div>
+      </section>
+    ),
+  }
+);
+
 const ToursSection = dynamic(
   () => import('@/components/home/ToursSection').then((mod) => ({ default: mod.ToursSection })),
   {

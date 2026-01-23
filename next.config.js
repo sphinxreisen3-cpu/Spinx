@@ -14,6 +14,9 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
 
+  // Fix for multiple package-lock.json warning
+  outputFileTracingRoot: __dirname,
+
   // Image optimization
   images: {
     formats: ['image/avif', 'image/webp'],
