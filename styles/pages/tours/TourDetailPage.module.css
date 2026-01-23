@@ -1,0 +1,36 @@
+/* Tour Detail Page Styles */
+
+.page {
+  min-height: 100vh;
+  background-color: hsl(var(--background));
+}
+
+.section {
+  padding: 2rem 0;
+}
+
+.sectionSmall {
+  padding: 1rem 0;
+}
+
+.sectionLarge {
+  padding: 3rem 0;
+}
+
+.containerMedium {
+  width: 100%;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.containerNarrow {
+  width: 100%;
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+  margin-top: 90px;
+}
+
+/* Styles intentionally removed to leave the page empty. */
+width: 100%;

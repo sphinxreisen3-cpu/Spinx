@@ -1,0 +1,309 @@
+/* TourReviews Component Styles */
+
+.container {
+  border-radius: 0.5rem;
+  background-color: rgb(255, 255, 255);
+  padding: 2rem;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Header */
+.header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.title {
+  margin-bottom: 1rem;
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+  color: rgb(17, 24, 39);
+}
+
+.ratingWrapper {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.ratingBox {
+  border-radius: 0.5rem;
+  background-color: rgb(255, 251, 235);
+  padding: 1rem;
+}
+
+.starsWrapper {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.stars {
+  display: flex;
+}
+
+.starButton {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.starButton:disabled {
+  cursor: default;
+}
+
+.starActive {
+  color: rgb(250, 204, 21);
+}
+
+.starInactive {
+  color: rgb(209, 213, 219);
+}
+
+.starInteractive {
+  cursor: pointer;
+}
+
+.starInteractive:hover {
+  color: rgb(250, 204, 21);
+}
+
+.ratingScore {
+  margin-left: 0.5rem;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: rgb(217, 119, 6);
+}
+
+.reviewCount {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(75, 85, 99);
+}
+
+/* Write Review Button */
+.buttonSection {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.writeReviewButton {
+  border-radius: 0.5rem;
+  background: linear-gradient(90deg, rgb(251, 191, 36) 0%, rgb(249, 115, 22) 100%);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  color: rgb(255, 255, 255);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: transform 300ms ease;
+  border: none;
+  cursor: pointer;
+}
+
+.writeReviewButton:hover {
+  transform: scale(1.05);
+}
+
+/* Review Form */
+.formContainer {
+  margin-bottom: 2rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgb(229, 231, 235);
+  background-color: rgb(249, 250, 251);
+  padding: 1.5rem;
+}
+
+.formTitle {
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  color: rgb(17, 24, 39);
+}
+
+.formGrid {
+  margin-bottom: 1rem;
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .formGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.input {
+  width: 100%;
+  border-radius: 0.25rem;
+  border: 1px solid rgb(209, 213, 219);
+  padding: 0.5rem 0.75rem;
+}
+
+.input:focus {
+  border-color: rgb(245, 158, 11);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.ratingField {
+  margin-bottom: 1rem;
+}
+
+.ratingLabel {
+  margin-bottom: 0.5rem;
+  display: block;
+  font-weight: 600;
+  color: rgb(55, 65, 81);
+}
+
+.ratingInput {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ratingHint {
+  margin-left: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(75, 85, 99);
+}
+
+.textareaField {
+  margin-bottom: 1rem;
+}
+
+.textarea {
+  width: 100%;
+  border-radius: 0.25rem;
+  border: 1px solid rgb(209, 213, 219);
+  padding: 0.5rem 0.75rem;
+  resize: vertical;
+}
+
+.textarea:focus {
+  border-color: rgb(245, 158, 11);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.submitSection {
+  text-align: center;
+}
+
+.submitButton {
+  border-radius: 0.5rem;
+  background: linear-gradient(90deg, rgb(251, 191, 36) 0%, rgb(249, 115, 22) 100%);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  color: rgb(255, 255, 255);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: transform 300ms ease;
+  border: none;
+  cursor: pointer;
+}
+
+.submitButton:hover {
+  transform: scale(1.05);
+}
+
+.submitButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Reviews List */
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.reviewCard {
+  border-radius: 0.5rem;
+  border: 1px solid rgb(229, 231, 235);
+  background-color: rgb(255, 255, 255);
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.reviewContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.avatar {
+  display: flex;
+  height: 3rem;
+  width: 3rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgb(59, 130, 246) 0%, rgb(168, 85, 247) 100%);
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  color: rgb(255, 255, 255);
+}
+
+.reviewBody {
+  flex: 1;
+}
+
+.reviewHeader {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reviewerName {
+  font-weight: 700;
+  color: rgb(17, 24, 39);
+}
+
+.reviewDate {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(107, 114, 128);
+}
+
+.reviewRating {
+  margin-bottom: 0.75rem;
+}
+
+.reviewText {
+  line-height: 1.625;
+  color: rgb(55, 65, 81);
+}
+
+/* Empty State */
+.emptyState {
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.emptyIcon {
+  margin-bottom: 1rem;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
+.emptyText {
+  color: rgb(107, 114, 128);
+}

@@ -1,0 +1,84 @@
+/*
+ * =============================================================================
+ * DEV.CSS - TEMPORARY DEVELOPMENT STYLING ONLY
+ * =============================================================================
+ *
+ * PURPOSE:
+ * This file is for rapid prototyping and debugging during development.
+ * Write pure CSS here that you can easily inspect in Chrome DevTools.
+ * Once styles are finalized, convert them to Tailwind utilities and remove
+ * the corresponding rules from this file.
+ *
+ * RULES:
+ * 1. Use explicit semantic class names prefixed with "dev-" (e.g., .dev-card)
+ * 2. Do NOT use @layer, @apply, or Tailwind directives
+ * 3. Do NOT use CSS variables (use explicit values for DevTools clarity)
+ * 4. Do NOT apply styles globally (no element selectors like div, p, h1)
+ * 5. Keep styles temporary — delete after converting to Tailwind
+ *
+ * IMPORT ORDER (why it matters):
+ * This file is imported AFTER globals.css (which contains Tailwind).
+ * CSS cascade means later styles override earlier ones at equal specificity.
+ * By loading dev.css last, your development styles take precedence over
+ * Tailwind utilities, making debugging easier without modifying Tailwind.
+ *
+ * HOW TO USE:
+ * 1. Add a dev- prefixed class to your component (e.g., className="dev-header")
+ * 2. Write the styles below
+ * 3. Inspect and iterate in Chrome DevTools
+ * 4. Once satisfied, convert to Tailwind utilities in your component
+ * 5. Remove the dev- class and delete the CSS rule here
+ *
+ * WARNING:
+ * Do NOT ship dev- classes to production. This file should ideally be
+ * empty or removed before deployment.
+ * =============================================================================
+ */
+
+/* -----------------------------------------------------------------------------
+ * EXAMPLE DEVELOPMENT STYLES (delete or replace with your own)
+ * -------------------------------------------------------------------------- */
+
+/*
+ * Example card component for development testing
+ * Usage: <div className="dev-card">...</div>
+ */
+.dev-card {
+  /* Add your development styles here */
+}
+
+/*
+ * Example header component for development testing
+ * Usage: <header className="dev-header">...</header>
+ */
+.dev-header {
+  /* Add your development styles here */
+}
+
+/*
+ * Example button component for development testing
+ * Usage: <button className="dev-button">...</button>
+ */
+.dev-button {
+  /* Add your development styles here */
+}
+
+/*
+ * Example container for development testing
+ * Usage: <div className="dev-container">...</div>
+ */
+.dev-container {
+  /* Add your development styles here */
+}
+
+/*
+ * Example section for development testing
+ * Usage: <section className="dev-section">...</section>
+ */
+.dev-section {
+  /* Add your development styles here */
+}
+
+/* -----------------------------------------------------------------------------
+ * ADD YOUR TEMPORARY DEVELOPMENT STYLES BELOW
+ * -------------------------------------------------------------------------- */

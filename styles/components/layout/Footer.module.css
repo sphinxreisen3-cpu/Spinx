@@ -1,0 +1,183 @@
+/* Footer Component Styles */
+
+.footer {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 169, 0, 0.08), transparent 35%),
+    radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.08), transparent 30%), rgb(21, 21, 21);
+  color: rgb(255, 255, 255);
+  padding-top: 3.5rem;
+  padding-bottom: 2rem;
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  display: grid;
+  max-width: 1200px;
+  gap: 2rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.logoBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.logoLink {
+  display: inline-flex;
+  align-items: center;
+}
+
+.tagline {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 360px;
+}
+
+.navTitle {
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 0.75rem;
+}
+
+.navButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.navButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.2rem;
+  border-radius: 20px;
+  background: linear-gradient(to top, rgb(252, 145, 74), rgb(235, 197, 25));
+  color: rgb(0, 0, 0);
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: -0.02em;
+  box-shadow:
+    inset 2px 2px 2px rgba(250, 246, 242, 0.95),
+    inset -4px -3px 2px rgba(0, 0, 0, 0.65);
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.navButton:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow:
+    inset 3px 3px 3px rgba(250, 246, 242, 0.95),
+    inset -5px -4px 3px rgba(0, 0, 0, 0.65);
+}
+
+.contactSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.contactList {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.contactItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.contactItem:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.contactItem svg {
+  font-size: 1.1rem;
+}
+
+.socialSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.socialGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+  max-width: 240px;
+}
+
+@media (max-width: 640px) {
+  .socialGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.socialLink {
+  display: inline-flex;
+  height: 2.5rem;
+  width: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgb(223, 225, 234);
+  transition: all 0.2s ease;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.socialLink:hover {
+  background: linear-gradient(to right, rgb(252, 145, 74), rgb(235, 197, 25));
+  color: rgb(0, 0, 0);
+  transform: translateY(-2px);
+}
+
+.bottomBar {
+  margin-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.bottomInner {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1200px;
+  padding: 0.75rem 1.25rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.copyrightLink {
+  color: rgb(255, 255, 255);
+  transition: color 0.15s ease-in-out;
+  text-decoration: none;
+}
+
+.copyrightLink:hover {
+  color: rgb(255, 169, 0);
+}

@@ -1,0 +1,72 @@
+/* TourDetailsTable Component Styles */
+
+.container {
+  border-radius: 0.5rem;
+  background-color: rgb(255, 255, 255);
+  padding: 1.5rem;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.header {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.headerIcon {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.headerTitle {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: rgb(17, 24, 39);
+}
+
+.tableWrapper {
+  overflow: hidden;
+  border-radius: 0.5rem;
+  border: 1px solid rgb(229, 231, 235);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableRow {
+  border-bottom: 1px solid rgb(229, 231, 235);
+}
+
+.tableRowEven {
+  background-color: rgb(249, 250, 251);
+}
+
+.tableRowOdd {
+  background-color: rgb(255, 255, 255);
+}
+
+.tableLabel {
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  color: rgb(55, 65, 81);
+}
+
+.tableLabelIcon {
+  margin-right: 0.5rem;
+}
+
+.tableValue {
+  padding: 0.75rem 1rem;
+  color: rgb(17, 24, 39);
+}
+
+.priceValue {
+  font-weight: 700;
+  color: rgb(217, 119, 6);
+}

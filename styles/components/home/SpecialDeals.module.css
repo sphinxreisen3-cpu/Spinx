@@ -1,0 +1,68 @@
+/* SpecialDeals Component Styles */
+
+.section {
+  background: linear-gradient(90deg, rgb(254, 242, 242) 0%, rgb(255, 247, 237) 100%);
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  max-width: 1280px;
+}
+
+.header {
+  margin-bottom: 4rem;
+  text-align: center;
+}
+
+.title {
+  margin-bottom: 1rem;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 700;
+  color: rgb(220, 38, 38);
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  color: rgb(75, 85, 99);
+}
+
+.titleUnderline {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1rem;
+  height: 0.25rem;
+  width: 6rem;
+  border-radius: 9999px;
+  background-color: rgb(239, 68, 68);
+}
+
+.content {
+  text-align: center;
+}
+
+.iconEmoji {
+  margin-bottom: 2rem;
+  font-size: 3.75rem;
+  line-height: 1;
+}
+
+.loadingTitle {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: rgb(17, 24, 39);
+}
+
+.loadingText {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  color: rgb(75, 85, 99);
+}

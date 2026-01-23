@@ -1,0 +1,49 @@
+{
+  "home": {
+    "title": "Discover Your Next Adventure",
+    "subtitle": "Explore amazing destinations worldwide",
+    "specialDeals": "Special Deals",
+    "allTours": "All Tours",
+    "ourServices": "Our Services",
+    "testimonials": "What Our Clients Say",
+    "bookNow": "Book Now"
+  },
+  "nav": {
+    "home": "Home",
+    "tours": "Tours",
+    "about": "About Us"
+  },
+  "tour": {
+    "price": "Price",
+    "duration": "Duration",
+    "category": "Category",
+    "highlights": "Highlights",
+    "description": "Description",
+    "bookTour": "Book This Tour",
+    "reviews": "Reviews"
+  },
+  "booking": {
+    "form": {
+      "name": "Full Name",
+      "email": "Email",
+      "phone": "Phone",
+      "adults": "Adults",
+      "children": "Children",
+      "infants": "Infants",
+      "travelDate": "Travel Date",
+      "notes": "Special Requirements",
+      "submit": "Confirm Booking"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "home": {
+    "title": "Entdecken Sie Ihr nächstes Abenteuer",
+    "subtitle": "Erkunden Sie erstaunliche Reiseziele weltweit",
+    "specialDeals": "Sonderangebote",
+    "allTours": "Alle Touren",
+    "ourServices": "Unsere Dienstleistungen",
+    "testimonials": "Was unsere Kunden sagen",
+    "bookNow": "Jetzt buchen"
+  },
+  "nav": {
+    "home": "Startseite",
+    "tours": "Touren",
+    "about": "Über uns"
+  },
+  "tour": {
+    "price": "Preis",
+    "duration": "Dauer",
+    "category": "Kategorie",
+    "highlights": "Höhepunkte",
+    "description": "Beschreibung",
+    "bookTour": "Diese Tour buchen",
+    "reviews": "Bewertungen"
+  },
+  "booking": {
+    "form": {
+      "name": "Vollständiger Name",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "adults": "Erwachsene",
+      "children": "Kinder",
+      "infants": "Kleinkinder",
+      "travelDate": "Reisedatum",
+      "notes": "Besondere Anforderungen",
+      "submit": "Buchung bestätigen"
+    }
+  },
+  "common": {
+    "loading": "Laden...",
+    "error": "Ein Fehler ist aufgetreten",
+    "success": "Erfolg",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "search": "Suchen",
+    "filter": "Filtern"
+  }
+}

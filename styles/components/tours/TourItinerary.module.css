@@ -1,0 +1,124 @@
+/* TourItinerary Component Styles */
+
+.container {
+  border-radius: 0.5rem;
+  background-color: rgb(255, 255, 255);
+  padding: 1.5rem;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.header {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.headerIcon {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.headerTitle {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: rgb(17, 24, 39);
+}
+
+.itemList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.item {
+  display: flex;
+  gap: 1rem;
+}
+
+.markerBase {
+  display: flex;
+  height: 3rem;
+  width: 3rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border-width: 2px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 700;
+}
+
+.markerNormal {
+  border-color: rgb(251, 191, 36);
+  background-color: rgb(251, 191, 36);
+  color: rgb(0, 0, 0);
+}
+
+.markerSpecial {
+  border-color: rgb(249, 115, 22);
+  background-color: rgb(249, 115, 22);
+  color: rgb(255, 255, 255);
+}
+
+.itemContent {
+  flex: 1;
+  padding-top: 0.5rem;
+}
+
+.itemText {
+  color: rgb(17, 24, 39);
+}
+
+.emptyState {
+  text-align: center;
+  color: rgb(107, 114, 128);
+}
+
+/* Map Section */
+.mapSection {
+  margin-top: 2rem;
+}
+
+.mapContainer {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, rgb(219, 234, 254) 0%, rgb(220, 252, 231) 100%);
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+}
+
+.mapPlaceholder {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.mapContent {
+  text-align: center;
+}
+
+.mapIcon {
+  margin-bottom: 1rem;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
+.mapTitle {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  color: rgb(55, 65, 81);
+}
+
+.mapCoordinates {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(107, 114, 128);
+}

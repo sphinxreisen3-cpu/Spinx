@@ -1,0 +1,200 @@
+/* Testimonials Component Styles */
+
+.section {
+  background-color: rgb(249, 250, 251);
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  max-width: 1280px;
+}
+
+.title {
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 700;
+  color: rgb(17, 24, 39);
+}
+
+.titleUnderline {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 4rem;
+  height: 0.25rem;
+  width: 6rem;
+  background: linear-gradient(90deg, rgb(251, 191, 36) 0%, rgb(249, 115, 22) 100%);
+}
+
+.wrapper {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 56rem;
+}
+
+.card {
+  overflow: hidden;
+  border-radius: 1rem;
+  background-color: rgb(255, 255, 255);
+  padding: 2rem;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .cardContent {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.avatarWrapper {
+  flex-shrink: 0;
+}
+
+.avatar {
+  display: flex;
+  height: 5rem;
+  width: 5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: rgb(255, 255, 255);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.avatarBlue {
+  background-color: rgb(59, 130, 246);
+}
+
+.avatarGreen {
+  background-color: rgb(34, 197, 94);
+}
+
+.avatarPurple {
+  background-color: rgb(168, 85, 247);
+}
+
+.contentWrapper {
+  flex: 1;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .contentWrapper {
+    text-align: left;
+  }
+}
+
+.quote {
+  margin-bottom: 1.5rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  line-height: 1.625;
+  color: rgb(55, 65, 81);
+}
+
+.authorSection {
+  border-top: 1px solid rgb(229, 231, 235);
+  padding-top: 1rem;
+}
+
+.authorName {
+  display: block;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  color: rgb(17, 24, 39);
+  font-style: normal;
+}
+
+.authorRole {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(75, 85, 99);
+}
+
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 9999px;
+  background-color: rgb(255, 255, 255);
+  padding: 0.75rem;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: all 300ms ease;
+  border: none;
+  cursor: pointer;
+}
+
+.navButton:hover {
+  background-color: rgb(249, 250, 251);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.navButtonPrev {
+  left: 1rem;
+}
+
+.navButtonNext {
+  right: 1rem;
+}
+
+.navIcon {
+  height: 1.5rem;
+  width: 1.5rem;
+  color: rgb(75, 85, 99);
+}
+
+.pagination {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.paginationDot {
+  height: 0.75rem;
+  width: 0.75rem;
+  border-radius: 9999px;
+  transition: all 300ms ease;
+  border: none;
+  cursor: pointer;
+}
+
+.paginationDotActive {
+  transform: scale(1.25);
+  background-color: rgb(245, 158, 11);
+}
+
+.paginationDotInactive {
+  background-color: rgb(209, 213, 219);
+}
+
+.paginationDotInactive:hover {
+  background-color: rgb(156, 163, 175);
+}

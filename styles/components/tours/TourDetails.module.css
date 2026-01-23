@@ -1,0 +1,12 @@
+/* TourDetails Component Styles */
+
+.container {
+  margin-top: 2rem;
+}
+
+.title {
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 700;
+}
