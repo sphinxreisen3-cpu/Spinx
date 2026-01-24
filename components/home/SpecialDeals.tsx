@@ -89,7 +89,7 @@ export function SpecialDeals() {
             🔥 Special Deals
           </h2>
           <p style={{ fontSize: '1.25rem', color: 'rgba(0, 0, 0, 0.8)', marginBottom: '2rem' }}>
-            Don't miss out on these amazing discounted tours!
+            Don&apos;t miss out on these amazing discounted tours!
           </p>
           <div
             style={{

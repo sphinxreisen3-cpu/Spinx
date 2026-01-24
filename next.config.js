@@ -42,8 +42,9 @@ const nextConfig = {
     },
   },
 
-  // Enable output standalone for optimized production builds
-  output: process.env.NODE_ENV === 'production' ? 'standalone' : undefined,
+  // Enable output standalone for optimized production builds on Railway/Docker
+  // This creates a minimal self-contained build
+  output: 'standalone',
 
   // Improve page loading with prefetching
   poweredByHeader: false, // Security: remove X-Powered-By header

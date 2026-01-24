@@ -116,7 +116,7 @@ export async function adminPasswordExists(): Promise<boolean> {
     await connectDB();
     const count = await Admin.countDocuments();
     return count > 0;
-  } catch (_error) {
+  } catch {
     return false;
   }
 }

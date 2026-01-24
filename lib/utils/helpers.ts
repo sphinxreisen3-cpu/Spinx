@@ -21,6 +21,9 @@ export function isProduction(): boolean {
 export function getBaseUrl(): string {
   if (typeof window !== 'undefined') return window.location.origin;
   if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
+  // Railway provides RAILWAY_PUBLIC_DOMAIN for public URLs
+  if (process.env.RAILWAY_PUBLIC_DOMAIN) return `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`;
+  // Fallback to Vercel for backwards compatibility
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   return 'http://localhost:3000';
 }
