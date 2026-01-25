@@ -115,45 +115,45 @@ export function ToursSection() {
             </div>
           ) : (
             tours.map((tour) => (
-              <div key={tour.id} className={styles.card}>
-                <div className={styles.imageWrapper}>
-                  <img
-                    src={tour.image}
-                    alt={tour.title}
-                    className={styles.image}
-                    loading="lazy"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        '/images/tours/pyramid-sky-desert-ancient.jpg';
-                    }}
-                  />
+              <Link
+                key={tour.id}
+                href={`/${locale}/tours/${tour.slug}#book`}
+                className={styles.cardLink}
+              >
+                <div className={styles.card}>
+                  <div className={styles.imageWrapper}>
+                    <img
+                      src={tour.image}
+                      alt={tour.title}
+                      className={styles.image}
+                      loading="lazy"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          '/images/tours/pyramid-sky-desert-ancient.jpg';
+                      }}
+                    />
+                  </div>
                   <div className={styles.categoryBadge}>{tour.category}</div>
-                </div>
-
-                <div className={styles.cardContent}>
-                  <h3 className={styles.cardTitle}>{tour.title}</h3>
-
-                  <p className={styles.cardDescription}>{tour.description}</p>
-
-                  <div className={styles.cardMeta}>
-                    <span className={styles.metaItem}>
-                      <span className={styles.metaIcon}>⏱️</span>
-                      {tour.duration}
-                    </span>
-                    <span className={styles.metaItem}>
-                      <span className={styles.metaIcon}>⭐</span>
-                      {tour.rating}
-                    </span>
-                  </div>
-
-                  <div className={styles.cardFooter}>
-                    <span className={styles.price}>{tour.price}</span>
-                    <Link href={`/${locale}/tours/${tour.slug}#book`}>
+                  <div className={styles.cardContent}>
+                    <h3 className={styles.cardTitle}>{tour.title}</h3>
+                    <p className={styles.cardDescription}>{tour.description}</p>
+                    <div className={styles.cardMeta}>
+                      <span className={styles.metaItem}>
+                        <span className={styles.metaIcon}>⏱️</span>
+                        {tour.duration}
+                      </span>
+                      <span className={styles.metaItem}>
+                        <span className={styles.metaIcon}>⭐</span>
+                        {tour.rating}
+                      </span>
+                    </div>
+                    <div className={styles.cardFooter}>
+                      <span className={styles.price}>{tour.price}</span>
                       <button className={styles.bookButton}>{t('home.toursSection.bookNow')}</button>
-                    </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))
           )}
         </div>

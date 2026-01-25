@@ -591,6 +591,7 @@
 
 .navArrowLeft {
   left: 1rem;
+  display: none;
 }
 
 @media (min-width: 640px) {
@@ -603,6 +604,7 @@
 
 .navArrowRight {
   right: 1rem;
+  display: none;
 }
 
 @media (min-width: 640px) {
