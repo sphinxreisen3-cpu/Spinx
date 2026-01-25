@@ -2,13 +2,26 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
+import { BookingTicket } from '@/components/bookings/BookingTicket';
 import type { Tour } from '@/types/tour.types';
+
+interface TourReviewItem {
+  _id: string;
+  name: string;
+  rating: number;
+  reviewText: string;
+  createdAt: string;
+}
 
 export default function TourDetailsPage() {
   const params = useParams();
   const slug = params.slug as string;
+  const locale = useLocale();
+  const t = useTranslations('tourDetail');
+  const isGerman = locale === 'de';
 
   const [tour, setTour] = useState<Tour | null>(null);
   const [loading, setLoading] = useState(true);
@@ -20,29 +33,30 @@ export default function TourDetailsPage() {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      name: 'Sarah Johnson',
-      date: 'December 15, 2024',
-      rating: 5,
-      text: 'An absolutely incredible experience! The expert guides knew everything about Egyptian history and culture. The camel ride through the desert was unforgettable. Highly recommend to anyone visiting Egypt!',
-    },
-    {
-      id: 2,
-      name: 'Michael Chen',
-      date: 'December 8, 2024',
-      rating: 5,
-      text: 'Perfectly organized tour with amazing views of the pyramids. The Sphinx was even more impressive in person. The lunch break by the Nile was a nice touch. Great value for money!',
-    },
-    {
-      id: 3,
-      name: 'Emma Wilson',
-      date: 'November 28, 2024',
-      rating: 4,
-      text: 'Really enjoyed the tour overall. The itinerary was well-planned and not too rushed. Would have appreciated more time at the temple, but the photography opportunities were excellent.',
-    },
-  ]);
+  const [reviews, setReviews] = useState<TourReviewItem[]>([]);
+  const [reviewsAverage, setReviewsAverage] = useState<{ average: number; count: number } | null>(null);
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+
+  const [isSubmittingBooking, setIsSubmittingBooking] = useState(false);
+  const [showTicket, setShowTicket] = useState(false);
+  const [bookingData, setBookingData] = useState<{
+    _id?: string;
+    name: string;
+    email: string;
+    phone: string;
+    tourTitle: string;
+    travelDate: string;
+    adults: number;
+    children: number;
+    infants: number;
+    totalPrice: number;
+    currencySymbol: string;
+    pickupLocation?: string;
+    requirements?: string;
+    message?: string;
+    status?: string;
+    createdAt?: string;
+  } | null>(null);
 
   // Fetch tour data
   useEffect(() => {
@@ -67,15 +81,124 @@ export default function TourDetailsPage() {
     }
   }, [slug]);
 
-  // Image slider setup
-  const sliderImages: { src: string; alt: string }[] = [];
-  if (tour) {
-    if (tour.image1) sliderImages.push({ src: tour.image1, alt: tour.title });
-    if (tour.image2) sliderImages.push({ src: tour.image2, alt: tour.title });
-    if (tour.image3) sliderImages.push({ src: tour.image3, alt: tour.title });
-    if (tour.image4) sliderImages.push({ src: tour.image4, alt: tour.title });
-  }
+  // Scroll to booking form if hash is present in URL
+  useEffect(() => {
+    if (!loading && tour && window.location.hash === '#book') {
+      setTimeout(() => {
+        const bookingSection = document.getElementById('booking-section');
+        if (bookingSection) {
+          bookingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  }, [loading, tour]);
 
+  // Fetch reviews for this tour
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!tour?._id) return;
+
+      try {
+        const response = await fetch(`/api/reviews?tourId=${tour._id}&limit=50`);
+        const data = await response.json();
+
+        if (data?.success && data?.data?.reviews) {
+          setReviews(data.data.reviews as TourReviewItem[]);
+          setReviewsAverage(data.data.averageRating || null);
+        }
+      } catch (err) {
+        console.error('Error fetching reviews:', err);
+      }
+    };
+
+    fetchReviews();
+  }, [tour?._id]);
+
+  // Get bilingual tour content helper
+  const getTourField = useMemo(() => {
+    return (field: string, fieldDe?: string) => {
+      return isGerman && fieldDe ? fieldDe : field;
+    };
+  }, [isGerman]);
+
+  // Compute all bilingual tour content (safe even when tour is null)
+  const tourContent = useMemo(() => {
+    if (!tour) {
+      return {
+        tourTitle: '',
+        tourCategory: '',
+      tourDescription: '',
+      tourLongDescription: '',
+      tourDescription2: '',
+      tourDetails: '',
+      tourTransportation: '',
+      tourPickup: '',
+      tourPickupLocation: '',
+      tourVanLocation: '',
+      tourBriefing: '',
+      tourDaysDurations: '',
+      tourLocation: '',
+      tourProgram: '',
+      tourFoodBeverages: '',
+      tourWhatToTake: '',
+      tourHighlights: [] as string[],
+      tourTrip: '',
+      tourTravelType: '',
+    };
+    }
+
+    return {
+      tourTitle: getTourField(tour.title, tour.title_de),
+      tourCategory: getTourField(tour.category, tour.category_de),
+      tourDescription: getTourField(tour.description, tour.description_de),
+      tourLongDescription: getTourField(tour.longDescription || '', tour.longDescription_de),
+      tourDescription2: getTourField(tour.description2 || '', tour.description2_de),
+      tourDetails: getTourField(tour.details || '', tour.details_de),
+      tourTransportation: getTourField(tour.transportation || '', tour.transportation_de),
+      tourPickup: getTourField(tour.pickup || '', tour.pickup_de),
+      tourPickupLocation: getTourField(tour.pickupLocation || '', tour.pickupLocation_de),
+      tourVanLocation: getTourField(tour.vanLocation || '', tour.vanLocation_de),
+      tourBriefing: getTourField(tour.briefing || '', tour.briefing_de),
+      tourDaysDurations: getTourField(tour.daysAndDurations || '', tour.daysAndDurations_de),
+      tourLocation: getTourField(tour.location || '', tour.location_de),
+      tourProgram: getTourField(tour.program || '', tour.program_de),
+      tourFoodBeverages: getTourField(tour.foodAndBeverages || '', tour.foodAndBeverages_de),
+      tourWhatToTake: getTourField(tour.whatToTake || '', tour.whatToTake_de),
+      tourHighlights: isGerman && tour.highlights_de ? tour.highlights_de : tour.highlights || [],
+      tourTrip: getTourField(tour.trip || '', tour.trip_de),
+      tourTravelType: getTourField(tour.travelType, tour.travelType_de),
+    };
+  }, [tour, getTourField, isGerman]);
+
+  // Get location markers with bilingual support
+  const getLocation = useMemo(() => {
+    return (index: number) => {
+      if (!tour) return '';
+      const locations = [
+        { en: tour.location1, de: tour.location1_de },
+        { en: tour.location2, de: tour.location2_de },
+        { en: tour.location3, de: tour.location3_de },
+        { en: tour.location4, de: tour.location4_de },
+        { en: tour.location5, de: tour.location5_de },
+        { en: tour.location6, de: tour.location6_de },
+      ];
+      const loc = locations[index];
+      return isGerman && loc.de ? loc.de : loc.en || '';
+    };
+  }, [tour, isGerman]);
+
+  // Build slider images array
+  const sliderImages = useMemo(() => {
+    if (!tour || !tourContent.tourTitle) return [];
+    const images: { src: string; alt: string }[] = [];
+    if (tour.image1) images.push({ src: tour.image1, alt: tourContent.tourTitle });
+    if (tour.image2) images.push({ src: tour.image2, alt: tourContent.tourTitle });
+    if (tour.image3) images.push({ src: tour.image3, alt: tourContent.tourTitle });
+    if (tour.image4) images.push({ src: tour.image4, alt: tourContent.tourTitle });
+    return images;
+  }, [tour, tourContent.tourTitle]);
+
+  // Image slider auto-advance effect
   useEffect(() => {
     if (sliderImages.length > 0) {
       const interval = setInterval(() => {
@@ -85,77 +208,235 @@ export default function TourDetailsPage() {
     }
   }, [sliderImages.length]);
 
+  // Early returns for loading and error states (AFTER all hooks)
   if (loading) {
-    return <div style={{ textAlign: 'center', padding: '2rem' }}>Loading tour...</div>;
+    return <div style={{ textAlign: 'center', padding: '2rem' }}>{t('loading')}</div>;
   }
 
   if (error || !tour) {
     return (
       <div style={{ textAlign: 'center', padding: '2rem', color: 'red' }}>
-        {error || 'Tour not found'}
+        {error || t('notFound')}
       </div>
     );
   }
 
-  const pricePerAdult = 150;
-  const pricePerChild = 75;
-  const pricePerInfant = 0;
-  const totalPrice = adults * pricePerAdult + children * pricePerChild + infants * pricePerInfant;
-  const averageRating = 4.67;
+  // Destructure tour content for easier use
+  const {
+    tourTitle,
+    tourCategory,
+    tourDescription,
+    tourLongDescription,
+    tourDescription2,
+    tourDetails,
+    tourTransportation,
+    tourPickup,
+    tourPickupLocation,
+    tourVanLocation,
+    tourBriefing,
+    tourDaysDurations,
+    tourLocation,
+    tourProgram,
+    tourFoodBeverages,
+    tourWhatToTake,
+    tourHighlights,
+    tourTrip,
+    tourTravelType,
+  } = tourContent;
 
-  const handleAddReview = (e: React.FormEvent) => {
+  // Calculate prices based on actual tour price
+  const getTourPrice = () => {
+    if (!tour) return 0;
+    const useEUR = isGerman && tour.priceEUR != null && tour.priceEUR > 0;
+    const basePrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
+    // Use discounted price if on sale
+    if (tour.onSale && tour.discount > 0) {
+      return Math.round(basePrice - (basePrice * tour.discount) / 100);
+    }
+    return basePrice;
+  };
+
+  const pricePerAdult = getTourPrice();
+  const pricePerChild = Math.round(pricePerAdult * 0.5); // 50% of adult price
+  const pricePerInfant = Math.round(pricePerAdult * 0.25); // 25% of adult price
+  const totalPrice = adults * pricePerAdult + children * pricePerChild + infants * pricePerInfant;
+  const useEUR = isGerman && tour?.priceEUR != null && tour.priceEUR > 0;
+  const currencySymbol = useEUR ? '€' : '$';
+  const currency = useEUR ? 'EUR' : 'USD';
+  const averageRating = reviewsAverage?.average || 0;
+
+  const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    const newReview = {
-      id: reviews.length + 1,
-      name: formData.get('reviewName') as string,
-      date: new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }),
-      rating: parseInt(formData.get('reviewRating') as string),
-      text: formData.get('reviewText') as string,
+    if (!tour?._id) return;
+
+    const formEl = e.target as HTMLFormElement;
+    const formData = new FormData(formEl);
+
+    // Validate travel date is in the future
+    const travelDate = String(formData.get('date') || '');
+    const selectedDate = new Date(travelDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (selectedDate < today) {
+      alert(t('form.travelDate') + ' must be in the future');
+      return;
+    }
+
+    const requirementsText = String(formData.get('requirements') || '');
+    const payload = {
+      name: String(formData.get('fullname') || ''),
+      email: String(formData.get('email') || ''),
+      phone: String(formData.get('phone') || ''),
+      travelDate: String(formData.get('date') || ''),
+      adults: Number(adults),
+      children: Number(children),
+      infants: Number(infants),
+      confirmTrip: tourTitle,
+      tourTitle: tourTitle,
+      pickupLocation: String(formData.get('pickup') || ''),
+      pickupLocationOutside: String(formData.get('outside-pickup') || ''),
+      message: requirementsText,
+      requirements: requirementsText,
+      totalPrice: Number(totalPrice),
+      currency: currency,
+      currencySymbol: currencySymbol,
     };
-    setReviews([newReview, ...reviews]);
-    setShowReviewForm(false);
-    (e.target as HTMLFormElement).reset();
+
+    try {
+      setIsSubmittingBooking(true);
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result?.success) {
+        // Store booking data and show ticket
+        setBookingData({
+          ...result.data.booking,
+          tourTitle: tourTitle,
+        });
+        setShowTicket(true);
+        formEl.reset();
+        setAdults(1);
+        setChildren(0);
+        setInfants(0);
+        // Scroll to top to show ticket
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        alert(result?.error || t('booking.submitError'));
+      }
+    } catch (err) {
+      console.error('Error submitting booking:', err);
+      alert(t('booking.error'));
+    } finally {
+      setIsSubmittingBooking(false);
+    }
+  };
+
+  const handleAddReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!tour?._id) return;
+
+    const formEl = e.target as HTMLFormElement;
+    const formData = new FormData(formEl);
+
+    const payload = {
+      name: String(formData.get('reviewName') || ''),
+      email: String(formData.get('reviewEmail') || ''),
+      rating: Number(formData.get('reviewRating') || 0),
+      reviewText: String(formData.get('reviewText') || ''),
+      tourId: tour._id,
+    };
+
+    if (!payload.name || !payload.email || !payload.reviewText || !payload.rating) {
+      alert(t('reviews.fillAllFields'));
+      return;
+    }
+
+    try {
+      setIsSubmittingReview(true);
+      const response = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result?.success) {
+        const reviewsRes = await fetch(`/api/reviews?tourId=${tour._id}&limit=50`);
+        const reviewsJson = await reviewsRes.json();
+        if (reviewsJson?.success && reviewsJson?.data?.reviews) {
+          setReviews(reviewsJson.data.reviews as TourReviewItem[]);
+          setReviewsAverage(reviewsJson.data.averageRating || null);
+        }
+
+        setShowReviewForm(false);
+        formEl.reset();
+        alert(t('reviews.submitSuccess'));
+      } else {
+        alert(result?.error || t('reviews.submitError'));
+      }
+    } catch (err) {
+      console.error('Error submitting review:', err);
+      alert(t('reviews.submitError'));
+    } finally {
+      setIsSubmittingReview(false);
+    }
   };
 
   return (
     <div className="tour-page">
-      {/* Section 1: Booking Form */}
-      <section className="booking-section">
-        <div className="booking-container">
-          <h1 className="booking-title">Book Now</h1>
+      {/* Booking Confirmation Ticket */}
+      {showTicket && bookingData && (
+        <BookingTicket
+          booking={bookingData}
+          onClose={() => setShowTicket(false)}
+        />
+      )}
 
-          <form className="booking-form">
+      {/* Section 1: Booking Form */}
+      <section id="booking-section" className="booking-section">
+        <div className="booking-container">
+          <h1 className="booking-title">{t('bookNow')}</h1>
+
+          <form className="booking-form" onSubmit={handleBookingSubmit}>
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="fullname">Full Name</label>
+                <label htmlFor="fullname">{t('form.fullName')}</label>
                 <input type="text" id="fullname" name="fullname" required />
               </div>
               <div className="form-group">
-                <label htmlFor="email">Email Address</label>
+                <label htmlFor="email">{t('form.email')}</label>
                 <input type="email" id="email" name="email" required />
               </div>
             </div>
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="phone">Phone Number</label>
+                <label htmlFor="phone">{t('form.phone')}</label>
                 <input type="tel" id="phone" name="phone" required />
               </div>
               <div className="form-group">
-                <label htmlFor="date">Travel Date</label>
-                <input type="date" id="date" name="date" required />
+                <label htmlFor="date">{t('form.travelDate')}</label>
+                <input
+                  type="date"
+                  id="date"
+                  name="date"
+                  min={new Date().toISOString().split('T')[0]}
+                  required
+                />
               </div>
             </div>
 
             <div className="travelers-section">
               <div className="traveler-group">
                 <div className="traveler-label">
-                  <label>Adults - standard</label>
+                  <label>{t('form.adults')}</label>
                 </div>
                 <div className="quantity-selector">
                   <button
@@ -174,7 +455,7 @@ export default function TourDetailsPage() {
 
               <div className="traveler-group">
                 <div className="traveler-label">
-                  <label>Children - Standard</label>
+                  <label>{t('form.children')}</label>
                 </div>
                 <div className="quantity-selector">
                   <button
@@ -197,7 +478,7 @@ export default function TourDetailsPage() {
 
               <div className="traveler-group">
                 <div className="traveler-label">
-                  <label>Infants - Standard</label>
+                  <label>{t('form.infants')}</label>
                 </div>
                 <div className="quantity-selector">
                   <button
@@ -217,19 +498,19 @@ export default function TourDetailsPage() {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="pickup">Pickup Location (Optional)</label>
+                <label htmlFor="pickup">{t('form.pickupLocation')}</label>
                 <input
                   type="text"
                   id="pickup"
                   name="pickup"
-                  placeholder="e.g., Your hotel or landmark"
+                  placeholder={t('form.pickupPlaceholder')}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="outside-pickup">Outside Pickup Location</label>
+                <label htmlFor="outside-pickup">{t('form.outsidePickup')}</label>
                 <input type="text" id="outside-pickup" name="outside-pickup" />
                 <span className="warning-note">
-                  ⚠ Additional charges may apply for locations outside the city center
+                  {t('form.outsidePickupWarning')}
                 </span>
               </div>
             </div>
@@ -239,7 +520,7 @@ export default function TourDetailsPage() {
                 id="requirements"
                 name="requirements"
                 rows={4}
-                placeholder="Please let us know any special requirements or dietary restrictions..."
+                placeholder={t('form.requirements')}
               ></textarea>
             </div>
 
@@ -247,27 +528,27 @@ export default function TourDetailsPage() {
               <div className="price-breakdown">
                 <div className="price-item">
                   <span>
-                    {adults} Adult(s) × ${pricePerAdult}
+                    {adults} {t('price.adults')} × {currencySymbol}{pricePerAdult}
                   </span>
-                  <span>${adults * pricePerAdult}</span>
+                  <span>{currencySymbol}{adults * pricePerAdult}</span>
                 </div>
                 {children > 0 && (
                   <div className="price-item">
                     <span>
-                      {children} Child(ren) × ${pricePerChild}
+                      {children} {t('price.children')} × {currencySymbol}{pricePerChild}
                     </span>
-                    <span>${children * pricePerChild}</span>
+                    <span>{currencySymbol}{children * pricePerChild}</span>
                   </div>
                 )}
                 <div className="price-total">
-                  <span>Total Cost:</span>
-                  <span className="total-amount">${totalPrice}</span>
+                  <span>{t('price.totalCost')}</span>
+                  <span className="total-amount">{currencySymbol}{totalPrice}</span>
                 </div>
               </div>
             </div>
 
-            <button type="submit" className="submit-btn">
-              Reserve Your Spot
+            <button type="submit" className="submit-btn" disabled={isSubmittingBooking}>
+              {isSubmittingBooking ? t('form.submitting') : t('form.submit')}
             </button>
           </form>
         </div>
@@ -313,14 +594,14 @@ export default function TourDetailsPage() {
             onClick={() =>
               setCurrentSlide((prev) => (prev - 1 + sliderImages.length) % sliderImages.length)
             }
-            aria-label="Previous slide"
+            aria-label={t('slider.prevAria')}
           >
             ‹
           </button>
           <button
             className="slider-nav next"
             onClick={() => setCurrentSlide((prev) => (prev + 1) % sliderImages.length)}
-            aria-label="Next slide"
+            aria-label={t('slider.nextAria')}
           >
             ›
           </button>
@@ -331,103 +612,154 @@ export default function TourDetailsPage() {
       <section className="tour-info-section">
         <div className="tour-info-container">
           <div className="tour-details-column">
-            <h2 className="section-title">Tour Details</h2>
+            <h2 className="section-title">{t('details.title')}</h2>
             <div className="details-table">
               <div className="detail-row">
-                <span className="detail-label">🎫 Tour Title</span>
-                <span className="detail-value">{tour.title}</span>
+                <span className="detail-label">{t('details.tourTitle')}</span>
+                <span className="detail-value">{tourTitle}</span>
               </div>
               <div className="detail-row">
-                <span className="detail-label">🏷️ Category</span>
-                <span className="detail-value">{tour.category}</span>
+                <span className="detail-label">{t('details.category')}</span>
+                <span className="detail-value">{tourCategory}</span>
               </div>
               <div className="detail-row highlight">
-                <span className="detail-label">💰 Price</span>
-                <span className="detail-value price-value">${tour.price} per person</span>
+                <span className="detail-label">{t('details.price')}</span>
+                <span className="detail-value price-value">
+                  {(() => {
+                    const useEUR = isGerman && tour.priceEUR != null && tour.priceEUR > 0;
+                    const displayPrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
+                    const currencySymbol = useEUR ? '€' : '$';
+                    const originalPrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
+                    
+                    if (tour.onSale && tour.discount > 0) {
+                      const discountedPrice = Math.round(originalPrice - (originalPrice * tour.discount) / 100);
+                      return (
+                        <>
+                          <span style={{ textDecoration: 'line-through', opacity: 0.7, marginRight: '0.5rem' }}>
+                            {currencySymbol}{originalPrice}
+                          </span>
+                          <span style={{ color: '#ef4444', fontWeight: 700 }}>
+                            {currencySymbol}{discountedPrice}
+                          </span>
+                          <span style={{ fontSize: '0.875rem', marginLeft: '0.5rem', color: '#ef4444' }}>
+                            ({tour.discount}% OFF)
+                          </span>
+                        </>
+                      );
+                    }
+                    return `${currencySymbol}${displayPrice}`;
+                  })()}{' '}
+                  {t('price.perPerson')}
+                </span>
               </div>
               <div className="detail-row">
-                <span className="detail-label">📝 Description</span>
+                <span className="detail-label">{t('details.description')}</span>
                 <span className="detail-value">
-                  {tour.description}
-                  {tour.longDescription && (
+                  {tourDescription}
+                  {tourLongDescription && (
                     <>
                       <br />
                       <br />
-                      {tour.longDescription}
+                      {tourLongDescription}
+                    </>
+                  )}
+                  {tourDescription2 && (
+                    <>
+                      <br />
+                      <br />
+                      {tourDescription2}
                     </>
                   )}
                 </span>
               </div>
-              {tour.transportation && (
+              {tourDetails && (
                 <div className="detail-row">
-                  <span className="detail-label">🚗 Transportation</span>
-                  <span className="detail-value">{tour.transportation}</span>
+                  <span className="detail-label">{t('details.details')}</span>
+                  <span className="detail-value">{tourDetails}</span>
                 </div>
               )}
-              {tour.pickup && (
+              {tourTransportation && (
                 <div className="detail-row">
-                  <span className="detail-label">🚐 Pickup Information</span>
-                  <span className="detail-value">{tour.pickup}</span>
+                  <span className="detail-label">{t('details.transportation')}</span>
+                  <span className="detail-value">{tourTransportation}</span>
                 </div>
               )}
-              {tour.briefing && (
+              {tourPickup && (
                 <div className="detail-row">
-                  <span className="detail-label">📣 Welcome Briefing</span>
-                  <span className="detail-value">{tour.briefing}</span>
+                  <span className="detail-label">{t('details.pickup')}</span>
+                  <span className="detail-value">{tourPickup}</span>
                 </div>
               )}
-              {tour.daysAndDurations && (
+              {tourPickupLocation && (
                 <div className="detail-row">
-                  <span className="detail-label">📅 Days & Durations</span>
-                  <span className="detail-value">{tour.daysAndDurations}</span>
+                  <span className="detail-label">📍 Pickup Location</span>
+                  <span className="detail-value">{tourPickupLocation}</span>
                 </div>
               )}
-              {(tour.location || tour.location1) && (
+              {tourVanLocation && (
                 <div className="detail-row">
-                  <span className="detail-label">📍 Location</span>
+                  <span className="detail-label">🚐 Van/Bus Meeting Point</span>
+                  <span className="detail-value">{tourVanLocation}</span>
+                </div>
+              )}
+              {tourBriefing && (
+                <div className="detail-row">
+                  <span className="detail-label">{t('details.briefing')}</span>
+                  <span className="detail-value">{tourBriefing}</span>
+                </div>
+              )}
+              {tourDaysDurations && (
+                <div className="detail-row">
+                  <span className="detail-label">{t('details.daysDurations')}</span>
+                  <span className="detail-value">{tourDaysDurations}</span>
+                </div>
+              )}
+              {(tourLocation || getLocation(0)) && (
+                <div className="detail-row">
+                  <span className="detail-label">{t('details.location')}</span>
                   <span className="detail-value">
-                    {tour.location ||
+                    {tourLocation ||
                       [
-                        tour.location1,
-                        tour.location2,
-                        tour.location3,
-                        tour.location4,
-                        tour.location5,
-                        tour.location6,
+                        getLocation(0),
+                        getLocation(1),
+                        getLocation(2),
+                        getLocation(3),
+                        getLocation(4),
+                        getLocation(5),
                       ]
                         .filter(Boolean)
                         .join(', ')}
                   </span>
                 </div>
               )}
-              {tour.program && (
+              {tourProgram && (
                 <div className="detail-row">
-                  <span className="detail-label">🎯 Program</span>
-                  <span className="detail-value">{tour.program}</span>
+                  <span className="detail-label">{t('details.program')}</span>
+                  <span className="detail-value">{tourProgram}</span>
                 </div>
               )}
-              {tour.foodAndBeverages && (
+              {tourFoodBeverages && (
                 <div className="detail-row">
-                  <span className="detail-label">🍽️ Inclusions</span>
-                  <span className="detail-value">{tour.foodAndBeverages}</span>
+                  <span className="detail-label">{t('details.inclusions')}</span>
+                  <span className="detail-value">{tourFoodBeverages}</span>
                 </div>
               )}
-              {tour.whatToTake && (
+              {tourWhatToTake && (
                 <div className="detail-row">
-                  <span className="detail-label">🎒 What to Bring</span>
-                  <span className="detail-value">{tour.whatToTake}</span>
+                  <span className="detail-label">{t('details.whatToBring')}</span>
+                  <span className="detail-value">{tourWhatToTake}</span>
                 </div>
               )}
               <div className="detail-row">
-                <span className="detail-label">⏱️ Duration</span>
-                <span className="detail-value">{tour.travelType}</span>
+                <span className="detail-label">{t('details.duration')}</span>
+                <span className="detail-value">{tourTravelType || tour.travelType}</span>
               </div>
-              {tour.highlights && tour.highlights.length > 0 && (
+              {tourHighlights && tourHighlights.length > 0 && (
                 <div className="detail-row">
-                  <span className="detail-label">✨ Highlights</span>
+                  <span className="detail-label">{t('details.highlights')}</span>
                   <span className="detail-value">
                     <ul style={{ margin: 0, paddingLeft: '1.2em' }}>
-                      {tour.highlights.map((highlight, index) => (
+                      {tourHighlights.map((highlight, index) => (
                         <li key={index}>{highlight}</li>
                       ))}
                     </ul>
@@ -438,16 +770,16 @@ export default function TourDetailsPage() {
           </div>
 
           <div className="itinerary-column">
-            <h2 className="section-title">Itinerary</h2>
+            <h2 className="section-title">{t('itinerary.title')}</h2>
             <div className="itinerary-list">
               {/* Display location stops */}
               {[
-                tour.location1,
-                tour.location2,
-                tour.location3,
-                tour.location4,
-                tour.location5,
-                tour.location6,
+                getLocation(0),
+                getLocation(1),
+                getLocation(2),
+                getLocation(3),
+                getLocation(4),
+                getLocation(5),
               ]
                 .filter(Boolean)
                 .map((location, index) => (
@@ -458,20 +790,20 @@ export default function TourDetailsPage() {
                 ))}
 
               {/* Display trip highlights if available */}
-              {tour.trip && (
+              {tourTrip && (
                 <div className="itinerary-item">
                   <span className="itinerary-number">
                     {[
-                      tour.location1,
-                      tour.location2,
-                      tour.location3,
-                      tour.location4,
-                      tour.location5,
-                      tour.location6,
+                      getLocation(0),
+                      getLocation(1),
+                      getLocation(2),
+                      getLocation(3),
+                      getLocation(4),
+                      getLocation(5),
                     ].filter(Boolean).length + 1}
                   </span>
                   <span className="itinerary-text">
-                    <strong>Trip Highlights:</strong> {tour.trip}
+                    <strong>{t('itinerary.tripHighlights')}</strong> {tourTrip}
                   </span>
                 </div>
               )}
@@ -479,18 +811,18 @@ export default function TourDetailsPage() {
               {/* Show message if no itinerary data */}
               {(() => {
                 const locationStops = [
-                  tour.location1,
-                  tour.location2,
-                  tour.location3,
-                  tour.location4,
-                  tour.location5,
-                  tour.location6,
+                  getLocation(0),
+                  getLocation(1),
+                  getLocation(2),
+                  getLocation(3),
+                  getLocation(4),
+                  getLocation(5),
                 ].filter(Boolean);
 
-                return locationStops.length === 0 && !tour.trip ? (
+                return locationStops.length === 0 && !tourTrip ? (
                   <div className="itinerary-item">
                     <span className="itinerary-text" style={{ fontStyle: 'italic', color: '#666' }}>
-                      Itinerary details will be provided upon booking.
+                      {t('itinerary.noItinerary')}
                     </span>
                   </div>
                 ) : null;
@@ -503,7 +835,7 @@ export default function TourDetailsPage() {
       {/* Section 6: Customer Reviews */}
       <section className="reviews-section">
         <div className="reviews-container">
-          <h2 className="reviews-title">Customer Reviews</h2>
+          <h2 className="reviews-title">{t('reviews.title')}</h2>
 
           <div className="reviews-summary">
             <div className="rating-display">
@@ -512,11 +844,13 @@ export default function TourDetailsPage() {
                 <span className="half-star">★</span>
               </div>
               <span className="rating-number">{averageRating.toFixed(2)}</span>
-              <span className="review-count">Based on {reviews.length} reviews</span>
+              <span className="review-count">
+                {t('reviews.basedOn')} {reviewsAverage?.count ?? reviews.length} {t('reviews.reviews')}
+              </span>
             </div>
 
             <button className="write-review-btn" onClick={() => setShowReviewForm(!showReviewForm)}>
-              {showReviewForm ? 'Cancel Review' : 'Write a Review'}
+              {showReviewForm ? t('reviews.cancelReview') : t('reviews.writeReview')}
             </button>
           </div>
 
@@ -524,54 +858,60 @@ export default function TourDetailsPage() {
             <form className="review-form" onSubmit={handleAddReview}>
               <div className="review-form-row">
                 <div className="form-group">
-                  <label htmlFor="reviewName">Your Name</label>
+                  <label htmlFor="reviewName">{t('reviews.form.name')}</label>
                   <input type="text" id="reviewName" name="reviewName" required />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="reviewEmail">Your Email</label>
+                  <label htmlFor="reviewEmail">{t('reviews.form.email')}</label>
                   <input type="email" id="reviewEmail" name="reviewEmail" required />
                 </div>
               </div>
 
               <div className="form-group">
-                <label htmlFor="reviewRating">Star Rating</label>
+                <label htmlFor="reviewRating">{t('reviews.form.rating')}</label>
                 <select id="reviewRating" name="reviewRating" defaultValue="5" required>
-                  <option value="5">5 Stars - Excellent</option>
-                  <option value="4">4 Stars - Very Good</option>
-                  <option value="3">3 Stars - Good</option>
-                  <option value="2">2 Stars - Fair</option>
-                  <option value="1">1 Star - Poor</option>
+                  <option value="5">{t('reviews.form.ratingOptions.5')}</option>
+                  <option value="4">{t('reviews.form.ratingOptions.4')}</option>
+                  <option value="3">{t('reviews.form.ratingOptions.3')}</option>
+                  <option value="2">{t('reviews.form.ratingOptions.2')}</option>
+                  <option value="1">{t('reviews.form.ratingOptions.1')}</option>
                 </select>
               </div>
 
               <div className="form-group">
-                <label htmlFor="reviewText">Your Review</label>
+                <label htmlFor="reviewText">{t('reviews.form.text')}</label>
                 <textarea
                   id="reviewText"
                   name="reviewText"
                   rows={5}
-                  placeholder="Share your experience with this tour..."
+                  placeholder={t('reviews.form.placeholder')}
                   required
                 ></textarea>
               </div>
 
               <button type="submit" className="submit-review-btn">
-                Submit Review
+                {isSubmittingReview ? t('reviews.form.submitting') : t('reviews.form.submit')}
               </button>
             </form>
           )}
 
           <div className="reviews-list">
             {reviews.map((review) => (
-              <div key={review.id} className="review-item">
+              <div key={review._id} className="review-item">
                 <div className="review-header">
                   <div className="review-author-info">
                     <h4 className="review-author">{review.name}</h4>
-                    <span className="review-date">{review.date}</span>
+                    <span className="review-date">
+                      {new Date(review.createdAt).toLocaleDateString(locale === 'de' ? 'de-DE' : 'en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </span>
                   </div>
                   <div className="review-rating">{'★'.repeat(review.rating)}</div>
                 </div>
-                <p className="review-text">{review.text}</p>
+                <p className="review-text">{review.reviewText}</p>
               </div>
             ))}
           </div>

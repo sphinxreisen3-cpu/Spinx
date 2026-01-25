@@ -35,8 +35,10 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withErrorHandler(async () => {
     // Verify admin authentication
-    const auth = await verifyAdminAuth(request);
-    if (!auth.authenticated) return auth.error;
+    if (process.env.NODE_ENV !== 'development') {
+      const auth = await verifyAdminAuth(request);
+      if (!auth.authenticated) return auth.error;
+    }
 
     await connectDB();
     const { id } = await params;
@@ -67,8 +69,10 @@ export async function DELETE(
 ) {
   return withErrorHandler(async () => {
     // Verify admin authentication
-    const auth = await verifyAdminAuth(request);
-    if (!auth.authenticated) return auth.error;
+    if (process.env.NODE_ENV !== 'development') {
+      const auth = await verifyAdminAuth(request);
+      if (!auth.authenticated) return auth.error;
+    }
 
     await connectDB();
     const { id } = await params;

@@ -1,17 +1,19 @@
 {
-  "home": {
-    "title": "Discover Your Next Adventure",
-    "subtitle": "Explore amazing destinations worldwide",
-    "specialDeals": "Special Deals",
-    "allTours": "All Tours",
-    "ourServices": "Our Services",
-    "testimonials": "What Our Clients Say",
-    "bookNow": "Book Now"
-  },
   "nav": {
     "home": "Home",
     "tours": "Tours",
-    "about": "About Us"
+    "about": "About Us",
+    "contact": "Contact"
+  },
+  "footer": {
+    "tagline": "Curating premium journeys across Egypt and beyond.",
+    "navigateTitle": "Navigate",
+    "contactTitle": "Contact",
+    "whatsappSupport": "WhatsApp Support",
+    "findUsOnMap": "Find us on the map",
+    "followTitle": "Follow",
+    "rights": "All Rights Reserved.",
+    "designBy": "Design by Egypt-Tours"
   },
   "tour": {
     "price": "Price",
@@ -33,6 +35,22 @@
       "travelDate": "Travel Date",
       "notes": "Special Requirements",
       "submit": "Confirm Booking"
+    },
+    "ticket": {
+      "title": "Booking Confirmation",
+      "tourName": "Tour Name",
+      "travelDate": "Travel Date",
+      "travelers": "Travelers",
+      "pickupLocation": "Pickup Location",
+      "totalAmount": "Total Amount",
+      "bookingReference": "Booking Reference",
+      "downloadTicket": "Download Ticket",
+      "adult": "Adult",
+      "adults": "Adults",
+      "child": "Child",
+      "children": "Children",
+      "infant": "Infant",
+      "infants": "Infants"
     }
   },
   "common": {
@@ -45,5 +63,371 @@
     "edit": "Edit",
     "search": "Search",
     "filter": "Filter"
+  },
+  "home": {
+    "title": "Discover Your Next Adventure",
+    "subtitle": "Explore amazing destinations worldwide",
+    "allTours": "All Tours",
+    "ourServices": "Our Services",
+    "bookNow": "Book Now",
+    "hero": {
+      "premiumBadge": "Premium Travel Experience",
+      "secondaryCta": "View All Tours",
+      "auto": "Auto",
+      "paused": "Paused",
+      "prevAria": "Previous slide",
+      "nextAria": "Next slide",
+      "slides": {
+        "1": {
+          "title": "Discover Amazing Destinations",
+          "subtitle": "Your Global Adventure Starts Here",
+          "description": "Embark on unforgettable journeys to breathtaking destinations worldwide. From romantic streets to vibrant beaches and ancient wonders, we curate extraordinary experiences.",
+          "highlights": ["500+ Global Destinations", "Expert Local Guides", "Best Price Guarantee"],
+          "ctaText": "Start Exploring"
+        },
+        "2": {
+          "title": "Your Dream Trip Awaits",
+          "subtitle": "Personalized Adventures Crafted for You",
+          "description": "Transform your travel dreams into reality with our bespoke vacation planning. From exotic cruises to luxurious resorts and cultural journeys, we create perfect itineraries.",
+          "highlights": ["Custom Itineraries", "Luxury Accommodations", "24/7 Concierge Support"],
+          "ctaText": "Plan My Dream Trip"
+        },
+        "3": {
+          "title": "Exclusive Travel Insights",
+          "subtitle": "Unlock Hidden Gems & Local Secrets",
+          "description": "Dive deep into authentic travel experiences with our expert insights. Discover off-the-beaten-path destinations, connect with local cultures, and experience extraordinary places.",
+          "highlights": ["Hidden Gems Uncovered", "Authentic Local Experiences", "Cultural Immersion"],
+          "ctaText": "Discover Hidden Treasures"
+        }
+      },
+      "stats": {
+        "destinations": "Destinations",
+        "experience": "Years Experience",
+        "countries": "Countries",
+        "happy": "Happy Clients",
+        "tours": "Tours",
+        "awards": "Awards",
+        "insights": "Travel Insights",
+        "guides": "Expert Guides",
+        "languages": "Languages"
+      }
+    },
+    "ticker": {
+      "words": [
+        "Egypt Tours",
+        "Pyramids of Giza",
+        "Red Sea Diving",
+        "Nile Cruises",
+        "Luxor Temples",
+        "Hurghada Resorts",
+        "Desert Safaris",
+        "Ancient Alexandria",
+        "Sinai Mountains",
+        "Valley of Kings",
+        "Abu Simbel",
+        "Red Sea Snorkeling",
+        "Luxury Hotels",
+        "Cultural Tours",
+        "Adventure Travel",
+        "Beach Holidays",
+        "Historical Sites",
+        "Egypt Vacations",
+        "Pharaoh Tours",
+        "Mediterranean Cruises"
+      ]
+    },
+    "specialDeals": {
+      "title": "Special Deals",
+      "subtitle": "Don't miss out on these amazing discounted tours!",
+      "loadingTitle": "Loading Special Offers...",
+      "loadingDesc": "Amazing deals coming your way",
+      "errorTitle": "Unable to Load Deals",
+      "noDealsTitle": "No Special Deals Right Now",
+      "noDealsDesc": "Check back soon for amazing discounts!",
+      "bookNow": "Book Now"
+    },
+    "toursSection": {
+      "title": "Amazing Destinations",
+      "searchPlaceholder": "Search tours by destination, activity, or description...",
+      "allCategories": "All Categories",
+      "categories": {
+        "ancientWonders": "Ancient Wonders",
+        "waterSports": "Water Sports",
+        "beachResort": "Beach Resort",
+        "cultural": "Cultural",
+        "adventure": "Adventure",
+        "historical": "Historical"
+      },
+      "noTours": "No tours available.",
+      "bookNow": "Book Now"
+    },
+    "services": {
+      "title": "Our Services",
+      "transportations": {
+        "title": "Transportations",
+        "description": "We provide reliable and comfortable transportation services including airport transfers, private car rentals, and luxury vehicle options to ensure your travel is seamless and stress-free."
+      },
+      "guiding": {
+        "title": "Tour Guiding",
+        "description": "Our professional tour guides are knowledgeable locals who provide insightful commentary, historical context, and personalized attention to make your sightseeing experiences truly memorable and educational."
+      },
+      "exploring": {
+        "title": "Exploring",
+        "description": "Discover hidden gems and off-the-beaten-path destinations with our curated exploration packages. From adventure activities to cultural immersion, we help you explore the world like never before."
+      },
+      "luxury": {
+        "title": "Luxury",
+        "description": "Experience the pinnacle of comfort and elegance with our luxury travel services. From VIP airport lounges to five-star accommodations and exclusive experiences, we cater to discerning travelers seeking the best."
+      }
+    },
+    "latestTrips": {
+      "title": "Latest Trips",
+      "loading": "Loading tours...",
+      "noTours": "No tours available.",
+      "bookNow": "Book Now",
+      "prevAria": "Previous tours",
+      "nextAria": "Next tours"
+    },
+    "testimonials": {
+      "title": "Testimonials",
+      "role": "Regular Customer",
+      "prevAria": "Previous testimonial",
+      "nextAria": "Next testimonial",
+      "items": {
+        "1": {
+          "text": "My experience traveling to Egypt with Sealine Travel was absolutely unforgettable! The pyramids of Giza were breathtaking up close, and walking among these ancient wonders took me back thousands of years. Our expert guide made the history come alive, explaining the construction techniques and daily life of the pharaohs. The accommodations in Cairo were luxurious and comfortable. I'll never forget riding a camel at sunset against the desert backdrop - it was pure magic!"
+        },
+        "2": {
+          "text": "Visiting the Nile Valley and Alexandria with Sealine Travel was a dream come true! Sailing on a traditional felucca at sunset while watching the sun set behind ancient temples was pure magic. Our guide's stories about Cleopatra and the pharaohs brought the ancient world to life. The temples of Luxor and Karnak were absolutely magnificent - walking through courtyards built thousands of years ago gave me chills. The hospitality, food, and attention to detail in every aspect of the tour made this an unforgettable journey through Egypt's rich history."
+        },
+        "3": {
+          "text": "Exploring the Sinai Peninsula with Sealine Travel was absolutely incredible! The Red Sea diving experience was world-class with crystal clear waters and vibrant coral reefs teeming with marine life. Visiting Saint Catherine's Monastery, one of the world's oldest Christian monasteries, was a profound spiritual experience. The Mount Sinai sunrise was absolutely breathtaking - watching the sun rise over the desert was a moment I'll treasure forever. The Bedouin hospitality and authentic experiences made this journey truly special and unforgettable!"
+        }
+      }
+    },
+    "map": {
+      "title": "Find Us in Hurghada",
+      "subtitle": "Egypt's Premier Red Sea Destination",
+      "iframeTitle": "Hurghada Egypt Office Location",
+      "locationTitle": "Hurghada, Egypt",
+      "locationAddress": "Egypt Red-sea Hurghada",
+      "description": "Located in the vibrant heart of Hurghada, our office is easily accessible and ready to help you plan your perfect Egyptian adventure."
+    },
+    "cta": {
+      "pill": "Plan with local experts",
+      "title": "Buy a tour without leaving your home",
+      "description": "Using our website, you can book any tour just in a couple of clicks.",
+      "subtext": "Secure payments, instant confirmation, and concierge support.",
+      "button": "Book Now"
+    }
+  },
+  "about": {
+    "hero": {
+      "title": "Welcome to Egypt-Tours",
+      "subtitle": "Your Gateway to Egypt's Wonders & Hurghada's Paradise",
+      "description": "Discover the magic of ancient Egypt and the beauty of Hurghada's Red Sea coast. With over 15 years of experience, we specialize in creating unforgettable journeys through Egypt's rich history and stunning beach destinations. From the majestic pyramids of Giza to the pristine beaches of Hurghada, we bring you the best of both worlds.",
+      "button": "Explore Egypt"
+    },
+    "services": {
+      "ancient": {
+        "title": "Ancient Tours",
+        "description": "Explore the wonders of ancient Egypt including the Pyramids of Giza, Luxor Temple, Valley of the Kings, and Abu Simbel with expert Egyptologist guides."
+      },
+      "resorts": {
+        "title": "Hurghada Resorts",
+        "description": "Experience luxury beach resorts in Hurghada with stunning Red Sea views, water sports, diving excursions, and relaxing spa treatments."
+      },
+      "diving": {
+        "title": "Red Sea Diving",
+        "description": "Discover the underwater paradise of the Red Sea with world-class diving sites, colorful coral reefs, and exotic marine life in Hurghada."
+      },
+      "cruises": {
+        "title": "Nile Cruises",
+        "description": "Sail along the legendary Nile River on luxury cruises from Luxor to Aswan, visiting ancient temples and experiencing timeless Egyptian culture."
+      }
+    },
+    "timeline": {
+      "title": "Egypt-Tours Journey",
+      "subtitle": "Our story of bringing Egypt's wonders to the world, from ancient pyramids to Red Sea paradise",
+      "items": {
+        "2008": {
+          "title": "Founded in Hurghada",
+          "description": "Started as a small local tour operator focusing on Red Sea diving and beach holidays in Hurghada with just 3 team members."
+        },
+        "2012": {
+          "title": "Expanded to Cairo & Luxor",
+          "description": "Added classic Egypt tours covering pyramids, temples, and Nile cruises. Team grew to 15 professional Egyptologist guides."
+        },
+        "2018": {
+          "title": "Luxury Resort Partnerships",
+          "description": "Partnered with 5-star resorts in Hurghada and Sharm El Sheikh to offer premium beach holiday packages with world-class amenities."
+        },
+        "2020": {
+          "title": "Digital Transformation",
+          "description": "Launched online booking platform and virtual tours, serving over 10,000 customers annually from 50+ countries worldwide."
+        }
+      }
+    },
+    "cta": {
+      "strong": "The most affordable prices!",
+      "text": "Choose your favorite destination!",
+      "button": "Order a tour!"
+    }
+  },
+  "tours": {
+    "page": {
+      "hero": {
+        "kicker": "Tailored experiences",
+        "title": "Find your next unforgettable tour",
+        "subtitle": "Browse curated adventures across Egypt and beyond. Filter by vibe, duration, and season to match the journey you want—luxury cruises, desert escapes, cultural dives, and more.",
+        "browseTours": "Browse tours",
+        "talkExpert": "Talk to an expert",
+        "badge": "Top picks updated weekly",
+        "stats": {
+          "destinations": "Destinations",
+          "happyTravelers": "Happy Travelers",
+          "expertGuides": "Expert Guides"
+        }
+      },
+      "filters": {
+        "kicker": "Filter & discover",
+        "title": "Dial in your perfect trip",
+        "subtitle": "Narrow by destination, dates, budget, and style. Save favorites and compare options side by side."
+      },
+      "grid": {
+        "kicker": "All tours",
+        "title": "Curated for every traveler",
+        "subtitle": "Scroll the collection—luxury Nile cruises, Red Sea retreats, Sahara safaris, city breaks, and family getaways."
+      }
+    }
+  },
+  "tourDetail": {
+    "loading": "Loading tour...",
+    "notFound": "Tour not found",
+    "bookNow": "Book Now",
+    "form": {
+      "fullName": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "travelDate": "Travel Date",
+      "adults": "Adults - standard",
+      "children": "Children - Standard",
+      "infants": "Infants - Standard",
+      "pickupLocation": "Pickup Location (Optional)",
+      "pickupPlaceholder": "e.g., Your hotel or landmark",
+      "outsidePickup": "Outside Pickup Location",
+      "outsidePickupWarning": "⚠ Additional charges may apply for locations outside the city center",
+      "requirements": "Please let us know any special requirements or dietary restrictions...",
+      "submit": "Reserve Your Spot",
+      "submitting": "Submitting..."
+    },
+    "price": {
+      "adults": "Adult(s)",
+      "children": "Child(ren)",
+      "totalCost": "Total Cost:",
+      "perPerson": "per person"
+    },
+    "slider": {
+      "prevAria": "Previous slide",
+      "nextAria": "Next slide",
+      "goToSlide": "Go to slide"
+    },
+    "details": {
+      "title": "Tour Details",
+      "tourTitle": "🎫 Tour Title",
+      "category": "🏷️ Category",
+      "price": "💰 Price",
+      "description": "📝 Description",
+      "details": "📋 Additional Details",
+      "transportation": "🚗 Transportation",
+      "pickup": "🚐 Pickup Information",
+      "briefing": "📣 Welcome Briefing",
+      "daysDurations": "📅 Days & Durations",
+      "location": "📍 Location",
+      "program": "🎯 Program",
+      "inclusions": "🍽️ Inclusions",
+      "whatToBring": "🎒 What to Bring",
+      "duration": "⏱️ Duration",
+      "highlights": "✨ Highlights"
+    },
+    "itinerary": {
+      "title": "Itinerary",
+      "tripHighlights": "Trip Highlights:",
+      "noItinerary": "Itinerary details will be provided upon booking."
+    },
+    "reviews": {
+      "title": "Customer Reviews",
+      "basedOn": "Based on",
+      "reviews": "reviews",
+      "writeReview": "Write a Review",
+      "cancelReview": "Cancel Review",
+      "form": {
+        "name": "Your Name",
+        "email": "Your Email",
+        "rating": "Star Rating",
+        "ratingOptions": {
+          "5": "5 Stars - Excellent",
+          "4": "4 Stars - Very Good",
+          "3": "3 Stars - Good",
+          "2": "2 Stars - Fair",
+          "1": "1 Star - Poor"
+        },
+        "text": "Your Review",
+        "placeholder": "Share your experience with this tour...",
+        "submit": "Submit Review",
+        "submitting": "Submitting..."
+      },
+      "fillAllFields": "Please fill in all required fields",
+      "submitSuccess": "Review submitted successfully",
+      "submitError": "Failed to submit review"
+    },
+    "booking": {
+      "submitSuccess": "Booking submitted successfully",
+      "submitError": "Failed to submit booking",
+      "error": "Error submitting booking. Please try again."
+    }
+  },
+  "contact": {
+    "hero": {
+      "kicker": "We are here for you",
+      "title": "Let's plan your next unforgettable journey",
+      "subtitle": "Reach out by phone, WhatsApp, or email. Our travel specialists respond quickly with tailored recommendations, accurate pricing, and the local insights you need.",
+      "chatWhatsApp": "Chat on WhatsApp",
+      "sendEmail": "Send us an email",
+      "responseTime": "Response time",
+      "underHour": "Under 1 hour",
+      "cardNote": "During business hours. We often reply within minutes.",
+      "badge": "24/7 guest support"
+    },
+    "options": {
+      "kicker": "Contact options",
+      "title": "Choose how you want to connect",
+      "subtitle": "We speak English and German. Tell us your travel dates, group size, and preferences—we'll craft the perfect itinerary.",
+      "callUs": "Call Us",
+      "whatsApp": "WhatsApp",
+      "email": "Email",
+      "visitUs": "Visit Us",
+      "callNow": "Call now",
+      "openWhatsApp": "Open WhatsApp",
+      "sendEmail": "Send email",
+      "viewMaps": "View on Maps"
+    },
+    "form": {
+      "kicker": "Tell us about your trip",
+      "title": "Quick enquiry",
+      "subtitle": "Share the essentials—we'll respond with tailored options, transparent pricing, and timelines.",
+      "name": "Your Name *",
+      "namePlaceholder": "Alex Johnson",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+20 100 905 9295",
+      "email": "Your Email *",
+      "emailPlaceholder": "you@example.com",
+      "subject": "Subject *",
+      "subjectPlaceholder": "Trip inquiry or question",
+      "details": "More Details",
+      "detailsPlaceholder": "Share dates, destinations, group size, or any specifics you want.",
+      "submit": "Send enquiry",
+      "responseHint": "We reply quickly—usually within an hour."
+    }
   }
 }

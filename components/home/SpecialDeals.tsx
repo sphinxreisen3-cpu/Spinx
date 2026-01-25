@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import type { Tour } from '@/types/tour.types';
 
 interface SaleTourCard {
@@ -18,6 +19,8 @@ interface SaleTourCard {
 }
 
 export function SpecialDeals() {
+  const locale = useLocale();
+  const t = useTranslations();
   const [saleTours, setSaleTours] = useState<SaleTourCard[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -33,18 +36,25 @@ export function SpecialDeals() {
         const apiTours: Tour[] = data.data.tours;
 
         // Map API tours to SaleTourCard format
-        const mappedTours: SaleTourCard[] = apiTours.map((tour: Tour) => ({
-          id: tour._id,
-          slug: tour.slug,
-          title: tour.title,
-          category: tour.category,
-          duration: tour.travelType,
-          originalPrice: `$${tour.price}`,
-          discountedPrice: `$${Math.round(tour.price - (tour.price * tour.discount) / 100)}`,
-          discount: tour.discount,
-          image: tour.image1 || '/images/placeholder-tour.jpg',
-          description: tour.description,
-        }));
+        const isGerman = locale === 'de';
+        const mappedTours: SaleTourCard[] = apiTours.map((tour: Tour) => {
+          const useEUR = isGerman && tour.priceEUR != null && tour.priceEUR > 0;
+          const basePrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
+          const currencySymbol = useEUR ? '€' : '$';
+          const discountedPrice = Math.round(basePrice - (basePrice * tour.discount) / 100);
+          return {
+            id: tour._id,
+            slug: tour.slug,
+            title: isGerman && tour.title_de ? tour.title_de : tour.title,
+            category: isGerman && tour.category_de ? tour.category_de : tour.category,
+            duration: isGerman && tour.travelType_de ? tour.travelType_de : tour.travelType,
+            originalPrice: `${currencySymbol}${basePrice}`,
+            discountedPrice: `${currencySymbol}${discountedPrice}`,
+            discount: tour.discount,
+            image: tour.image1 || '/images/placeholder-tour.jpg',
+            description: isGerman && tour.description_de ? tour.description_de : tour.description,
+          };
+        });
 
         setSaleTours(mappedTours);
       } catch (err) {
@@ -56,7 +66,7 @@ export function SpecialDeals() {
     };
 
     fetchSaleTours();
-  }, []);
+  }, [locale]);
 
   return (
     <section
@@ -86,10 +96,10 @@ export function SpecialDeals() {
               textShadow: '0 2px 4px rgba(0,0,0,0.3)',
             }}
           >
-            🔥 Special Deals
+            🔥 {t('home.specialDeals.title')}
           </h2>
           <p style={{ fontSize: '1.25rem', color: 'rgba(0, 0, 0, 0.8)', marginBottom: '2rem' }}>
-            Don&apos;t miss out on these amazing discounted tours!
+            {t('home.specialDeals.subtitle')}
           </p>
           <div
             style={{
@@ -113,10 +123,10 @@ export function SpecialDeals() {
                 marginBottom: '1rem',
               }}
             >
-              Loading Special Offers...
+              {t('home.specialDeals.loadingTitle')}
             </h3>
             <p style={{ fontSize: '1.125rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>
-              Amazing deals coming your way
+              {t('home.specialDeals.loadingDesc')}
             </p>
           </div>
         ) : error ? (
@@ -130,7 +140,7 @@ export function SpecialDeals() {
                 marginBottom: '1rem',
               }}
             >
-              Unable to Load Deals
+              {t('home.specialDeals.errorTitle')}
             </h3>
             <p style={{ fontSize: '1.125rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>
               {error}
@@ -147,10 +157,10 @@ export function SpecialDeals() {
                 marginBottom: '1rem',
               }}
             >
-              No Special Deals Right Now
+              {t('home.specialDeals.noDealsTitle')}
             </h3>
             <p style={{ fontSize: '1.125rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>
-              Check back soon for amazing discounts!
+              {t('home.specialDeals.noDealsDesc')}
             </p>
           </div>
         ) : (
@@ -263,7 +273,7 @@ export function SpecialDeals() {
                         {tour.discountedPrice}
                       </span>
                     </div>
-                    <Link href={`/tours/${tour.slug}`}>
+                    <Link href={`/${locale}/tours/${tour.slug}#book`}>
                       <button
                         style={{
                           background: 'linear-gradient(135deg, #ff6b6b, #ffa500)',
@@ -275,7 +285,7 @@ export function SpecialDeals() {
                           cursor: 'pointer',
                         }}
                       >
-                        Book Now
+                        {t('home.specialDeals.bookNow')}
                       </button>
                     </Link>
                   </div>

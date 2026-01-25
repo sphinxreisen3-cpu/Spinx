@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, MapPin, Star, Calendar } from 'lucide-react';
 import styles from '../../styles/components/home/HeroSlider.module.css';
@@ -10,42 +11,25 @@ const slides = [
   {
     id: 1,
     image: '/images/pexels-bassel-zaki-706250525-18614692.webp',
-    title: 'Discover Amazing Destinations',
-    subtitle: 'Your Global Adventure Starts Here',
-    description:
-      'Embark on unforgettable journeys to breathtaking destinations worldwide. From romantic streets to vibrant beaches and ancient wonders, we curate extraordinary experiences.',
-    highlights: ['500+ Global Destinations', 'Expert Local Guides', 'Best Price Guarantee'],
-    ctaText: 'Start Exploring',
     ctaLink: '#tours-section',
     stats: { destinations: '500+', experience: '15+', countries: '50+' },
   },
   {
     id: 2,
     image: '/images/pexels-freestockpro-1540108.webp',
-    title: 'Your Dream Trip Awaits',
-    subtitle: 'Personalized Adventures Crafted for You',
-    description:
-      'Transform your travel dreams into reality with our bespoke vacation planning. From exotic cruises to luxurious resorts and cultural journeys, we create perfect itineraries.',
-    highlights: ['Custom Itineraries', 'Luxury Accommodations', '24/7 Concierge Support'],
-    ctaText: 'Plan My Dream Trip',
     ctaLink: '#tours-section',
     stats: { happy: '10K+', tours: '250+', awards: '25+' },
   },
   {
     id: 3,
     image: '/images/byramids.webp',
-    title: 'Exclusive Travel Insights',
-    subtitle: 'Unlock Hidden Gems & Local Secrets',
-    description:
-      'Dive deep into authentic travel experiences with our expert insights. Discover off-the-beaten-path destinations, connect with local cultures, and experience extraordinary places.',
-    highlights: ['Hidden Gems Uncovered', 'Authentic Local Experiences', 'Cultural Immersion'],
-    ctaText: 'Discover Hidden Treasures',
     ctaLink: '#tours-section',
     stats: { insights: '1000+', guides: '50+', languages: '12+' },
   },
 ];
 
 export function HeroSlider() {
+  const t = useTranslations();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -83,7 +67,7 @@ export function HeroSlider() {
             <div className={styles.slideImageInner}>
               <Image
                 src={slide.image}
-                alt={slide.title}
+                alt={t(`home.hero.slides.${slide.id}.title`)}
                 fill
                 className="object-cover object-center"
                 priority={index === 0}
@@ -114,14 +98,14 @@ export function HeroSlider() {
                         className={`${styles.premiumBadge} ${index === currentSlide ? styles.premiumBadgeActive : ''}`}
                       >
                         <Star className={styles.premiumBadgeIcon} />
-                        <span className={styles.premiumBadgeText}>Premium Travel Experience</span>
+                        <span className={styles.premiumBadgeText}>{t('home.hero.premiumBadge')}</span>
                       </div>
 
                       {/* Title */}
                       <div
                         className={`${styles.titleSection} ${index === currentSlide ? styles.titleSectionActive : ''}`}
                       >
-                        <h1 className={styles.mainTitle}>{slide.title}</h1>
+                        <h1 className={styles.mainTitle}>{t(`home.hero.slides.${slide.id}.title`)}</h1>
                         <div className={styles.titleDivider}></div>
                       </div>
 
@@ -129,21 +113,21 @@ export function HeroSlider() {
                       <h2
                         className={`${styles.subtitle} ${index === currentSlide ? styles.subtitleActive : ''}`}
                       >
-                        {slide.subtitle}
+                        {t(`home.hero.slides.${slide.id}.subtitle`)}
                       </h2>
 
                       {/* Description */}
                       <p
                         className={`${styles.description} ${index === currentSlide ? styles.descriptionActive : ''}`}
                       >
-                        {slide.description}
+                        {t(`home.hero.slides.${slide.id}.description`)}
                       </p>
 
                       {/* Highlights */}
                       <div
                         className={`${styles.highlights} ${index === currentSlide ? styles.highlightsActive : ''}`}
                       >
-                        {slide.highlights.map((highlight, idx) => (
+                        {(t.raw(`home.hero.slides.${slide.id}.highlights`) as string[]).map((highlight, idx) => (
                           <div key={idx} className={styles.highlightItem}>
                             <div className={styles.highlightDot}></div>
                             <span className={styles.highlightText}>{highlight}</span>
@@ -158,7 +142,7 @@ export function HeroSlider() {
                         <Link href={slide.ctaLink} className={styles.primaryCta}>
                           <span className={styles.primaryCtaContent}>
                             <MapPin className={styles.primaryCtaIcon} />
-                            {slide.ctaText}
+                            {t(`home.hero.slides.${slide.id}.ctaText`)}
                           </span>
                           <div className={styles.primaryCtaOverlay}></div>
                         </Link>
@@ -168,7 +152,7 @@ export function HeroSlider() {
                           className={styles.secondaryCta}
                         >
                           <Calendar className={styles.secondaryCtaIcon} />
-                          View All Tours
+                          {t('home.hero.secondaryCta')}
                         </button>
                       </div>
                     </div>
@@ -184,7 +168,7 @@ export function HeroSlider() {
                             <div className={styles.statCardContent}>
                               <div className={styles.statValue}>{value}</div>
                               <div className={styles.statLabel}>
-                                {key.replace(/([A-Z])/g, ' $1').trim()}
+                                {t(`home.hero.stats.${key}`)}
                               </div>
                             </div>
                           </div>
@@ -202,7 +186,7 @@ export function HeroSlider() {
         <button
           onClick={prevSlide}
           className={`${styles.navArrow} ${styles.navArrowLeft}`}
-          aria-label="Previous slide"
+          aria-label={t('home.hero.prevAria')}
         >
           <ChevronLeft className={styles.navArrowIcon} />
         </button>
@@ -210,7 +194,7 @@ export function HeroSlider() {
         <button
           onClick={nextSlide}
           className={`${styles.navArrow} ${styles.navArrowRight}`}
-          aria-label="Next slide"
+          aria-label={t('home.hero.nextAria')}
         >
           <ChevronRight className={styles.navArrowIcon} />
         </button>
@@ -244,7 +228,9 @@ export function HeroSlider() {
           <div
             className={`${styles.statusIndicator} ${isAutoPlaying ? styles.statusIndicatorActive : styles.statusIndicatorInactive}`}
           ></div>
-          <span className={styles.statusText}>{isAutoPlaying ? 'Auto' : 'Paused'}</span>
+          <span className={styles.statusText}>
+            {isAutoPlaying ? t('home.hero.auto') : t('home.hero.paused')}
+          </span>
         </button>
       </div>
     </section>

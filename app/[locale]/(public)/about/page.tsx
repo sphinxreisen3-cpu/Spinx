@@ -1,7 +1,10 @@
 import Image from 'next/image';
+import { getTranslations } from 'next-intl/server';
 import styles from '@/styles/pages/about/AboutPage.module.css';
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const t = await getTranslations('about');
+
   return (
     <div className={styles.page}>
       {/* Hero Section */}
@@ -9,20 +12,16 @@ export default function AboutPage() {
         <div className={styles.container}>
           <div className={styles.heroLayout}>
             <div className={styles.heroContent}>
-              <h1 className={styles.heroTitle}>Welcome to Egypt-Tours</h1>
+              <h1 className={styles.heroTitle}>{t('hero.title')}</h1>
               <div className={styles.heroDivider}></div>
               <h2 className={styles.heroSubtitle}>
-                Your Gateway to Egypt&apos;s Wonders &amp; Hurghada&apos;s Paradise
+                {t('hero.subtitle')}
               </h2>
               <p className={styles.heroText}>
-                Discover the magic of ancient Egypt and the beauty of Hurghada&apos;s Red Sea coast.
-                With over 15 years of experience, we specialize in creating unforgettable journeys
-                through Egypt&apos;s rich history and stunning beach destinations. From the majestic
-                pyramids of Giza to the pristine beaches of Hurghada, we bring you the best of both
-                worlds.
+                {t('hero.description')}
               </p>
               <button type="button" className={styles.heroButton}>
-                Explore Egypt
+                {t('hero.button')}
               </button>
             </div>
             <div className={styles.heroImageWrapper}>
@@ -51,10 +50,9 @@ export default function AboutPage() {
               <div className={styles.serviceIconWrapper}>
                 <span className={styles.serviceIcon}>🏛️</span>
               </div>
-              <h3 className={styles.serviceTitle}>Ancient Tours</h3>
+              <h3 className={styles.serviceTitle}>{t('services.ancient.title')}</h3>
               <p className={styles.serviceText}>
-                Explore the wonders of ancient Egypt including the Pyramids of Giza, Luxor Temple,
-                Valley of the Kings, and Abu Simbel with expert Egyptologist guides.
+                {t('services.ancient.description')}
               </p>
             </div>
 
@@ -63,10 +61,9 @@ export default function AboutPage() {
               <div className={styles.serviceIconWrapper}>
                 <span className={styles.serviceIcon}>🏖️</span>
               </div>
-              <h3 className={styles.serviceTitle}>Hurghada Resorts</h3>
+              <h3 className={styles.serviceTitle}>{t('services.resorts.title')}</h3>
               <p className={styles.serviceText}>
-                Experience luxury beach resorts in Hurghada with stunning Red Sea views, water
-                sports, diving excursions, and relaxing spa treatments.
+                {t('services.resorts.description')}
               </p>
             </div>
 
@@ -75,10 +72,9 @@ export default function AboutPage() {
               <div className={styles.serviceIconWrapper}>
                 <span className={styles.serviceIcon}>🤿</span>
               </div>
-              <h3 className={styles.serviceTitle}>Red Sea Diving</h3>
+              <h3 className={styles.serviceTitle}>{t('services.diving.title')}</h3>
               <p className={styles.serviceText}>
-                Discover the underwater paradise of the Red Sea with world-class diving sites,
-                colorful coral reefs, and exotic marine life in Hurghada.
+                {t('services.diving.description')}
               </p>
             </div>
 
@@ -87,10 +83,9 @@ export default function AboutPage() {
               <div className={styles.serviceIconWrapper}>
                 <span className={styles.serviceIcon}>🚢</span>
               </div>
-              <h3 className={styles.serviceTitle}>Nile Cruises</h3>
+              <h3 className={styles.serviceTitle}>{t('services.cruises.title')}</h3>
               <p className={styles.serviceText}>
-                Sail along the legendary Nile River on luxury cruises from Luxor to Aswan, visiting
-                ancient temples and experiencing timeless Egyptian culture.
+                {t('services.cruises.description')}
               </p>
             </div>
           </div>
@@ -101,11 +96,10 @@ export default function AboutPage() {
       <section className={styles.timelineSection}>
         <div className={styles.container}>
           <div className={styles.timelineHeader}>
-            <h2 className={styles.timelineTitle}>Egypt-Tours Journey</h2>
+            <h2 className={styles.timelineTitle}>{t('timeline.title')}</h2>
             <div className={styles.timelineDivider}></div>
             <p className={styles.timelineSubtitle}>
-              Our story of bringing Egypt&apos;s wonders to the world, from ancient pyramids to Red
-              Sea paradise
+              {t('timeline.subtitle')}
             </p>
           </div>
 
@@ -120,10 +114,9 @@ export default function AboutPage() {
                     <div className={styles.timelineConnector}></div>
                   </div>
                   <div className={styles.timelineCard}>
-                    <h3 className={styles.timelineCardTitle}>Founded in Hurghada</h3>
+                    <h3 className={styles.timelineCardTitle}>{t('timeline.items.2008.title')}</h3>
                     <p className={styles.timelineCardText}>
-                      Started as a small local tour operator focusing on Red Sea diving and beach
-                      holidays in Hurghada with just 3 team members.
+                      {t('timeline.items.2008.description')}
                     </p>
                   </div>
                 </div>
@@ -135,10 +128,9 @@ export default function AboutPage() {
                     <div className={styles.timelineConnector}></div>
                   </div>
                   <div className={styles.timelineCard}>
-                    <h3 className={styles.timelineCardTitle}>Expanded to Cairo & Luxor</h3>
+                    <h3 className={styles.timelineCardTitle}>{t('timeline.items.2012.title')}</h3>
                     <p className={styles.timelineCardText}>
-                      Added classic Egypt tours covering pyramids, temples, and Nile cruises. Team
-                      grew to 15 professional Egyptologist guides.
+                      {t('timeline.items.2012.description')}
                     </p>
                   </div>
                 </div>
@@ -150,10 +142,9 @@ export default function AboutPage() {
                     <div className={styles.timelineConnector}></div>
                   </div>
                   <div className={styles.timelineCard}>
-                    <h3 className={styles.timelineCardTitle}>Luxury Resort Partnerships</h3>
+                    <h3 className={styles.timelineCardTitle}>{t('timeline.items.2018.title')}</h3>
                     <p className={styles.timelineCardText}>
-                      Partnered with 5-star resorts in Hurghada and Sharm El Sheikh to offer premium
-                      beach holiday packages with world-class amenities.
+                      {t('timeline.items.2018.description')}
                     </p>
                   </div>
                 </div>
@@ -164,10 +155,9 @@ export default function AboutPage() {
                     <div className={styles.timelineMarker}>20</div>
                   </div>
                   <div className={styles.timelineCard}>
-                    <h3 className={styles.timelineCardTitle}>Digital Transformation</h3>
+                    <h3 className={styles.timelineCardTitle}>{t('timeline.items.2020.title')}</h3>
                     <p className={styles.timelineCardText}>
-                      Launched online booking platform and virtual tours, serving over 10,000
-                      customers annually from 50+ countries worldwide.
+                      {t('timeline.items.2020.description')}
                     </p>
                   </div>
                 </div>
@@ -217,9 +207,9 @@ export default function AboutPage() {
       <section className={styles.ctaSection}>
         <div className={styles.container}>
           <p className={styles.ctaText}>
-            <strong>The most affordable prices!</strong> Choose your favorite destination!
+            <strong>{t('cta.strong')}</strong> {t('cta.text')}
             <button type="button" className={styles.ctaLink}>
-              Order a tour!
+              {t('cta.button')}
             </button>
           </p>
         </div>

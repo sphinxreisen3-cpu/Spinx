@@ -1,20 +1,22 @@
+import { getTranslations } from 'next-intl/server';
 import styles from '../../styles/components/home/CTASection.module.css';
 
-export function CTASection() {
+export async function CTASection() {
+  const t = await getTranslations();
   return (
     <section className={styles.ctaSection}>
       <div className={styles.container}>
         <div className={styles.contentWrapper}>
           <div className={styles.headerSection}>
-            <h2 className={styles.title}>Buy a tour without leaving your home</h2>
+            <h2 className={styles.title}>{t('home.cta.title')}</h2>
             <p className={styles.description}>
-              Using our website, you can book any tour just in a couple of clicks.
+              {t('home.cta.description')}
             </p>
           </div>
 
           <div className={styles.buttonContainer}>
             <a href="#" className={styles.ctaButton}>
-              Book Now
+              {t('home.cta.button')}
             </a>
           </div>
         </div>

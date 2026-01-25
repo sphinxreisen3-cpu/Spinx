@@ -1,38 +1,18 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import styles from '../../styles/components/home/TravelTicker.module.css';
 
-const travelWords = [
-  'Egypt Tours',
-  'Pyramids of Giza',
-  'Red Sea Diving',
-  'Nile Cruises',
-  'Luxor Temples',
-  'Hurghada Resorts',
-  'Desert Safaris',
-  'Ancient Alexandria',
-  'Sinai Mountains',
-  'Valley of Kings',
-  'Abu Simbel',
-  'Red Sea Snorkeling',
-  'Luxury Hotels',
-  'Cultural Tours',
-  'Adventure Travel',
-  'Beach Holidays',
-  'Historical Sites',
-  'Egypt Vacations',
-  'Pharaoh Tours',
-  'Mediterranean Cruises',
-];
-
 export function TravelTicker() {
   const [words, setWords] = useState<string[]>([]);
+  const t = useTranslations();
 
   useEffect(() => {
     // Create two copies for seamless scrolling
+    const travelWords = t.raw('home.ticker.words') as string[];
     setWords([...travelWords, ...travelWords]);
-  }, []);
+  }, [t]);
 
   return (
     <section className={styles.section}>

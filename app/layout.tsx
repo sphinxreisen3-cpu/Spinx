@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Oswald, Lato, Montserrat } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getLocale, getMessages } from 'next-intl/server';
 import './globals.css';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 /*
@@ -43,10 +43,11 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale();
   const messages = await getMessages();
 
   return (
-    <html lang="en" className={`${oswald.variable} ${lato.variable} ${montserrat.variable}`}>
+    <html lang={locale} className={`${oswald.variable} ${lato.variable} ${montserrat.variable}`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />

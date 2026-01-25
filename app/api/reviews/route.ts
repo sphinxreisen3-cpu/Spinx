@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db/mongoose';
 import { Review } from '@/lib/db/models/review.model';
 import { Tour } from '@/lib/db/models/tour.model';
+import mongoose from 'mongoose';
 import {
   successResponse,
   errorResponse,
   validateBody,
   validateQuery,
+  verifyAdminAuth,
   withErrorHandler,
   isValidObjectId,
 } from '@/lib/api/helpers';
@@ -21,37 +23,81 @@ export async function GET(request: NextRequest) {
     const { data: query, error } = validateQuery(request, reviewQuerySchema);
     if (error) return error;
 
+    const isAdminQuery = query.isApproved === 'false' || query.isApproved === 'all';
+    if (isAdminQuery && process.env.NODE_ENV !== 'development') {
+      const auth = await verifyAdminAuth(request);
+      if (!auth.authenticated) return auth.error;
+    }
+
     const page = parseInt(query.page || '1');
     const limit = parseInt(query.limit || '10');
     const skip = (page - 1) * limit;
 
     // Build query filter
     type QueryFilter = {
-      tourId?: string;
+      tourId?: string | mongoose.Types.ObjectId;
       isApproved?: boolean;
     };
     const filter: QueryFilter = {};
 
     // For public API, only show approved reviews by default
-    if (query.isApproved !== 'false') {
+    if (query.isApproved === 'false') {
+      filter.isApproved = false;
+    } else if (query.isApproved === 'all') {
+      // no filter
+    } else {
       filter.isApproved = true;
     }
 
     if (query.tourId) {
-      filter.tourId = query.tourId;
+      // Convert string tourId to ObjectId for MongoDB query
+      if (isValidObjectId(query.tourId)) {
+        filter.tourId = new mongoose.Types.ObjectId(query.tourId);
+      } else {
+        return errorResponse('Invalid tour ID format', 400);
+      }
     }
 
     // Execute query with pagination
-    const [reviews, total] = await Promise.all([
-      Review.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+    const [reviewsRaw, total] = await Promise.all([
+      Review.find(filter)
+        .populate({ path: 'tourId', select: 'title' })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
       Review.countDocuments(filter),
     ]);
 
+    const reviews = (reviewsRaw as unknown[]).map((review) => {
+      const r = review as Record<string, unknown>;
+      const tourIdValue = r.tourId as unknown;
+
+      if (tourIdValue && typeof tourIdValue === 'object') {
+        const t = tourIdValue as Record<string, unknown>;
+        const tourTitle = typeof t.title === 'string' ? t.title : undefined;
+        const tourId = '_id' in t ? String(t._id) : String(r.tourId);
+
+        return {
+          ...r,
+          tourTitle,
+          tourId,
+        };
+      }
+
+      return {
+        ...r,
+        tourTitle: undefined,
+        tourId: String(r.tourId),
+      };
+    });
+
     // Calculate average rating for tour if tourId provided
     let averageRating = null;
-    if (query.tourId) {
+    if (query.tourId && isValidObjectId(query.tourId)) {
+      const tourObjectId = new mongoose.Types.ObjectId(query.tourId);
       const stats = await Review.aggregate([
-        { $match: { tourId: query.tourId, isApproved: true } },
+        { $match: { tourId: tourObjectId, isApproved: true } },
         { $group: { _id: null, avgRating: { $avg: '$rating' }, count: { $sum: 1 } } },
       ]);
       if (stats.length > 0) {

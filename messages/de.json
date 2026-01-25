@@ -1,17 +1,19 @@
 {
-  "home": {
-    "title": "Entdecken Sie Ihr nächstes Abenteuer",
-    "subtitle": "Erkunden Sie erstaunliche Reiseziele weltweit",
-    "specialDeals": "Sonderangebote",
-    "allTours": "Alle Touren",
-    "ourServices": "Unsere Dienstleistungen",
-    "testimonials": "Was unsere Kunden sagen",
-    "bookNow": "Jetzt buchen"
-  },
   "nav": {
     "home": "Startseite",
     "tours": "Touren",
-    "about": "Über uns"
+    "about": "Über uns",
+    "contact": "Kontakt"
+  },
+  "footer": {
+    "tagline": "Wir gestalten Premium-Reisen durch Ägypten und darüber hinaus.",
+    "navigateTitle": "Navigation",
+    "contactTitle": "Kontakt",
+    "whatsappSupport": "WhatsApp Support",
+    "findUsOnMap": "Auf der Karte finden",
+    "followTitle": "Folgen",
+    "rights": "Alle Rechte vorbehalten.",
+    "designBy": "Design von Egypt-Tours"
   },
   "tour": {
     "price": "Preis",
@@ -33,6 +35,22 @@
       "travelDate": "Reisedatum",
       "notes": "Besondere Anforderungen",
       "submit": "Buchung bestätigen"
+    },
+    "ticket": {
+      "title": "Buchungsbestätigung",
+      "tourName": "Tourname",
+      "travelDate": "Reisedatum",
+      "travelers": "Reisende",
+      "pickupLocation": "Abholort",
+      "totalAmount": "Gesamtbetrag",
+      "bookingReference": "Buchungsreferenz",
+      "downloadTicket": "Ticket herunterladen",
+      "adult": "Erwachsener",
+      "adults": "Erwachsene",
+      "child": "Kind",
+      "children": "Kinder",
+      "infant": "Kleinkind",
+      "infants": "Kleinkinder"
     }
   },
   "common": {
@@ -45,5 +63,371 @@
     "edit": "Bearbeiten",
     "search": "Suchen",
     "filter": "Filtern"
+  },
+  "home": {
+    "title": "Entdecken Sie Ihr nächstes Abenteuer",
+    "subtitle": "Erkunden Sie erstaunliche Reiseziele weltweit",
+    "allTours": "Alle Touren",
+    "ourServices": "Unsere Dienstleistungen",
+    "bookNow": "Jetzt buchen",
+    "hero": {
+      "premiumBadge": "Premium-Reiseerlebnis",
+      "secondaryCta": "Alle Touren ansehen",
+      "auto": "Auto",
+      "paused": "Pausiert",
+      "prevAria": "Vorherige Folie",
+      "nextAria": "Nächste Folie",
+      "slides": {
+        "1": {
+          "title": "Entdecken Sie faszinierende Reiseziele",
+          "subtitle": "Ihr globales Abenteuer beginnt hier",
+          "description": "Starten Sie unvergessliche Reisen zu atemberaubenden Destinationen weltweit. Von romantischen Gassen über lebendige Strände bis hin zu antiken Wundern – wir gestalten außergewöhnliche Erlebnisse.",
+          "highlights": ["500+ Reiseziele weltweit", "Lokale Experten-Guides", "Bestpreis-Garantie"],
+          "ctaText": "Jetzt entdecken"
+        },
+        "2": {
+          "title": "Ihre Traumreise wartet",
+          "subtitle": "Individuelle Abenteuer – perfekt für Sie",
+          "description": "Verwandeln Sie Ihre Reiseträume in Realität – mit unserer maßgeschneiderten Planung. Von exotischen Kreuzfahrten über luxuriöse Resorts bis zu Kulturreisen erstellen wir perfekte Routen.",
+          "highlights": ["Individuelle Routen", "Luxus-Unterkünfte", "24/7 Concierge-Service"],
+          "ctaText": "Meine Traumreise planen"
+        },
+        "3": {
+          "title": "Exklusive Reise-Insights",
+          "subtitle": "Versteckte Highlights & lokale Geheimnisse",
+          "description": "Tauchen Sie ein in authentische Reiseerlebnisse mit unseren Experten-Tipps. Entdecken Sie Orte abseits der Massen, erleben Sie Kulturen hautnah und sammeln Sie besondere Momente.",
+          "highlights": ["Verborgene Schätze", "Authentische Erlebnisse", "Kulturelles Eintauchen"],
+          "ctaText": "Verborgene Schätze entdecken"
+        }
+      },
+      "stats": {
+        "destinations": "Reiseziele",
+        "experience": "Jahre Erfahrung",
+        "countries": "Länder",
+        "happy": "Zufriedene Kunden",
+        "tours": "Touren",
+        "awards": "Auszeichnungen",
+        "insights": "Reise-Insights",
+        "guides": "Experten-Guides",
+        "languages": "Sprachen"
+      }
+    },
+    "ticker": {
+      "words": [
+        "Ägypten-Touren",
+        "Pyramiden von Gizeh",
+        "Tauchen im Roten Meer",
+        "Nilkreuzfahrten",
+        "Tempel von Luxor",
+        "Resorts in Hurghada",
+        "Wüstensafaris",
+        "Antikes Alexandria",
+        "Sinai-Gebirge",
+        "Tal der Könige",
+        "Abu Simbel",
+        "Schnorcheln im Roten Meer",
+        "Luxushotels",
+        "Kulturreisen",
+        "Abenteuerreisen",
+        "Strandurlaub",
+        "Historische Stätten",
+        "Ägypten-Urlaub",
+        "Pharaonen-Touren",
+        "Mittelmeer-Kreuzfahrten"
+      ]
+    },
+    "specialDeals": {
+      "title": "Sonderangebote",
+      "subtitle": "Verpassen Sie diese großartigen Rabatte nicht!",
+      "loadingTitle": "Sonderangebote werden geladen...",
+      "loadingDesc": "Tolle Deals sind gleich da",
+      "errorTitle": "Angebote konnten nicht geladen werden",
+      "noDealsTitle": "Aktuell keine Sonderangebote",
+      "noDealsDesc": "Schauen Sie bald wieder vorbei – neue Rabatte kommen!",
+      "bookNow": "Jetzt buchen"
+    },
+    "toursSection": {
+      "title": "Traumhafte Reiseziele",
+      "searchPlaceholder": "Touren nach Ziel, Aktivität oder Beschreibung suchen...",
+      "allCategories": "Alle Kategorien",
+      "categories": {
+        "ancientWonders": "Antike Wunder",
+        "waterSports": "Wassersport",
+        "beachResort": "Strandresort",
+        "cultural": "Kultur",
+        "adventure": "Abenteuer",
+        "historical": "Historisch"
+      },
+      "noTours": "Keine Touren verfügbar.",
+      "bookNow": "Jetzt buchen"
+    },
+    "services": {
+      "title": "Unsere Dienstleistungen",
+      "transportations": {
+        "title": "Transport",
+        "description": "Wir bieten zuverlässige und komfortable Transportleistungen – einschließlich Flughafentransfers, privater Mietwagen und luxuriöser Fahrzeugoptionen – damit Ihre Reise reibungslos und stressfrei verläuft."
+      },
+      "guiding": {
+        "title": "Reiseleitung",
+        "description": "Unsere professionellen Guides sind ortskundige Experten und bieten spannende Einblicke, historische Hintergründe und persönliche Betreuung – für ein unvergessliches und lehrreiches Erlebnis."
+      },
+      "exploring": {
+        "title": "Entdecken",
+        "description": "Entdecken Sie versteckte Highlights und Orte abseits der bekannten Wege mit unseren sorgfältig zusammengestellten Erkundungspaketen. Von Abenteuer bis Kultur – wir helfen Ihnen, die Welt neu zu erleben."
+      },
+      "luxury": {
+        "title": "Luxus",
+        "description": "Erleben Sie höchsten Komfort mit unseren Luxus-Services: von VIP-Lounges über Fünf-Sterne-Unterkünfte bis hin zu exklusiven Erlebnissen – perfekt für anspruchsvolle Reisende."
+      }
+    },
+    "latestTrips": {
+      "title": "Neueste Reisen",
+      "loading": "Touren werden geladen...",
+      "noTours": "Keine Touren verfügbar.",
+      "bookNow": "Jetzt buchen",
+      "prevAria": "Vorherige Touren",
+      "nextAria": "Nächste Touren"
+    },
+    "testimonials": {
+      "title": "Kundenstimmen",
+      "role": "Stammkunde",
+      "prevAria": "Vorherige Bewertung",
+      "nextAria": "Nächste Bewertung",
+      "items": {
+        "1": {
+          "text": "Meine Reise nach Ägypten mit Sealine Travel war absolut unvergesslich! Die Pyramiden von Gizeh waren aus nächster Nähe atemberaubend, und zwischen diesen antiken Wundern zu stehen fühlte sich an wie eine Zeitreise. Unser Guide ließ die Geschichte lebendig werden und erklärte Bauweisen sowie das Leben der Pharaonen. Die Unterkunft in Kairo war luxuriös und sehr komfortabel. Den Kamelritt bei Sonnenuntergang vor der Wüstenkulisse werde ich nie vergessen – einfach magisch!"
+        },
+        "2": {
+          "text": "Der Besuch des Niltals und Alexandrias mit Sealine Travel war ein Traum! Eine Felukenfahrt bei Sonnenuntergang, während hinter antiken Tempeln die Sonne verschwand, war pure Magie. Die Geschichten unseres Guides über Kleopatra und die Pharaonen brachten die Vergangenheit zum Leben. Die Tempel von Luxor und Karnak waren überwältigend – durch Höfe zu gehen, die vor Tausenden Jahren erbaut wurden, war Gänsehaut pur. Gastfreundschaft, Essen und die Liebe zum Detail machten diese Reise zu einem unvergesslichen Erlebnis durch Ägyptens reiche Geschichte."
+        },
+        "3": {
+          "text": "Die Sinai-Halbinsel mit Sealine Travel zu erkunden war unglaublich! Das Tauchen im Roten Meer war Weltklasse – kristallklares Wasser und farbenfrohe Korallenriffe voller Meeresleben. Der Besuch des Katharinenklosters, eines der ältesten christlichen Klöster der Welt, war sehr bewegend. Der Sonnenaufgang am Sinai war atemberaubend – diesen Moment werde ich für immer in Erinnerung behalten. Die beduinische Gastfreundschaft und die authentischen Erlebnisse machten diese Reise wirklich besonders."
+        }
+      }
+    },
+    "map": {
+      "title": "Besuchen Sie uns in Hurghada",
+      "subtitle": "Ägyptens Top-Destination am Roten Meer",
+      "iframeTitle": "Standort unseres Büros in Hurghada, Ägypten",
+      "locationTitle": "Hurghada, Ägypten",
+      "locationAddress": "Ägypten – Rotes Meer – Hurghada",
+      "description": "Im lebendigen Herzen von Hurghada gelegen, ist unser Büro leicht erreichbar und hilft Ihnen gerne, Ihr perfektes Ägypten-Abenteuer zu planen."
+    },
+    "cta": {
+      "pill": "Planen Sie mit lokalen Experten",
+      "title": "Buchen Sie eine Tour, ohne Ihr Zuhause zu verlassen",
+      "description": "Mit unserer Website können Sie jede Tour in nur wenigen Klicks buchen.",
+      "subtext": "Sichere Zahlungen, sofortige Bestätigung und Concierge-Support.",
+      "button": "Jetzt buchen"
+    }
+  },
+  "about": {
+    "hero": {
+      "title": "Willkommen bei Egypt-Tours",
+      "subtitle": "Ihr Tor zu Ägyptens Wundern & Hurghadas Paradies",
+      "description": "Entdecken Sie die Magie des alten Ägypten und die Schönheit der Hurghada-Rotmeer-Küste. Mit über 15 Jahren Erfahrung sind wir darauf spezialisiert, unvergessliche Reisen durch Ägyptens reiche Geschichte und atemberaubende Strandziele zu gestalten. Von den majestätischen Pyramiden von Gizeh bis zu den unberührten Stränden von Hurghada bieten wir Ihnen das Beste aus beiden Welten.",
+      "button": "Ägypten entdecken"
+    },
+    "services": {
+      "ancient": {
+        "title": "Antike Touren",
+        "description": "Erkunden Sie die Wunder des alten Ägypten, darunter die Pyramiden von Gizeh, den Luxor-Tempel, das Tal der Könige und Abu Simbel, mit erfahrenen Ägyptologen als Führern."
+      },
+      "resorts": {
+        "title": "Hurghada Resorts",
+        "description": "Erleben Sie Luxus-Beachresorts in Hurghada mit atemberaubendem Blick auf das Rote Meer, Wassersport, Tauchausflügen und entspannenden Spa-Behandlungen."
+      },
+      "diving": {
+        "title": "Rotes Meer Tauchen",
+        "description": "Entdecken Sie das Unterwasserparadies des Roten Meeres mit Weltklasse-Tauchplätzen, farbenfrohen Korallenriffen und exotischem Meeresleben in Hurghada."
+      },
+      "cruises": {
+        "title": "Nilkreuzfahrten",
+        "description": "Segeln Sie auf dem legendären Nil auf Luxuskreuzfahrten von Luxor nach Assuan, besuchen Sie antike Tempel und erleben Sie zeitlose ägyptische Kultur."
+      }
+    },
+    "timeline": {
+      "title": "Egypt-Tours Reise",
+      "subtitle": "Unsere Geschichte, Ägyptens Wunder in die Welt zu bringen - von antiken Pyramiden bis zum Roten Meer-Paradies",
+      "items": {
+        "2008": {
+          "title": "Gegründet in Hurghada",
+          "description": "Begann als kleiner lokaler Reiseveranstalter mit Fokus auf Rotes Meer-Tauchen und Strandurlaube in Hurghada mit nur 3 Teammitgliedern."
+        },
+        "2012": {
+          "title": "Erweiterung nach Kairo & Luxor",
+          "description": "Fügte klassische Ägypten-Touren hinzu, die Pyramiden, Tempel und Nilkreuzfahrten abdecken. Das Team wuchs auf 15 professionelle Ägyptologen-Führer an."
+        },
+        "2018": {
+          "title": "Luxus-Resort-Partnerschaften",
+          "description": "Kooperation mit 5-Sterne-Resorts in Hurghada und Sharm El Sheikh, um Premium-Strandurlaubspakete mit Weltklasse-Ausstattung anzubieten."
+        },
+        "2020": {
+          "title": "Digitale Transformation",
+          "description": "Startete Online-Buchungsplattform und virtuelle Touren, bedient über 10.000 Kunden jährlich aus 50+ Ländern weltweit."
+        }
+      }
+    },
+    "cta": {
+      "strong": "Die günstigsten Preise!",
+      "text": "Wählen Sie Ihr Lieblingsziel!",
+      "button": "Eine Tour buchen!"
+    }
+  },
+  "tours": {
+    "page": {
+      "hero": {
+        "kicker": "Maßgeschneiderte Erlebnisse",
+        "title": "Finden Sie Ihre nächste unvergessliche Tour",
+        "subtitle": "Durchstöbern Sie sorgfältig ausgewählte Abenteuer in Ägypten und darüber hinaus. Filtern Sie nach Stimmung, Dauer und Saison, um die Reise zu finden, die Sie suchen – Luxuskreuzfahrten, Wüstenausflüge, Kulturreisen und mehr.",
+        "browseTours": "Touren durchsuchen",
+        "talkExpert": "Mit Experten sprechen",
+        "badge": "Top-Auswahl wöchentlich aktualisiert",
+        "stats": {
+          "destinations": "Reiseziele",
+          "happyTravelers": "Zufriedene Reisende",
+          "expertGuides": "Experten-Guides"
+        }
+      },
+      "filters": {
+        "kicker": "Filtern & entdecken",
+        "title": "Finden Sie Ihre perfekte Reise",
+        "subtitle": "Eingrenzen nach Ziel, Datum, Budget und Stil. Favoriten speichern und Optionen nebeneinander vergleichen."
+      },
+      "grid": {
+        "kicker": "Alle Touren",
+        "title": "Für jeden Reisenden zusammengestellt",
+        "subtitle": "Durchstöbern Sie die Sammlung – Luxus-Nilkreuzfahrten, Rotes Meer-Retreats, Sahara-Safaris, Städtereisen und Familienurlaube."
+      }
+    }
+  },
+  "tourDetail": {
+    "loading": "Tour wird geladen...",
+    "notFound": "Tour nicht gefunden",
+    "bookNow": "Jetzt buchen",
+    "form": {
+      "fullName": "Vollständiger Name",
+      "email": "E-Mail-Adresse",
+      "phone": "Telefonnummer",
+      "travelDate": "Reisedatum",
+      "adults": "Erwachsene - Standard",
+      "children": "Kinder - Standard",
+      "infants": "Kleinkinder - Standard",
+      "pickupLocation": "Abholort (Optional)",
+      "pickupPlaceholder": "z.B. Ihr Hotel oder Sehenswürdigkeit",
+      "outsidePickup": "Abholort außerhalb",
+      "outsidePickupWarning": "⚠ Zusätzliche Gebühren können für Orte außerhalb des Stadtzentrums anfallen",
+      "requirements": "Bitte teilen Sie uns besondere Anforderungen oder diätetische Einschränkungen mit...",
+      "submit": "Platz reservieren",
+      "submitting": "Wird gesendet..."
+    },
+    "price": {
+      "adults": "Erwachsene",
+      "children": "Kinder",
+      "totalCost": "Gesamtkosten:",
+      "perPerson": "pro Person"
+    },
+    "slider": {
+      "prevAria": "Vorherige Folie",
+      "nextAria": "Nächste Folie",
+      "goToSlide": "Zu Folie"
+    },
+    "details": {
+      "title": "Tour-Details",
+      "tourTitle": "🎫 Tour-Titel",
+      "category": "🏷️ Kategorie",
+      "price": "💰 Preis",
+      "description": "📝 Beschreibung",
+      "details": "📋 Zusätzliche Details",
+      "transportation": "🚗 Transport",
+      "pickup": "🚐 Abholinformationen",
+      "briefing": "📣 Willkommens-Briefing",
+      "daysDurations": "📅 Tage & Dauer",
+      "location": "📍 Standort",
+      "program": "🎯 Programm",
+      "inclusions": "🍽️ Inklusivleistungen",
+      "whatToBring": "🎒 Was mitzubringen",
+      "duration": "⏱️ Dauer",
+      "highlights": "✨ Höhepunkte"
+    },
+    "itinerary": {
+      "title": "Reiseverlauf",
+      "tripHighlights": "Reise-Höhepunkte:",
+      "noItinerary": "Reiseverlaufsdetails werden bei der Buchung bereitgestellt."
+    },
+    "reviews": {
+      "title": "Kundenbewertungen",
+      "basedOn": "Basierend auf",
+      "reviews": "Bewertungen",
+      "writeReview": "Bewertung schreiben",
+      "cancelReview": "Bewertung abbrechen",
+      "form": {
+        "name": "Ihr Name",
+        "email": "Ihre E-Mail",
+        "rating": "Sternebewertung",
+        "ratingOptions": {
+          "5": "5 Sterne - Ausgezeichnet",
+          "4": "4 Sterne - Sehr gut",
+          "3": "3 Sterne - Gut",
+          "2": "2 Sterne - Befriedigend",
+          "1": "1 Stern - Schlecht"
+        },
+        "text": "Ihre Bewertung",
+        "placeholder": "Teilen Sie Ihre Erfahrung mit dieser Tour...",
+        "submit": "Bewertung absenden",
+        "submitting": "Wird gesendet..."
+      },
+      "fillAllFields": "Bitte füllen Sie alle erforderlichen Felder aus",
+      "submitSuccess": "Bewertung erfolgreich übermittelt",
+      "submitError": "Bewertung konnte nicht übermittelt werden"
+    },
+    "booking": {
+      "submitSuccess": "Buchung erfolgreich übermittelt",
+      "submitError": "Buchung konnte nicht übermittelt werden",
+      "error": "Fehler beim Senden der Buchung. Bitte versuchen Sie es erneut."
+    }
+  },
+  "contact": {
+    "hero": {
+      "kicker": "Wir sind für Sie da",
+      "title": "Lassen Sie uns Ihre nächste unvergessliche Reise planen",
+      "subtitle": "Kontaktieren Sie uns telefonisch, per WhatsApp oder E-Mail. Unsere Reisespezialisten antworten schnell mit maßgeschneiderten Empfehlungen, genauen Preisen und den lokalen Einblicken, die Sie benötigen.",
+      "chatWhatsApp": "Per WhatsApp chatten",
+      "sendEmail": "E-Mail senden",
+      "responseTime": "Antwortzeit",
+      "underHour": "Unter 1 Stunde",
+      "cardNote": "Während der Geschäftszeiten. Wir antworten oft innerhalb von Minuten.",
+      "badge": "24/7 Gästesupport"
+    },
+    "options": {
+      "kicker": "Kontaktmöglichkeiten",
+      "title": "Wählen Sie, wie Sie Kontakt aufnehmen möchten",
+      "subtitle": "Wir sprechen Englisch und Deutsch. Teilen Sie uns Ihre Reisedaten, Gruppengröße und Präferenzen mit – wir erstellen die perfekte Route.",
+      "callUs": "Rufen Sie uns an",
+      "whatsApp": "WhatsApp",
+      "email": "E-Mail",
+      "visitUs": "Besuchen Sie uns",
+      "callNow": "Jetzt anrufen",
+      "openWhatsApp": "WhatsApp öffnen",
+      "sendEmail": "E-Mail senden",
+      "viewMaps": "Auf Karte anzeigen"
+    },
+    "form": {
+      "kicker": "Erzählen Sie uns von Ihrer Reise",
+      "title": "Schnelle Anfrage",
+      "subtitle": "Teilen Sie die wichtigsten Informationen – wir antworten mit maßgeschneiderten Optionen, transparenten Preisen und Zeitplänen.",
+      "name": "Ihr Name *",
+      "namePlaceholder": "Alex Johnson",
+      "phone": "Telefonnummer",
+      "phonePlaceholder": "+20 100 905 9295",
+      "email": "Ihre E-Mail *",
+      "emailPlaceholder": "sie@beispiel.com",
+      "subject": "Betreff *",
+      "subjectPlaceholder": "Reiseanfrage oder Frage",
+      "details": "Weitere Details",
+      "detailsPlaceholder": "Teilen Sie Daten, Ziele, Gruppengröße oder spezifische Wünsche mit.",
+      "submit": "Anfrage senden",
+      "responseHint": "Wir antworten schnell – normalerweise innerhalb einer Stunde."
+    }
   }
 }

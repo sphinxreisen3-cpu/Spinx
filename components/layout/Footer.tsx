@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   FaFacebookF,
   FaInstagram,
@@ -15,10 +15,10 @@ import { MdEmail } from 'react-icons/md';
 import styles from '../../styles/components/layout/Footer.module.css';
 
 const navLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'Tours', href: '/tours' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Contact', href: '/contact' },
+  { key: 'home', href: '/' },
+  { key: 'tours', href: '/tours' },
+  { key: 'about', href: '/about' },
+  { key: 'contact', href: '/contact' },
 ];
 
 const socialLinks = [
@@ -46,6 +46,7 @@ const socialLinks = [
 
 export function Footer() {
   const locale = useLocale();
+  const t = useTranslations();
   const year = new Date().getFullYear();
 
   return (
@@ -62,26 +63,26 @@ export function Footer() {
               priority
             />
           </Link>
-          <p className={styles.tagline}>Curating premium journeys across Egypt and beyond.</p>
+          <p className={styles.tagline}>{t('footer.tagline')}</p>
         </div>
 
         <div className={styles.footerNav}>
-          <div className={styles.navTitle}>Navigate</div>
+          <div className={styles.navTitle}>{t('footer.navigateTitle')}</div>
           <div className={styles.navButtons}>
-            {navLinks.map(({ label, href }) => (
+            {navLinks.map(({ key, href }) => (
               <Link
                 key={href}
                 href={`/${locale}${href === '/' ? '' : href}`}
                 className={styles.navButton}
               >
-                {label}
+                {t(`nav.${key}`)}
               </Link>
             ))}
           </div>
         </div>
 
         <div className={styles.contactSection}>
-          <div className={styles.navTitle}>Contact</div>
+          <div className={styles.navTitle}>{t('footer.contactTitle')}</div>
           <div className={styles.contactList}>
             <a href="tel:+201009059295" className={styles.contactItem}>
               <FaPhoneAlt aria-hidden />
@@ -103,7 +104,7 @@ export function Footer() {
               className={styles.contactItem}
             >
               <FaWhatsapp aria-hidden />
-              <span>WhatsApp Support</span>
+              <span>{t('footer.whatsappSupport')}</span>
             </a>
             <a
               href="https://maps.app.goo.gl/w6UgCtGAbvvNc6L3A"
@@ -112,13 +113,13 @@ export function Footer() {
               className={styles.contactItem}
             >
               <FaMapMarkerAlt aria-hidden />
-              <span>Find us on the map</span>
+              <span>{t('footer.findUsOnMap')}</span>
             </a>
           </div>
         </div>
 
         <div className={styles.socialSection}>
-          <div className={styles.navTitle}>Follow</div>
+          <div className={styles.navTitle}>{t('footer.followTitle')}</div>
           <div className={styles.socialGrid}>
             {socialLinks.map(({ href, label, icon }) => (
               <a
@@ -138,9 +139,9 @@ export function Footer() {
 
       <div className={styles.bottomBar}>
         <div className={styles.bottomInner}>
-          <span>© {year} All Rights Reserved.</span>
+          <span>© {year} {t('footer.rights')}</span>
           <a href="#" className={styles.copyrightLink}>
-            Design by Egypt-Tours
+            {t('footer.designBy')}
           </a>
         </div>
       </div>

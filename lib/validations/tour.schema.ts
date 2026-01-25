@@ -5,6 +5,7 @@ export const createTourSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters').max(100),
   title_de: z.string().max(100).optional(),
   price: z.number().min(0, 'Price must be positive'),
+  priceEUR: z.number().min(0, 'EUR price must be positive').nullable().optional(),
   travelType: z.enum(['1 day', '2 days', '3 days', '1 week', '2 weeks']),
   travelType_de: z.string().optional(),
   category: z.string().min(1, 'Category is required').max(50),

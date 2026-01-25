@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from '@/styles/components/home/Testimonials.module.css';
@@ -32,6 +33,7 @@ const testimonials = [
 ];
 
 export function Testimonials() {
+  const t = useTranslations();
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextTestimonial = () => {
@@ -60,7 +62,7 @@ export function Testimonials() {
   return (
     <section className={styles.section}>
       <div className={styles.container}>
-        <h2 className={styles.title}>Testimonials</h2>
+        <h2 className={styles.title}>{t('home.testimonials.title')}</h2>
         <div className={styles.titleUnderline}></div>
 
         <div className={styles.wrapper}>
@@ -74,12 +76,12 @@ export function Testimonials() {
 
               <div className={styles.contentWrapper}>
                 <blockquote className={styles.quote}>
-                  &ldquo;{currentTestimonial.text}&rdquo;
+                  &ldquo;{t(`home.testimonials.items.${currentTestimonial.id}.text`)}&rdquo;
                 </blockquote>
 
                 <div className={styles.authorSection}>
                   <cite className={styles.authorName}>{currentTestimonial.name}</cite>
-                  <span className={styles.authorRole}>{currentTestimonial.role}</span>
+                  <span className={styles.authorRole}>{t('home.testimonials.role')}</span>
                 </div>
               </div>
             </div>
@@ -89,7 +91,7 @@ export function Testimonials() {
           <button
             onClick={prevTestimonial}
             className={`${styles.navButton} ${styles.navButtonPrev}`}
-            aria-label="Previous testimonial"
+            aria-label={t('home.testimonials.prevAria')}
           >
             <ChevronLeft className={styles.navIcon} />
           </button>
@@ -97,7 +99,7 @@ export function Testimonials() {
           <button
             onClick={nextTestimonial}
             className={`${styles.navButton} ${styles.navButtonNext}`}
-            aria-label="Next testimonial"
+            aria-label={t('home.testimonials.nextAria')}
           >
             <ChevronRight className={styles.navIcon} />
           </button>

@@ -16,6 +16,7 @@ interface TourFull {
   travelType: string;
   travelType_de: string;
   price: number;
+  priceEUR?: number;
   description: string;
   description_de: string;
   transportation: string;
@@ -167,6 +168,7 @@ export function ToursAdminPage() {
   const [saleModal, setSaleModal] = useState<{ tour: TourFull; discount: number } | null>(null);
   const [translationTourId, setTranslationTourId] = useState('');
   const [showTranslationForm, setShowTranslationForm] = useState(false);
+  const [translationFormData, setTranslationFormData] = useState<Partial<TourFull>>({});
   const [imagePreview, setImagePreview] = useState<(string | null)[]>([null, null, null, null]);
   const fileInputRefs = [
     useRef<HTMLInputElement>(null),
@@ -483,11 +485,113 @@ export function ToursAdminPage() {
     if (tourId) {
       const tour = tours.find((t) => t._id === tourId);
       if (tour) {
-        // Populate form with English data as reference
+        // Populate form with existing German translations (or empty strings)
+        setTranslationFormData({
+          title_de: tour.title_de || '',
+          category_de: tour.category_de || '',
+          travelType_de: tour.travelType_de || '',
+          priceEUR: tour.priceEUR != null ? String(tour.priceEUR) : '',
+          description_de: tour.description_de || '',
+          description2_de: tour.description2_de || '',
+          transportation_de: tour.transportation_de || '',
+          location_de: tour.location_de || '',
+          details_de: tour.details_de || '',
+          daysAndDurations_de: tour.daysAndDurations_de || '',
+          pickup_de: tour.pickup_de || '',
+          briefing_de: tour.briefing_de || '',
+          trip_de: tour.trip_de || '',
+          program_de: tour.program_de || '',
+          foodAndBeverages_de: tour.foodAndBeverages_de || '',
+          whatToTake_de: tour.whatToTake_de || '',
+          pickupLocation_de: tour.pickupLocation_de || '',
+          vanLocation_de: tour.vanLocation_de || '',
+          location1_de: tour.location1_de || '',
+          location2_de: tour.location2_de || '',
+          location3_de: tour.location3_de || '',
+          location4_de: tour.location4_de || '',
+          location5_de: tour.location5_de || '',
+          location6_de: tour.location6_de || '',
+        });
         setShowTranslationForm(true);
       }
     } else {
       setShowTranslationForm(false);
+      setTranslationFormData({});
+    }
+  };
+
+  const handleTranslationFieldChange = (field: string, value: string) => {
+    setTranslationFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveTranslation = async () => {
+    if (!translationTourId) {
+      alert('Please select a tour first');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Prepare only German translation fields
+      const translationData: Record<string, string | number | null> = {};
+      
+      // Always include priceEUR in the update if it exists in form data (even if empty)
+      if ('priceEUR' in translationFormData) {
+        const priceEURValue = translationFormData.priceEUR;
+        if (priceEURValue === '' || priceEURValue === null || priceEURValue === undefined) {
+          translationData.priceEUR = null;
+        } else {
+          const numValue = typeof priceEURValue === 'number' ? priceEURValue : parseFloat(String(priceEURValue));
+          if (!isNaN(numValue) && numValue > 0) {
+            translationData.priceEUR = numValue;
+          } else {
+            // If invalid or 0, set to null to clear the field
+            translationData.priceEUR = null;
+          }
+        }
+      }
+      
+      // Process all other German translation fields
+      Object.keys(translationFormData).forEach((key) => {
+        const value = translationFormData[key as keyof typeof translationFormData];
+        // Skip priceEUR as it's already handled above
+        if (key === 'priceEUR') {
+          return;
+        }
+        if (key.endsWith('_de') && value) {
+          if (typeof value === 'string' && value.trim()) {
+            translationData[key] = value.trim();
+          }
+        }
+      });
+
+      const response = await fetch(`/api/tours/${translationTourId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(translationData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Refresh tours list
+        await fetchTours();
+        alert('German translations saved successfully!');
+        // Optionally clear the form
+        setShowTranslationForm(false);
+        setTranslationTourId('');
+        setTranslationFormData({});
+      } else {
+        const errorMsg = result.error || 'Failed to save translations';
+        alert('Error: ' + errorMsg);
+      }
+    } catch (error) {
+      console.error('Error saving translations:', error);
+      alert('Error saving translations. Check console for details.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -1104,86 +1208,381 @@ export function ToursAdminPage() {
           <div>
             <div
               style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '1rem',
+                padding: '1rem',
+                background: 'hsl(var(--muted) / 0.3)',
+                borderRadius: '8px',
                 marginBottom: '1.5rem',
               }}
             >
-              <div className={formStyles.formGroup}>
-                <label className={formStyles.label}>Tour Title (German)</label>
-                <input
-                  type="text"
-                  className={formStyles.input}
-                  defaultValue={selectedTranslationTour.title_de}
-                  placeholder="Tour-Titel auf Deutsch"
-                />
-              </div>
-              <div className={formStyles.formGroup}>
-                <label className={formStyles.label}>Category (German)</label>
-                <input
-                  type="text"
-                  className={formStyles.input}
-                  defaultValue={selectedTranslationTour.category_de}
-                  placeholder="Kategorie auf Deutsch"
-                />
-              </div>
-              <div className={formStyles.formGroup}>
-                <label className={formStyles.label}>Duration (German) - Read Only</label>
-                <input
-                  type="text"
-                  className={formStyles.input}
-                  value={selectedTranslationTour.travelType}
-                  readOnly
-                  style={{ background: 'hsl(var(--muted))', cursor: 'not-allowed' }}
-                />
-              </div>
-              <div className={formStyles.formGroup}>
-                <label className={formStyles.label}>Price (German) - Read Only</label>
-                <input
-                  type="text"
-                  className={formStyles.input}
-                  value={`$${selectedTranslationTour.price}`}
-                  readOnly
-                  style={{ background: 'hsl(var(--muted))', cursor: 'not-allowed' }}
-                />
+              <p style={{ margin: 0, fontSize: '0.875rem', color: 'hsl(var(--muted-foreground))' }}>
+                <strong>Translating:</strong> {selectedTranslationTour.title} ({selectedTranslationTour.category})
+              </p>
+              <p style={{ margin: '0.5rem 0 0', fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))' }}>
+                Fill in the German translations below. English values are shown as reference.
+              </p>
+            </div>
+
+            {/* Basic Information */}
+            <div style={{ marginBottom: '2rem' }}>
+              <h4 style={{ margin: '0 0 1rem', fontSize: '1rem', fontWeight: 600 }}>Basic Information</h4>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                  gap: '1rem',
+                }}
+              >
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>
+                    Tour Title (German) <span style={{ color: '#ef4444' }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className={formStyles.input}
+                    value={translationFormData.title_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('title_de', e.target.value)}
+                    placeholder="Tour-Titel auf Deutsch"
+                    required
+                  />
+                  <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    EN: {selectedTranslationTour.title}
+                  </p>
+                </div>
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>
+                    Category (German) <span style={{ color: '#ef4444' }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className={formStyles.input}
+                    value={translationFormData.category_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('category_de', e.target.value)}
+                    placeholder="Kategorie auf Deutsch"
+                    required
+                  />
+                  <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    EN: {selectedTranslationTour.category}
+                  </p>
+                </div>
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>Duration (German)</label>
+                  <input
+                    type="text"
+                    className={formStyles.input}
+                    value={translationFormData.travelType_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('travelType_de', e.target.value)}
+                    placeholder="z.B., 1 Tag, 2 Tage, 1 Woche"
+                  />
+                  <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    EN: {selectedTranslationTour.travelType}
+                  </p>
+                </div>
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>Price (EUR)</label>
+                  <input
+                    type="number"
+                    className={formStyles.input}
+                    value={
+                      translationFormData.priceEUR != null && translationFormData.priceEUR !== ''
+                        ? String(translationFormData.priceEUR)
+                        : ''
+                    }
+                    onChange={(e) => handleTranslationFieldChange('priceEUR', e.target.value)}
+                    placeholder="Preis in Euro"
+                    step="0.01"
+                    min="0"
+                  />
+                  <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    USD: ${selectedTranslationTour.price}
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '1rem',
-                marginBottom: '1.5rem',
-              }}
-            >
-              <div className={formStyles.formGroup}>
-                <label className={formStyles.label}>Description (German)</label>
-                <textarea
-                  className={formStyles.textarea}
-                  defaultValue={selectedTranslationTour.description_de}
-                  placeholder="Beschreibung auf Deutsch..."
-                />
+            {/* Descriptions */}
+            <div style={{ marginBottom: '2rem' }}>
+              <h4 style={{ margin: '0 0 1rem', fontSize: '1rem', fontWeight: 600 }}>Descriptions</h4>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                  gap: '1rem',
+                }}
+              >
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>
+                    Description (German) <span style={{ color: '#ef4444' }}>*</span>
+                  </label>
+                  <textarea
+                    className={formStyles.textarea}
+                    value={translationFormData.description_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('description_de', e.target.value)}
+                    placeholder="Beschreibung auf Deutsch..."
+                    required
+                    style={{ minHeight: '120px' }}
+                  />
+                  <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    EN: {truncate(selectedTranslationTour.description, 100)}
+                  </p>
+                </div>
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>Additional Description (German)</label>
+                  <textarea
+                    className={formStyles.textarea}
+                    value={translationFormData.description2_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('description2_de', e.target.value)}
+                    placeholder="Zusätzliche Beschreibung auf Deutsch..."
+                    style={{ minHeight: '120px' }}
+                  />
+                  {selectedTranslationTour.description2 && (
+                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                      EN: {truncate(selectedTranslationTour.description2, 100)}
+                    </p>
+                  )}
+                </div>
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>Details (German)</label>
+                  <textarea
+                    className={formStyles.textarea}
+                    value={translationFormData.details_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('details_de', e.target.value)}
+                    placeholder="Details auf Deutsch..."
+                    style={{ minHeight: '120px' }}
+                  />
+                  {selectedTranslationTour.details && (
+                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                      EN: {truncate(selectedTranslationTour.details, 100)}
+                    </p>
+                  )}
+                </div>
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>Transportation (German)</label>
+                  <textarea
+                    className={formStyles.textarea}
+                    value={translationFormData.transportation_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('transportation_de', e.target.value)}
+                    placeholder="Transport auf Deutsch..."
+                    style={{ minHeight: '120px' }}
+                  />
+                  {selectedTranslationTour.transportation && (
+                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                      EN: {truncate(selectedTranslationTour.transportation, 100)}
+                    </p>
+                  )}
+                </div>
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>Location (German)</label>
+                  <input
+                    type="text"
+                    className={formStyles.input}
+                    value={translationFormData.location_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('location_de', e.target.value)}
+                    placeholder="Standort auf Deutsch"
+                  />
+                  {selectedTranslationTour.location && (
+                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                      EN: {selectedTranslationTour.location}
+                    </p>
+                  )}
+                </div>
               </div>
-              <div className={formStyles.formGroup}>
-                <label className={formStyles.label}>Transportation (German)</label>
-                <textarea
-                  className={formStyles.textarea}
-                  defaultValue={selectedTranslationTour.transportation_de}
-                  placeholder="Transport auf Deutsch"
-                />
+            </div>
+
+            {/* Itinerary & Logistics */}
+            <div style={{ marginBottom: '2rem' }}>
+              <h4 style={{ margin: '0 0 1rem', fontSize: '1rem', fontWeight: 600 }}>Itinerary & Logistics</h4>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                  gap: '1rem',
+                }}
+              >
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>Pickup Information (German)</label>
+                  <textarea
+                    className={formStyles.textarea}
+                    value={translationFormData.pickup_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('pickup_de', e.target.value)}
+                    placeholder="Abholinformationen auf Deutsch..."
+                    style={{ minHeight: '100px' }}
+                  />
+                  {selectedTranslationTour.pickup && (
+                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                      EN: {truncate(selectedTranslationTour.pickup, 80)}
+                    </p>
+                  )}
+                </div>
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>Welcome Briefing (German)</label>
+                  <textarea
+                    className={formStyles.textarea}
+                    value={translationFormData.briefing_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('briefing_de', e.target.value)}
+                    placeholder="Willkommensbriefing auf Deutsch..."
+                    style={{ minHeight: '100px' }}
+                  />
+                  {selectedTranslationTour.briefing && (
+                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                      EN: {truncate(selectedTranslationTour.briefing, 80)}
+                    </p>
+                  )}
+                </div>
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>Daily Program (German)</label>
+                  <textarea
+                    className={formStyles.textarea}
+                    value={translationFormData.program_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('program_de', e.target.value)}
+                    placeholder="Tagesprogramm auf Deutsch..."
+                    style={{ minHeight: '100px' }}
+                  />
+                  {selectedTranslationTour.program && (
+                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                      EN: {truncate(selectedTranslationTour.program, 80)}
+                    </p>
+                  )}
+                </div>
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>Trip Highlights (German)</label>
+                  <textarea
+                    className={formStyles.textarea}
+                    value={translationFormData.trip_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('trip_de', e.target.value)}
+                    placeholder="Reisehighlights auf Deutsch..."
+                    style={{ minHeight: '100px' }}
+                  />
+                  {selectedTranslationTour.trip && (
+                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                      EN: {truncate(selectedTranslationTour.trip, 80)}
+                    </p>
+                  )}
+                </div>
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>Food & Beverages (German)</label>
+                  <textarea
+                    className={formStyles.textarea}
+                    value={translationFormData.foodAndBeverages_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('foodAndBeverages_de', e.target.value)}
+                    placeholder="Essen & Getränke auf Deutsch..."
+                    style={{ minHeight: '100px' }}
+                  />
+                  {selectedTranslationTour.foodAndBeverages && (
+                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                      EN: {truncate(selectedTranslationTour.foodAndBeverages, 80)}
+                    </p>
+                  )}
+                </div>
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>What to Bring (German)</label>
+                  <textarea
+                    className={formStyles.textarea}
+                    value={translationFormData.whatToTake_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('whatToTake_de', e.target.value)}
+                    placeholder="Was mitzubringen ist auf Deutsch..."
+                    style={{ minHeight: '100px' }}
+                  />
+                  {selectedTranslationTour.whatToTake && (
+                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                      EN: {truncate(selectedTranslationTour.whatToTake, 80)}
+                    </p>
+                  )}
+                </div>
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>Days & Durations (German)</label>
+                  <textarea
+                    className={formStyles.textarea}
+                    value={translationFormData.daysAndDurations_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('daysAndDurations_de', e.target.value)}
+                    placeholder="Tage & Dauer auf Deutsch..."
+                    style={{ minHeight: '100px' }}
+                  />
+                  {selectedTranslationTour.daysAndDurations && (
+                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                      EN: {truncate(selectedTranslationTour.daysAndDurations, 80)}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Locations */}
+            <div style={{ marginBottom: '2rem' }}>
+              <h4 style={{ margin: '0 0 1rem', fontSize: '1rem', fontWeight: 600 }}>Locations & Stops</h4>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                  gap: '1rem',
+                }}
+              >
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>Pickup Location (German)</label>
+                  <input
+                    type="text"
+                    className={formStyles.input}
+                    value={translationFormData.pickupLocation_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('pickupLocation_de', e.target.value)}
+                    placeholder="Abholort auf Deutsch"
+                  />
+                  {selectedTranslationTour.pickupLocation && (
+                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                      EN: {selectedTranslationTour.pickupLocation}
+                    </p>
+                  )}
+                </div>
+                <div className={formStyles.formGroup}>
+                  <label className={formStyles.label}>Van/Bus Meeting Point (German)</label>
+                  <input
+                    type="text"
+                    className={formStyles.input}
+                    value={translationFormData.vanLocation_de || ''}
+                    onChange={(e) => handleTranslationFieldChange('vanLocation_de', e.target.value)}
+                    placeholder="Van/Bus Treffpunkt auf Deutsch"
+                  />
+                  {selectedTranslationTour.vanLocation && (
+                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                      EN: {selectedTranslationTour.vanLocation}
+                    </p>
+                  )}
+                </div>
+                {[1, 2, 3, 4, 5, 6].map((num) => (
+                  <div key={num} className={formStyles.formGroup}>
+                    <label className={formStyles.label}>Tour Stop {num} (German)</label>
+                    <input
+                      type="text"
+                      className={formStyles.input}
+                      value={translationFormData[`location${num}_de` as keyof typeof translationFormData] || ''}
+                      onChange={(e) => handleTranslationFieldChange(`location${num}_de`, e.target.value)}
+                      placeholder={`Tour-Stopp ${num} auf Deutsch`}
+                    />
+                    {selectedTranslationTour[`location${num}` as keyof typeof selectedTranslationTour] && (
+                      <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                        EN: {selectedTranslationTour[`location${num}` as keyof typeof selectedTranslationTour] as string}
+                      </p>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
 
             <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-              <button type="button" className={styles.primaryButton}>
-                <FaSave /> Save German Translation
+              <button
+                type="button"
+                className={styles.primaryButton}
+                onClick={handleSaveTranslation}
+                disabled={isLoading}
+              >
+                <FaSave /> {isLoading ? 'Saving...' : 'Save German Translation'}
               </button>
               <button
                 type="button"
                 className={styles.secondaryButton}
-                onClick={() => setShowTranslationForm(false)}
+                onClick={() => {
+                  setShowTranslationForm(false);
+                  setTranslationTourId('');
+                  setTranslationFormData({});
+                }}
               >
                 <FaTrash /> Clear Form
               </button>

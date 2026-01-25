@@ -5,6 +5,7 @@ export interface ITour extends Document {
   title: string;
   title_de?: string;
   price: number;
+  priceEUR?: number;
   travelType: string;
   travelType_de?: string;
   category: string;
@@ -82,6 +83,7 @@ const TourSchema = new Schema<ITour>(
     title: { type: String, required: true, maxlength: 100 },
     title_de: { type: String, maxlength: 100 },
     price: { type: Number, required: true, min: 0 },
+    priceEUR: { type: Number, min: 0 },
     travelType: {
       type: String,
       required: true,

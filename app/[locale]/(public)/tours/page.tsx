@@ -1,27 +1,27 @@
 import { TourGrid } from '@/components/tours/TourGrid';
 import { TourFilters } from '@/components/tours/TourFilters';
+import { getTranslations } from 'next-intl/server';
 import styles from '@/styles/pages/tours/ToursPage.module.css';
 
-const stats = [
-  { label: 'Destinations', value: '120+' },
-  { label: 'Happy Travelers', value: '25K+' },
-  { label: 'Expert Guides', value: '80+' },
-];
+export default async function ToursPage() {
+  const t = await getTranslations('tours.page');
 
-export default function ToursPage() {
+  const stats = [
+    { label: t('hero.stats.destinations'), value: '120+' },
+    { label: t('hero.stats.happyTravelers'), value: '25K+' },
+    { label: t('hero.stats.expertGuides'), value: '80+' },
+  ];
+
   return (
     <div className={styles.page}>
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <p className={styles.kicker}>Tailored experiences</p>
-          <h1 className={styles.title}>Find your next unforgettable tour</h1>
-          <p className={styles.subtitle}>
-            Browse curated adventures across Egypt and beyond. Filter by vibe, duration, and season
-            to match the journey you want—luxury cruises, desert escapes, cultural dives, and more.
-          </p>
+          <p className={styles.kicker}>{t('hero.kicker')}</p>
+          <h1 className={styles.title}>{t('hero.title')}</h1>
+          <p className={styles.subtitle}>{t('hero.subtitle')}</p>
           <div className={styles.heroActions}>
             <a href="#filters" className={styles.primaryCta}>
-              Browse tours
+              {t('hero.browseTours')}
             </a>
             <a
               href="https://wa.link/l3auw8"
@@ -29,7 +29,7 @@ export default function ToursPage() {
               rel="noopener noreferrer"
               className={styles.secondaryCta}
             >
-              Talk to an expert
+              {t('hero.talkExpert')}
             </a>
           </div>
           <div className={styles.heroStats}>
@@ -42,7 +42,7 @@ export default function ToursPage() {
           </div>
         </div>
         <div className={styles.heroVisual}>
-          <div className={styles.heroBadge}>Top picks updated weekly</div>
+          <div className={styles.heroBadge}>{t('hero.badge')}</div>
           <div className={styles.heroImage}>
             <div className={styles.heroOverlay}></div>
           </div>
@@ -52,12 +52,9 @@ export default function ToursPage() {
       <section id="filters" className={styles.filtersSection}>
         <div className={styles.sectionHeader}>
           <div>
-            <p className={styles.sectionKicker}>Filter & discover</p>
-            <h2 className={styles.sectionTitle}>Dial in your perfect trip</h2>
-            <p className={styles.sectionSubtitle}>
-              Narrow by destination, dates, budget, and style. Save favorites and compare options
-              side by side.
-            </p>
+            <p className={styles.sectionKicker}>{t('filters.kicker')}</p>
+            <h2 className={styles.sectionTitle}>{t('filters.title')}</h2>
+            <p className={styles.sectionSubtitle}>{t('filters.subtitle')}</p>
           </div>
         </div>
         <TourFilters />
@@ -66,12 +63,9 @@ export default function ToursPage() {
       <section className={styles.gridSection}>
         <div className={styles.sectionHeader}>
           <div>
-            <p className={styles.sectionKicker}>All tours</p>
-            <h2 className={styles.sectionTitle}>Curated for every traveler</h2>
-            <p className={styles.sectionSubtitle}>
-              Scroll the collection—luxury Nile cruises, Red Sea retreats, Sahara safaris, city
-              breaks, and family getaways.
-            </p>
+            <p className={styles.sectionKicker}>{t('grid.kicker')}</p>
+            <h2 className={styles.sectionTitle}>{t('grid.title')}</h2>
+            <p className={styles.sectionSubtitle}>{t('grid.subtitle')}</p>
           </div>
         </div>
         <TourGrid />

@@ -4,7 +4,7 @@
   "private": true,
   "description": "Modern Next.js 15 travel agency with i18n, admin panel, and MongoDB",
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "dev:regular": "next dev",
     "css:watch": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
     "build": "next build",
@@ -24,10 +24,13 @@
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
     "bcryptjs": "^2.4.3",
+    "canvg": "^4.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "date-fns": "^3.3.0",
+    "html2canvas": "^1.4.1",
     "jose": "^5.2.0",
+    "jspdf": "^4.0.0",
     "lucide-react": "^0.344.0",
     "mongoose": "^8.0.0",
     "nanoid": "^5.0.5",

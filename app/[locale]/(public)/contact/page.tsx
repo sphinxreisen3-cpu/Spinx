@@ -1,70 +1,67 @@
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import styles from '@/styles/pages/contact/ContactPage.module.css';
 
-const contacts = [
-  {
-    title: 'Call Us',
-    value: '+20 100 905 9295',
-    href: 'tel:+201009059295',
-    cta: 'Call now',
-  },
-  {
-    title: 'WhatsApp',
-    value: '+20 100 905 9295',
-    href: 'https://wa.link/l3auw8',
-    cta: 'Open WhatsApp',
-  },
-  {
-    title: 'Email',
-    value: 'sphinxreisen3@gmail.com',
-    href: 'mailto:sphinxreisen3@gmail.com',
-    cta: 'Send email',
-  },
-  {
-    title: 'Visit Us',
-    value: 'Cairo, Egypt',
-    href: 'https://maps.app.goo.gl/w6UgCtGAbvvNc6L3A',
-    cta: 'View on Maps',
-  },
-];
+export default async function ContactPage() {
+  const t = await getTranslations('contact');
 
-export default function ContactPage() {
+  const contacts = [
+    {
+      title: t('options.callUs'),
+      value: '+20 100 905 9295',
+      href: 'tel:+201009059295',
+      cta: t('options.callNow'),
+    },
+    {
+      title: t('options.whatsApp'),
+      value: '+20 100 905 9295',
+      href: 'https://wa.link/l3auw8',
+      cta: t('options.openWhatsApp'),
+    },
+    {
+      title: t('options.email'),
+      value: 'sphinxreisen3@gmail.com',
+      href: 'mailto:sphinxreisen3@gmail.com',
+      cta: t('options.sendEmail'),
+    },
+    {
+      title: t('options.visitUs'),
+      value: 'Cairo, Egypt',
+      href: 'https://maps.app.goo.gl/w6UgCtGAbvvNc6L3A',
+      cta: t('options.viewMaps'),
+    },
+  ];
+
   return (
     <div className={styles.page}>
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <p className={styles.kicker}>We are here for you</p>
-          <h1 className={styles.title}>Let&apos;s plan your next unforgettable journey</h1>
-          <p className={styles.subtitle}>
-            Reach out by phone, WhatsApp, or email. Our travel specialists respond quickly with
-            tailored recommendations, accurate pricing, and the local insights you need.
-          </p>
+          <p className={styles.kicker}>{t('hero.kicker')}</p>
+          <h1 className={styles.title}>{t('hero.title')}</h1>
+          <p className={styles.subtitle}>{t('hero.subtitle')}</p>
           <div className={styles.heroActions}>
             <Link href="https://wa.link/l3auw8" className={styles.primaryCta} target="_blank">
-              Chat on WhatsApp
+              {t('hero.chatWhatsApp')}
             </Link>
             <Link href="mailto:sphinxreisen3@gmail.com" className={styles.secondaryCta}>
-              Send us an email
+              {t('hero.sendEmail')}
             </Link>
           </div>
         </div>
         <div className={styles.heroCard}>
-          <div className={styles.cardHeader}>Response time</div>
-          <div className={styles.responseTime}>Under 1 hour</div>
-          <p className={styles.cardNote}>During business hours. We often reply within minutes.</p>
-          <div className={styles.badge}>24/7 guest support</div>
+          <div className={styles.cardHeader}>{t('hero.responseTime')}</div>
+          <div className={styles.responseTime}>{t('hero.underHour')}</div>
+          <p className={styles.cardNote}>{t('hero.cardNote')}</p>
+          <div className={styles.badge}>{t('hero.badge')}</div>
         </div>
       </section>
 
       <section className={styles.gridSection}>
         <div className={styles.sectionHeader}>
           <div>
-            <p className={styles.sectionKicker}>Contact options</p>
-            <h2 className={styles.sectionTitle}>Choose how you want to connect</h2>
-            <p className={styles.sectionSubtitle}>
-              We speak English and German. Tell us your travel dates, group size, and
-              preferences—we&apos;ll craft the perfect itinerary.
-            </p>
+            <p className={styles.sectionKicker}>{t('options.kicker')}</p>
+            <h2 className={styles.sectionTitle}>{t('options.title')}</h2>
+            <p className={styles.sectionSubtitle}>{t('options.subtitle')}</p>
           </div>
         </div>
         <div className={styles.contactGrid}>
@@ -86,47 +83,44 @@ export default function ContactPage() {
       <section className={styles.formSection}>
         <div className={styles.sectionHeader}>
           <div>
-            <p className={styles.sectionKicker}>Tell us about your trip</p>
-            <h2 className={styles.sectionTitle}>Quick enquiry</h2>
-            <p className={styles.sectionSubtitle}>
-              Share the essentials—we&apos;ll respond with tailored options, transparent pricing,
-              and timelines.
-            </p>
+            <p className={styles.sectionKicker}>{t('form.kicker')}</p>
+            <h2 className={styles.sectionTitle}>{t('form.title')}</h2>
+            <p className={styles.sectionSubtitle}>{t('form.subtitle')}</p>
           </div>
         </div>
         <form className={styles.form} action="https://formspree.io/f/xayrnnov" method="POST">
           <div className={styles.formGrid}>
             <label className={styles.field}>
-              <span>Your Name *</span>
-              <input name="name" type="text" placeholder="Alex Johnson" required />
+              <span>{t('form.name')}</span>
+              <input name="name" type="text" placeholder={t('form.namePlaceholder')} required />
             </label>
             <label className={styles.field}>
-              <span>Phone Number</span>
-              <input name="phone" type="tel" placeholder="+20 100 905 9295" />
+              <span>{t('form.phone')}</span>
+              <input name="phone" type="tel" placeholder={t('form.phonePlaceholder')} />
             </label>
             <label className={styles.field}>
-              <span>Your Email *</span>
-              <input name="email" type="email" placeholder="you@example.com" required />
+              <span>{t('form.email')}</span>
+              <input name="email" type="email" placeholder={t('form.emailPlaceholder')} required />
             </label>
             <label className={styles.field}>
-              <span>Subject *</span>
-              <input name="subject" type="text" placeholder="Trip inquiry or question" required />
+              <span>{t('form.subject')}</span>
+              <input name="subject" type="text" placeholder={t('form.subjectPlaceholder')} required />
             </label>
           </div>
           <label className={styles.field}>
-            <span>More Details</span>
+            <span>{t('form.details')}</span>
             <textarea
               name="message"
               rows={5}
-              placeholder="Share dates, destinations, group size, or any specifics you want."
+              placeholder={t('form.detailsPlaceholder')}
               required
             ></textarea>
           </label>
           <div className={styles.formActions}>
             <button type="submit" className={styles.primaryCta}>
-              Send enquiry
+              {t('form.submit')}
             </button>
-            <span className={styles.responseHint}>We reply quickly—usually within an hour.</span>
+            <span className={styles.responseHint}>{t('form.responseHint')}</span>
           </div>
         </form>
       </section>

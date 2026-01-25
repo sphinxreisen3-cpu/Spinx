@@ -1,37 +1,35 @@
+import { getTranslations } from 'next-intl/server';
 import styles from '@/styles/components/home/ServicesSection.module.css';
 
-export function ServicesSection() {
+export async function ServicesSection() {
+  const t = await getTranslations();
   const services = [
     {
       icon: 'mdi-car',
-      title: 'Transportations',
-      description:
-        'We provide reliable and comfortable transportation services including airport transfers, private car rentals, and luxury vehicle options to ensure your travel is seamless and stress-free.',
+      title: t('home.services.transportations.title'),
+      description: t('home.services.transportations.description'),
     },
     {
       icon: 'mdi-map-marker',
-      title: 'Tour Guiding',
-      description:
-        'Our professional tour guides are knowledgeable locals who provide insightful commentary, historical context, and personalized attention to make your sightseeing experiences truly memorable and educational.',
+      title: t('home.services.guiding.title'),
+      description: t('home.services.guiding.description'),
     },
     {
       icon: 'mdi-compass',
-      title: 'Exploring',
-      description:
-        'Discover hidden gems and off-the-beaten-path destinations with our curated exploration packages. From adventure activities to cultural immersion, we help you explore the world like never before.',
+      title: t('home.services.exploring.title'),
+      description: t('home.services.exploring.description'),
     },
     {
       icon: 'mdi-star',
-      title: 'Luxury',
-      description:
-        'Experience the pinnacle of comfort and elegance with our luxury travel services. From VIP airport lounges to five-star accommodations and exclusive experiences, we cater to discerning travelers seeking the best.',
+      title: t('home.services.luxury.title'),
+      description: t('home.services.luxury.description'),
     },
   ];
 
   return (
     <section className={styles.section}>
       <div className={styles.container}>
-        <h2 className={styles.title}>Our Services</h2>
+        <h2 className={styles.title}>{t('home.services.title')}</h2>
         <div className={styles.titleUnderline}></div>
 
         <div className={styles.grid}>

@@ -4,6 +4,7 @@ export interface Tour {
   title: string;
   title_de?: string;
   price: number;
+  priceEUR?: number;
   travelType: '1 day' | '2 days' | '3 days' | '1 week' | '2 weeks';
   travelType_de?: string;
   category: string;
@@ -79,6 +80,7 @@ export interface CreateTourInput {
   title: string;
   title_de?: string;
   price: number;
+  priceEUR?: number;
   travelType: string;
   category: string;
   description: string;

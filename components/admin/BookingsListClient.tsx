@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   FaEye,
   FaCheck,
@@ -9,6 +9,7 @@ import {
   FaEnvelope,
   FaCalendarAlt,
   FaUsers,
+  FaDownload,
 } from 'react-icons/fa';
 import { DataTable, Column } from '@/components/admin/DataTable';
 import { StatusBadge } from '@/components/admin/StatusBadge';
@@ -16,6 +17,7 @@ import { ActionMenu } from '@/components/admin/ActionMenu';
 import { SearchFilter } from '@/components/admin/SearchFilter';
 import { Pagination } from '@/components/admin/Pagination';
 import { Modal } from '@/components/admin/Modal';
+import { BookingTicket } from '@/components/bookings/BookingTicket';
 import type { Booking } from '@/types/booking.types';
 import styles from '@/styles/pages/admin/AdminPage.module.css';
 import tableStyles from '@/styles/components/admin/DataTable.module.css';
@@ -96,48 +98,123 @@ function formatDate(dateString: string) {
 }
 
 export function BookingsListClient() {
-  const [bookings, setBookings] = useState<Booking[]>(mockBookings);
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>(mockBookings);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [showTicket, setShowTicket] = useState(false);
+  const [ticketBooking, setTicketBooking] = useState<Booking | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [_isLoading, setIsLoading] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const pageSize = 10;
 
-  const handleSearch = (query: string) => {
-    if (!query) {
-      setFilteredBookings(bookings);
-      return;
+  const fetchBookings = async (opts?: { status?: string; search?: string }) => {
+    try {
+      setIsLoading(true);
+      const params = new URLSearchParams();
+      params.set('limit', '200');
+      params.set('sortBy', 'createdAt');
+      params.set('sortOrder', 'desc');
+      if (opts?.status) params.set('status', opts.status);
+      if (opts?.search) params.set('search', opts.search);
+
+      const response = await fetch(`/api/bookings?${params.toString()}`);
+      const result = await response.json();
+
+      if (response.ok && result?.success && result?.data?.bookings) {
+        const apiBookings = (result.data.bookings as Array<Record<string, unknown>>).map((b) => ({
+          _id: String(b._id || ''),
+          name: String(b.name || ''),
+          phone: String(b.phone || ''),
+          email: String(b.email || ''),
+          adults: typeof b.adults === 'number' ? b.adults : Number(b.adults || 0),
+          children: typeof b.children === 'number' ? b.children : Number(b.children || 0),
+          infants: typeof b.infants === 'number' ? b.infants : Number(b.infants || 0),
+          travelDate: String(b.travelDate || ''),
+          confirmTrip: String(b.confirmTrip || ''),
+          tourTitle: typeof b.tourTitle === 'string' ? b.tourTitle : undefined,
+          notes: typeof b.notes === 'string' ? b.notes : undefined,
+          pickupLocation: typeof b.pickupLocation === 'string' ? b.pickupLocation : undefined,
+          requirements: typeof b.requirements === 'string' ? b.requirements : undefined,
+          totalPrice: typeof b.totalPrice === 'number' ? b.totalPrice : Number(b.totalPrice || 0),
+          currency: (b.currency as Booking['currency']) || 'USD',
+          currencySymbol: (b.currencySymbol as Booking['currencySymbol']) || '$',
+          status: (b.status as Booking['status']) || 'pending',
+          createdAt: String(b.createdAt || ''),
+          updatedAt: String(b.updatedAt || ''),
+        } as Booking));
+
+        setFilteredBookings(apiBookings);
+      }
+    } catch (err) {
+      console.error('Error fetching bookings:', err);
+    } finally {
+      setIsLoading(false);
     }
-    const lower = query.toLowerCase();
-    setFilteredBookings(
-      bookings.filter(
-        (b) =>
-          b.name.toLowerCase().includes(lower) ||
-          b.email.toLowerCase().includes(lower) ||
-          b.tourTitle?.toLowerCase().includes(lower)
-      )
-    );
+  };
+
+  useEffect(() => {
+    fetchBookings();
+  }, []);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    setCurrentPage(1);
+    fetchBookings({ status: statusFilter || undefined, search: query || undefined });
   };
 
   const handleFilterChange = (key: string, value: string) => {
-    if (!value) {
-      setFilteredBookings(bookings);
-      return;
-    }
-    if (key === 'status') {
-      setFilteredBookings(bookings.filter((b) => b.status === value));
-    }
+    if (key !== 'status') return;
+    setStatusFilter(value);
+    setCurrentPage(1);
+    fetchBookings({ status: value || undefined, search: searchQuery || undefined });
   };
 
   const handleClear = () => {
-    setFilteredBookings(bookings);
+    setStatusFilter('');
+    setSearchQuery('');
+    setCurrentPage(1);
+    fetchBookings();
   };
 
-  const updateStatus = (bookingId: string, newStatus: Booking['status']) => {
-    // TODO: Call API to update status
-    setBookings((prev) => prev.map((b) => (b._id === bookingId ? { ...b, status: newStatus } : b)));
-    setFilteredBookings((prev) =>
-      prev.map((b) => (b._id === bookingId ? { ...b, status: newStatus } : b))
-    );
+  const updateStatus = async (bookingId: string, newStatus: Booking['status']) => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`/api/bookings/${bookingId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      const result = await response.json();
+      if (response.ok && result?.success && result?.data?.booking) {
+        await fetchBookings({ status: statusFilter || undefined, search: searchQuery || undefined });
+      } else {
+        alert(result?.error || 'Failed to update booking');
+      }
+    } catch (err) {
+      console.error('Error updating booking:', err);
+      alert('Error updating booking. Check console for details.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const deleteBooking = async (bookingId: string) => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`/api/bookings/${bookingId}`, { method: 'DELETE' });
+      const result = await response.json();
+      if (response.ok && result?.success) {
+        await fetchBookings({ status: statusFilter || undefined, search: searchQuery || undefined });
+      } else {
+        alert(result?.error || 'Failed to delete booking');
+      }
+    } catch (err) {
+      console.error('Error deleting booking:', err);
+      alert('Error deleting booking. Check console for details.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const columns: Column<Booking>[] = [
@@ -204,6 +281,14 @@ export function BookingsListClient() {
               icon: <FaEye />,
               onClick: () => setSelectedBooking(booking),
             },
+            {
+              label: 'Download Ticket',
+              icon: <FaDownload />,
+              onClick: () => {
+                setTicketBooking(booking);
+                setShowTicket(true);
+              },
+            },
             ...(booking.status === 'pending'
               ? [
                   {
@@ -219,6 +304,12 @@ export function BookingsListClient() {
                   },
                 ]
               : []),
+            {
+              label: 'Delete',
+              icon: <FaTimes />,
+              onClick: () => deleteBooking(booking._id),
+              variant: 'danger' as const,
+            },
           ]}
         />
       ),
@@ -368,38 +459,61 @@ export function BookingsListClient() {
             )}
 
             {/* Actions */}
-            {selectedBooking.status === 'pending' && (
-              <div
-                style={{
-                  display: 'flex',
-                  gap: '0.75rem',
-                  paddingTop: '0.5rem',
-                  borderTop: '1px solid hsl(var(--border))',
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.75rem',
+                paddingTop: '0.5rem',
+                borderTop: '1px solid hsl(var(--border))',
+                flexWrap: 'wrap',
+              }}
+            >
+              <button
+                className={styles.secondaryButton}
+                onClick={() => {
+                  setTicketBooking(selectedBooking);
+                  setShowTicket(true);
                 }}
               >
-                <button
-                  className={styles.primaryButton}
-                  onClick={() => {
-                    updateStatus(selectedBooking._id, 'confirmed');
-                    setSelectedBooking(null);
-                  }}
-                >
-                  <FaCheck /> Confirm Booking
-                </button>
-                <button
-                  className={styles.dangerButton}
-                  onClick={() => {
-                    updateStatus(selectedBooking._id, 'cancelled');
-                    setSelectedBooking(null);
-                  }}
-                >
-                  <FaTimes /> Cancel Booking
-                </button>
-              </div>
-            )}
+                <FaDownload /> Download Ticket
+              </button>
+              {selectedBooking.status === 'pending' && (
+                <>
+                  <button
+                    className={styles.primaryButton}
+                    onClick={() => {
+                      updateStatus(selectedBooking._id, 'confirmed');
+                      setSelectedBooking(null);
+                    }}
+                  >
+                    <FaCheck /> Confirm Booking
+                  </button>
+                  <button
+                    className={styles.dangerButton}
+                    onClick={() => {
+                      updateStatus(selectedBooking._id, 'cancelled');
+                      setSelectedBooking(null);
+                    }}
+                  >
+                    <FaTimes /> Cancel Booking
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         )}
       </Modal>
+
+      {/* Booking Ticket Modal */}
+      {showTicket && ticketBooking && (
+        <BookingTicket
+          booking={ticketBooking}
+          onClose={() => {
+            setShowTicket(false);
+            setTicketBooking(null);
+          }}
+        />
+      )}
     </div>
   );
 }

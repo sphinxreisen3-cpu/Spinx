@@ -40,10 +40,13 @@ export function TourDetailsTable({ tour, locale }: TourDetailsTableProps) {
   const isGerman = locale === 'de';
 
   const numberLocale = isGerman ? 'de-DE' : 'en-US';
+  const useEUR = isGerman && tour.priceEUR != null && tour.priceEUR > 0;
+  const currency = useEUR ? 'EUR' : 'USD';
+  const displayPrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat(numberLocale, {
       style: 'currency',
-      currency: 'USD',
+      currency: currency,
       maximumFractionDigits: 0,
     }).format(value);
 
@@ -60,7 +63,7 @@ export function TourDetailsTable({ tour, locale }: TourDetailsTableProps) {
       labelEn: 'Price',
       labelDe: 'Preis',
       icon: '💰',
-      value: formatCurrency(tour.price),
+      value: formatCurrency(displayPrice),
     },
     {
       key: 'description',

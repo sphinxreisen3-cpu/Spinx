@@ -2,17 +2,17 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useLocale } from 'next-intl';
-import { usePathname, useRouter } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { FaFacebookF, FaInstagram, FaMapMarkerAlt, FaTiktok, FaWhatsapp } from 'react-icons/fa';
 import styles from '../../styles/components/layout/Header.module.css';
 
 const navLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'Tours', href: '/tours' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Contact', href: '/contact' },
+  { key: 'home', href: '/' },
+  { key: 'tours', href: '/tours' },
+  { key: 'about', href: '/about' },
+  { key: 'contact', href: '/contact' },
 ];
 
 const socialLinks = [
@@ -32,15 +32,21 @@ const socialLinks = [
 
 export function Header() {
   const locale = useLocale();
+  const t = useTranslations();
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const basePath = pathname.replace(`/${locale}`, '') || '/';
+  const basePath = pathname.startsWith(`/${locale}`)
+    ? pathname.slice(locale.length + 1) || '/'
+    : pathname;
 
   const switchLanguage = (newLocale: string) => {
     if (newLocale === locale) return;
-    router.push(`/${newLocale}${basePath === '/' ? '' : basePath}`);
+
+    const query = searchParams.toString();
+    router.push(`/${newLocale}${basePath === '/' ? '' : basePath}${query ? `?${query}` : ''}`);
   };
 
   const langButton = (code: string) => (
@@ -72,14 +78,14 @@ export function Header() {
               />
             </Link>
             <nav className={styles.navContainer}>
-              {navLinks.map(({ label, href }) => (
+              {navLinks.map(({ key, href }) => (
                 <Link
                   key={href}
                   href={`/${locale}${href === '/' ? '' : href}`}
                   className={styles.navButton}
                   prefetch={true}
                 >
-                  {label}
+                  {t(`nav.${key}`)}
                 </Link>
               ))}
             </nav>
@@ -189,7 +195,7 @@ export function Header() {
         {isMobileMenuOpen && (
           <div className={styles.mobileNavMenu}>
             <nav className={styles.mobileNav}>
-              {navLinks.map(({ label, href }) => (
+              {navLinks.map(({ key, href }) => (
                 <Link
                   key={href}
                   href={`/${locale}${href === '/' ? '' : href}`}
@@ -197,7 +203,7 @@ export function Header() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   prefetch={true}
                 >
-                  {label}
+                  {t(`nav.${key}`)}
                 </Link>
               ))}
             </nav>

@@ -145,17 +145,84 @@ function StarRating({
 }
 
 export function ReviewsAdminPage() {
-  const [reviews, setReviews] = useState<ReviewFull[]>(initialReviews);
+  const [reviews, setReviews] = useState<ReviewFull[]>([]);
+  const [tours, setTours] = useState<Array<{ _id: string; title: string }>>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [approvalFilter, setApprovalFilter] = useState<string>('');
   const [ratingFilter, setRatingFilter] = useState<string>('');
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [viewModal, setViewModal] = useState<ReviewFull | null>(null);
   const [editModal, setEditModal] = useState<ReviewFull | null>(null);
   const [deleteModal, setDeleteModal] = useState<ReviewFull | null>(null);
   const [editForm, setEditForm] = useState({ reviewText: '', rating: 5 });
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [createForm, setCreateForm] = useState({
+    name: '',
+    email: '',
+    reviewText: '',
+    rating: 5,
+    tourId: '',
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
+
+  const fetchTours = async () => {
+    try {
+      const response = await fetch('/api/tours?isActive=false&limit=200');
+      const result = await response.json();
+      if (result?.success && result?.data?.tours) {
+        const apiTours = result.data.tours.map((t: Record<string, unknown>) => ({
+          _id: (t._id as string) || (t.id as string),
+          title: (t.title as string) || 'Untitled',
+        }));
+        setTours(apiTours);
+      }
+    } catch (err) {
+      console.error('Error fetching tours:', err);
+    }
+  };
+
+  const fetchReviews = async () => {
+    try {
+      setIsRefreshing(true);
+      const response = await fetch('/api/reviews?isApproved=all&limit=200');
+      const result = await response.json();
+      if (result?.success && result?.data?.reviews) {
+        const apiReviews = result.data.reviews.map((r: Record<string, unknown>) => {
+          const _id = String((r._id as string) || (r.id as string) || '');
+          const rating = typeof r.rating === 'number' ? r.rating : Number(r.rating || 0);
+          const isApproved = typeof r.isApproved === 'boolean' ? r.isApproved : Boolean(r.isApproved);
+
+          return {
+            _id,
+            name: String(r.name || ''),
+            email: String(r.email || ''),
+            reviewText: String(r.reviewText || ''),
+            rating,
+            tourId: String(r.tourId || ''),
+            tourTitle: String(r.tourTitle || ''),
+            isApproved,
+            createdAt: String(r.createdAt || ''),
+            updatedAt: String(r.updatedAt || ''),
+          } as ReviewFull;
+        });
+        setReviews(apiReviews);
+      } else {
+        setReviews(initialReviews);
+      }
+    } catch (err) {
+      console.error('Error fetching reviews:', err);
+      setReviews(initialReviews);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTours();
+    fetchReviews();
+  }, []);
 
   // Debounced search
   const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
@@ -218,14 +285,30 @@ export function ReviewsAdminPage() {
     return { total, approved, pending, avgRating };
   }, [reviews]);
 
-  const toggleApproval = (reviewId: string) => {
-    setReviews((prev) =>
-      prev.map((r) =>
-        r._id === reviewId
-          ? { ...r, isApproved: !r.isApproved, updatedAt: new Date().toISOString() }
-          : r
-      )
-    );
+  const toggleApproval = async (reviewId: string) => {
+    const review = reviews.find((r) => r._id === reviewId);
+    if (!review) return;
+
+    try {
+      setIsLoading(true);
+      const response = await fetch(`/api/reviews/${reviewId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isApproved: !review.isApproved }),
+      });
+      const result = await response.json();
+      if (result?.success && result?.data?.review) {
+        const updated = result.data.review as ReviewFull;
+        setReviews((prev) => prev.map((r) => (r._id === reviewId ? { ...r, ...updated } : r)));
+      } else {
+        alert('Error: ' + (result?.error || 'Failed to update review'));
+      }
+    } catch (err) {
+      console.error('Error updating review approval:', err);
+      alert('Error updating review. Check console for details.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const openEditModal = (review: ReviewFull) => {
@@ -233,40 +316,117 @@ export function ReviewsAdminPage() {
     setEditModal(review);
   };
 
-  const saveEdit = () => {
-    if (editModal) {
-      setReviews((prev) =>
-        prev.map((r) =>
-          r._id === editModal._id
-            ? {
-                ...r,
-                reviewText: editForm.reviewText,
-                rating: editForm.rating,
-                updatedAt: new Date().toISOString(),
-              }
-            : r
+  const saveEdit = async () => {
+    if (!editModal) return;
+
+    try {
+      setIsLoading(true);
+      const response = await fetch(`/api/reviews/${editModal._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reviewText: editForm.reviewText, rating: editForm.rating }),
+      });
+      const result = await response.json();
+      if (result?.success && result?.data?.review) {
+        const updated = result.data.review as ReviewFull;
+        setReviews((prev) =>
+          prev.map((r) => (r._id === editModal._id ? { ...r, ...updated } : r))
+        );
+        setEditModal(null);
+      } else {
+        alert('Error: ' + (result?.error || 'Failed to update review'));
+      }
+    } catch (err) {
+      console.error('Error editing review:', err);
+      alert('Error editing review. Check console for details.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteModal) return;
+
+    try {
+      setIsLoading(true);
+      const response = await fetch(`/api/reviews/${deleteModal._id}`, { method: 'DELETE' });
+      const result = await response.json();
+
+      if (result?.success) {
+        setReviews((prev) => prev.filter((r) => r._id !== deleteModal._id));
+        setDeleteModal(null);
+      } else {
+        alert('Error: ' + (result?.error || 'Failed to delete review'));
+      }
+    } catch (err) {
+      console.error('Error deleting review:', err);
+      alert('Error deleting review. Check console for details.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRefresh = async () => {
+    await fetchReviews();
+  };
+
+  const approveAll = async () => {
+    const toApprove = reviews.filter((r) => !r.isApproved);
+    if (toApprove.length === 0) return;
+
+    try {
+      setIsLoading(true);
+      await Promise.all(
+        toApprove.map((r) =>
+          fetch(`/api/reviews/${r._id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ isApproved: true }),
+          })
         )
       );
-      setEditModal(null);
+      await fetchReviews();
+    } catch (err) {
+      console.error('Error approving all reviews:', err);
+      alert('Error approving reviews. Check console for details.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleDelete = () => {
-    if (deleteModal) {
-      setReviews((prev) => prev.filter((r) => r._id !== deleteModal._id));
-      setDeleteModal(null);
+  const createReview = async () => {
+    if (!createForm.name || !createForm.email || !createForm.reviewText || !createForm.tourId) {
+      alert('Please fill in all required fields');
+      return;
     }
-  };
 
-  const handleRefresh = () => {
-    setIsRefreshing(true);
-    setTimeout(() => setIsRefreshing(false), 1000);
-  };
-
-  const approveAll = () => {
-    setReviews((prev) =>
-      prev.map((r) => ({ ...r, isApproved: true, updatedAt: new Date().toISOString() }))
-    );
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: createForm.name,
+          email: createForm.email,
+          reviewText: createForm.reviewText,
+          rating: createForm.rating,
+          tourId: createForm.tourId,
+        }),
+      });
+      const result = await response.json();
+      if (result?.success) {
+        setCreateModalOpen(false);
+        setCreateForm({ name: '', email: '', reviewText: '', rating: 5, tourId: '' });
+        await fetchReviews();
+      } else {
+        alert('Error: ' + (result?.error || 'Failed to create review'));
+      }
+    } catch (err) {
+      console.error('Error creating review:', err);
+      alert('Error creating review. Check console for details.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -418,6 +578,14 @@ export function ReviewsAdminPage() {
             {/* Approve All */}
             <button className={styles.primaryButton} onClick={approveAll}>
               <FaCheck /> Approve All
+            </button>
+
+            <button
+              className={styles.primaryButton}
+              onClick={() => setCreateModalOpen(true)}
+              disabled={isLoading}
+            >
+              Add Review
             </button>
 
             {/* Refresh */}
@@ -942,6 +1110,122 @@ export function ReviewsAdminPage() {
               </button>
               <button className={styles.dangerButton} onClick={handleDelete}>
                 Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Create Review Modal */}
+      {createModalOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+          }}
+          onClick={() => setCreateModalOpen(false)}
+        >
+          <div
+            style={{
+              background: 'hsl(var(--card))',
+              borderRadius: '12px',
+              padding: '2rem',
+              maxWidth: 520,
+              width: '90%',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 style={{ margin: '0 0 1.5rem' }}>Add Review</h3>
+
+            <div className={formStyles.formGroup} style={{ marginBottom: '1rem' }}>
+              <label className={formStyles.label}>Tour *</label>
+              {tours.length > 0 ? (
+                <select
+                  className={formStyles.select}
+                  value={createForm.tourId}
+                  onChange={(e) => setCreateForm((p) => ({ ...p, tourId: e.target.value }))}
+                >
+                  <option value="">Select tour</option>
+                  {tours.map((t) => (
+                    <option key={t._id} value={t._id}>
+                      {t.title}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  className={formStyles.input}
+                  value={createForm.tourId}
+                  onChange={(e) => setCreateForm((p) => ({ ...p, tourId: e.target.value }))}
+                  placeholder="Tour ID"
+                />
+              )}
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '1rem',
+                marginBottom: '1rem',
+              }}
+            >
+              <div className={formStyles.formGroup}>
+                <label className={formStyles.label}>Name *</label>
+                <input
+                  className={formStyles.input}
+                  value={createForm.name}
+                  onChange={(e) => setCreateForm((p) => ({ ...p, name: e.target.value }))}
+                />
+              </div>
+              <div className={formStyles.formGroup}>
+                <label className={formStyles.label}>Email *</label>
+                <input
+                  className={formStyles.input}
+                  type="email"
+                  value={createForm.email}
+                  onChange={(e) => setCreateForm((p) => ({ ...p, email: e.target.value }))}
+                />
+              </div>
+            </div>
+
+            <div className={formStyles.formGroup} style={{ marginBottom: '1rem' }}>
+              <label className={formStyles.label}>Rating</label>
+              <StarRating
+                rating={createForm.rating}
+                editable
+                onChange={(rating) => setCreateForm((p) => ({ ...p, rating }))}
+              />
+            </div>
+
+            <div className={formStyles.formGroup}>
+              <label className={formStyles.label}>Review Text *</label>
+              <textarea
+                className={formStyles.textarea}
+                value={createForm.reviewText}
+                onChange={(e) => setCreateForm((p) => ({ ...p, reviewText: e.target.value }))}
+                rows={5}
+              />
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.75rem',
+                justifyContent: 'flex-end',
+                marginTop: '1.5rem',
+              }}
+            >
+              <button className={styles.secondaryButton} onClick={() => setCreateModalOpen(false)}>
+                Cancel
+              </button>
+              <button className={styles.primaryButton} onClick={createReview} disabled={isLoading}>
+                Save
               </button>
             </div>
           </div>

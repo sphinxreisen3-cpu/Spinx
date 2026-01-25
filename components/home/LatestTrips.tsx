@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from '@/styles/components/home/LatestTrips.module.css';
 import type { Tour } from '@/types/tour.types';
@@ -18,6 +19,8 @@ interface TourCard {
 }
 
 export function LatestTrips() {
+  const locale = useLocale();
+  const t = useTranslations();
   const [tours, setTours] = useState<TourCard[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -33,17 +36,23 @@ export function LatestTrips() {
         const data = await response.json();
         const apiTours: Tour[] = data.data.tours;
 
-        // Map API tours to TourCard format
-        const mappedTours: TourCard[] = apiTours.map((tour: Tour) => ({
-          id: tour._id,
-          slug: tour.slug,
-          title: tour.title,
-          image: tour.image1 || '/images/placeholder-tour.jpg',
-          category: tour.category,
-          duration: tour.travelType,
-          rating: 4.8, // Default rating
-          price: `$${tour.price}`,
-        }));
+        // Map API tours to TourCard format with bilingual support
+        const isGerman = locale === 'de';
+        const mappedTours: TourCard[] = apiTours.map((tour: Tour) => {
+          const useEUR = isGerman && tour.priceEUR != null && tour.priceEUR > 0;
+          const displayPrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
+          const currencySymbol = useEUR ? '€' : '$';
+          return {
+            id: tour._id,
+            slug: tour.slug,
+            title: isGerman && tour.title_de ? tour.title_de : tour.title,
+            image: tour.image1 || '/images/placeholder-tour.jpg',
+            category: isGerman && tour.category_de ? tour.category_de : tour.category,
+            duration: isGerman && tour.travelType_de ? tour.travelType_de : tour.travelType,
+            rating: 4.8, // Default rating
+            price: `${currencySymbol}${displayPrice}`,
+          };
+        });
 
         setTours(mappedTours);
       } catch (err) {
@@ -55,7 +64,7 @@ export function LatestTrips() {
     };
 
     fetchTours();
-  }, []);
+  }, [locale]);
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % Math.ceil(tours.length / 3));
@@ -71,7 +80,7 @@ export function LatestTrips() {
     <section className={styles.section}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Latest Trips</h2>
+          <h2 className={styles.title}>{t('home.latestTrips.title')}</h2>
           <div className={styles.titleUnderline}></div>
         </div>
 
@@ -79,7 +88,7 @@ export function LatestTrips() {
           <div className={styles.grid}>
             {loading ? (
               <div style={{ textAlign: 'center', padding: '2rem', gridColumn: '1 / -1' }}>
-                Loading tours...
+                {t('home.latestTrips.loading')}
               </div>
             ) : error ? (
               <div
@@ -89,7 +98,7 @@ export function LatestTrips() {
               </div>
             ) : tours.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '2rem', gridColumn: '1 / -1' }}>
-                No tours available.
+                {t('home.latestTrips.noTours')}
               </div>
             ) : (
               visibleTours.map((tour: TourCard) => (
@@ -124,8 +133,8 @@ export function LatestTrips() {
 
                     <div className={styles.cardFooter}>
                       <span className={styles.price}>{tour.price}</span>
-                      <Link href={`/tours/${tour.slug}`}>
-                        <button className={styles.bookButton}>Book Now</button>
+                      <Link href={`/${locale}/tours/${tour.slug}#book`}>
+                        <button className={styles.bookButton}>{t('home.latestTrips.bookNow')}</button>
                       </Link>
                     </div>
                   </div>
@@ -138,7 +147,7 @@ export function LatestTrips() {
           <button
             onClick={prevSlide}
             className={`${styles.navButton} ${styles.navButtonPrev}`}
-            aria-label="Previous tours"
+            aria-label={t('home.latestTrips.prevAria')}
           >
             <ChevronLeft className={styles.navIcon} />
           </button>
@@ -146,7 +155,7 @@ export function LatestTrips() {
           <button
             onClick={nextSlide}
             className={`${styles.navButton} ${styles.navButtonNext}`}
-            aria-label="Next tours"
+            aria-label={t('home.latestTrips.nextAria')}
           >
             <ChevronRight className={styles.navIcon} />
           </button>

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import styles from '@/styles/components/home/ToursSection.module.css';
 import type { Tour } from '@/types/tour.types';
 
@@ -18,6 +19,8 @@ interface TourCard {
 }
 
 export function ToursSection() {
+  const locale = useLocale();
+  const t = useTranslations();
   const [tours, setTours] = useState<TourCard[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -33,17 +36,23 @@ export function ToursSection() {
         const apiTours: Tour[] = data.data.tours;
 
         // Map API tours to TourCard format
-        const mappedTours: TourCard[] = apiTours.map((tour: Tour) => ({
-          id: tour._id,
-          slug: tour.slug,
-          title: tour.title,
-          category: tour.category,
-          duration: tour.travelType,
-          rating: 4.8, // Default rating since not in API
-          price: `$${tour.price}`,
-          image: tour.image1 || '/images/placeholder-tour.jpg', // Use uploaded image or placeholder
-          description: tour.description,
-        }));
+        const isGerman = locale === 'de';
+        const mappedTours: TourCard[] = apiTours.map((tour: Tour) => {
+          const useEUR = isGerman && tour.priceEUR != null && tour.priceEUR > 0;
+          const displayPrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
+          const currencySymbol = useEUR ? '€' : '$';
+          return {
+            id: tour._id,
+            slug: tour.slug,
+            title: isGerman && tour.title_de ? tour.title_de : tour.title,
+            category: isGerman && tour.category_de ? tour.category_de : tour.category,
+            duration: isGerman && tour.travelType_de ? tour.travelType_de : tour.travelType,
+            rating: 4.8, // Default rating since not in API
+            price: `${currencySymbol}${displayPrice}`,
+            image: tour.image1 || '/images/placeholder-tour.jpg', // Use uploaded image or placeholder
+            description: isGerman && tour.description_de ? tour.description_de : tour.description,
+          };
+        });
 
         setTours(mappedTours);
       } catch (err) {
@@ -55,13 +64,13 @@ export function ToursSection() {
     };
 
     fetchTours();
-  }, []);
+  }, [locale]);
   return (
     <section className={styles.section} id="tours-section">
       <div className={styles.container}>
         <div className={styles.header}>
           <h2 className={styles.title}>
-            🏖️ Amazing Destinations
+            🏖️ {t('home.toursSection.title')}
             <div className={styles.titleUnderline}></div>
           </h2>
         </div>
@@ -75,7 +84,7 @@ export function ToursSection() {
                   <input
                     type="text"
                     id="tours-search"
-                    placeholder="Search tours by destination, activity, or description..."
+                    placeholder={t('home.toursSection.searchPlaceholder')}
                     className={styles.searchInput}
                   />
                   <span className={styles.searchIcon}>🔍</span>
@@ -84,13 +93,13 @@ export function ToursSection() {
 
               <div className={styles.selectWrapper}>
                 <select id="category-filter" className={styles.selectInput}>
-                  <option value="">All Categories</option>
-                  <option value="Ancient Wonders">Ancient Wonders</option>
-                  <option value="Water Sports">Water Sports</option>
-                  <option value="Beach Resort">Beach Resort</option>
-                  <option value="Cultural">Cultural</option>
-                  <option value="Adventure">Adventure</option>
-                  <option value="Historical">Historical</option>
+                  <option value="">{t('home.toursSection.allCategories')}</option>
+                  <option value="Ancient Wonders">{t('home.toursSection.categories.ancientWonders')}</option>
+                  <option value="Water Sports">{t('home.toursSection.categories.waterSports')}</option>
+                  <option value="Beach Resort">{t('home.toursSection.categories.beachResort')}</option>
+                  <option value="Cultural">{t('home.toursSection.categories.cultural')}</option>
+                  <option value="Adventure">{t('home.toursSection.categories.adventure')}</option>
+                  <option value="Historical">{t('home.toursSection.categories.historical')}</option>
                 </select>
                 <span className={styles.selectIcon}>📂</span>
               </div>
@@ -102,7 +111,7 @@ export function ToursSection() {
         <div className={styles.grid}>
           {tours.length === 0 && !loading ? (
             <div style={{ textAlign: 'center', padding: '2rem', gridColumn: '1 / -1' }}>
-              {error ? <span style={{ color: 'red' }}>{error}</span> : 'No tours available.'}
+              {error ? <span style={{ color: 'red' }}>{error}</span> : t('home.toursSection.noTours')}
             </div>
           ) : (
             tours.map((tour) => (
@@ -139,8 +148,8 @@ export function ToursSection() {
 
                   <div className={styles.cardFooter}>
                     <span className={styles.price}>{tour.price}</span>
-                    <Link href={`/tours/${tour.slug}`}>
-                      <button className={styles.bookButton}>Book Now</button>
+                    <Link href={`/${locale}/tours/${tour.slug}#book`}>
+                      <button className={styles.bookButton}>{t('home.toursSection.bookNow')}</button>
                     </Link>
                   </div>
                 </div>

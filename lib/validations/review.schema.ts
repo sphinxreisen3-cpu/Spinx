@@ -16,12 +16,13 @@ export const createReviewSchema = z.object({
 export const updateReviewSchema = z.object({
   isApproved: z.boolean().optional(),
   reviewText: z.string().min(10).max(1000).optional(),
+  rating: z.number().int().min(1).max(5).optional(),
 });
 
 // Review query schema
 export const reviewQuerySchema = z.object({
   tourId: z.string().optional(),
-  isApproved: z.enum(['true', 'false']).optional(),
+  isApproved: z.enum(['true', 'false', 'all']).optional(),
   page: z.string().regex(/^\d+$/).optional().default('1'),
   limit: z.string().regex(/^\d+$/).optional().default('10'),
 });
