@@ -650,7 +650,7 @@
     align-items: flex-start;
   }
   .booking-container {
-        padding: 25px 15px;
+        padding: 10px 10px;
         margin-top: 20px;
   }
   .slider-section{
@@ -680,6 +680,7 @@
   }
   .quantity-selector {
     width: 100%;
+        padding: 1px;
     justify-content: space-between;
   }
   .slider-nav {
@@ -688,4 +689,18 @@
   .branding-tagline {
     font-size: 28px;
   }
+  .form-row {
+  gap: 10px;
+}
+.travelers-section{
+      display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(156px, 1fr));
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    align-content: center;
+    place-content: center;
+    place-items: center;
+    gap: 9px;
+}
 }

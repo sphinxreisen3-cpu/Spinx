@@ -193,6 +193,31 @@
       "role": "Regular Customer",
       "prevAria": "Previous testimonial",
       "nextAria": "Next testimonial",
+      "submit": {
+        "button": "Add Testimonial",
+        "title": "Share your experience",
+        "fields": {
+          "name": "Name",
+          "country": "Country",
+          "initials": "Initials",
+          "text": "Your testimonial"
+        },
+        "placeholders": {
+          "name": "Your name",
+          "country": "Your country",
+          "initials": "AM",
+          "text": "Write a short testimonial..."
+        },
+        "submit": "Submit",
+        "submitting": "Submitting...",
+        "success": "Thank you! Your testimonial was submitted.",
+        "errors": {
+          "name": "Please enter your name.",
+          "country": "Please enter your country.",
+          "initials": "Please enter 1–3 initials.",
+          "text": "Please write at least 10 characters."
+        }
+      },
       "items": {
         "1": {
           "text": "My experience traveling to Egypt with Sealine Travel was absolutely unforgettable! The pyramids of Giza were breathtaking up close, and walking among these ancient wonders took me back thousands of years. Our expert guide made the history come alive, explaining the construction techniques and daily life of the pharaohs. The accommodations in Cairo were luxurious and comfortable. I'll never forget riding a camel at sunset against the desert backdrop - it was pure magic!"

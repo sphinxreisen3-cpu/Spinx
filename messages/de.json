@@ -193,6 +193,31 @@
       "role": "Stammkunde",
       "prevAria": "Vorherige Bewertung",
       "nextAria": "Nächste Bewertung",
+      "submit": {
+        "button": "Bewertung hinzufügen",
+        "title": "Teilen Sie Ihre Erfahrung",
+        "fields": {
+          "name": "Name",
+          "country": "Land",
+          "initials": "Initialen",
+          "text": "Ihre Bewertung"
+        },
+        "placeholders": {
+          "name": "Ihr Name",
+          "country": "Ihr Land",
+          "initials": "AM",
+          "text": "Schreiben Sie eine kurze Bewertung..."
+        },
+        "submit": "Senden",
+        "submitting": "Wird gesendet...",
+        "success": "Danke! Ihre Bewertung wurde gesendet.",
+        "errors": {
+          "name": "Bitte geben Sie Ihren Namen ein.",
+          "country": "Bitte geben Sie Ihr Land ein.",
+          "initials": "Bitte geben Sie 1–3 Initialen ein.",
+          "text": "Bitte schreiben Sie mindestens 10 Zeichen."
+        }
+      },
       "items": {
         "1": {
           "text": "Meine Reise nach Ägypten mit Sealine Travel war absolut unvergesslich! Die Pyramiden von Gizeh waren aus nächster Nähe atemberaubend, und zwischen diesen antiken Wundern zu stehen fühlte sich an wie eine Zeitreise. Unser Guide ließ die Geschichte lebendig werden und erklärte Bauweisen sowie das Leben der Pharaonen. Die Unterkunft in Kairo war luxuriös und sehr komfortabel. Den Kamelritt bei Sonnenuntergang vor der Wüstenkulisse werde ich nie vergessen – einfach magisch!"
