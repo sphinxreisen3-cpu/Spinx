@@ -44,7 +44,8 @@ const nextConfig = {
 
   // Enable output standalone for optimized production builds on Railway/Docker
   // This creates a minimal self-contained build
-  output: 'standalone',
+  // Commented out for Railway - using next start with PORT instead
+  // output: 'standalone',
 
   // Improve page loading with prefetching
   poweredByHeader: false, // Security: remove X-Powered-By header
