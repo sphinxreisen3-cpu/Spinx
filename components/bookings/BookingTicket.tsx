@@ -10,7 +10,8 @@ interface BookingTicketProps {
     name: string;
     email: string;
     phone: string;
-    tourTitle: string;
+    tourTitle?: string;
+    confirmTrip?: string;
     travelDate: string;
     adults: number;
     children: number;
@@ -125,7 +126,7 @@ export function BookingTicket({ booking, onClose }: BookingTicketProps) {
           <div className={styles.ticketContent}>
             <div className={styles.ticketRow}>
               <span className={styles.ticketLabel}>{t('tourName')}:</span>
-              <span className={styles.ticketValue}>{booking.tourTitle}</span>
+              <span className={styles.ticketValue}>{booking.tourTitle || booking.confirmTrip || ''}</span>
             </div>
 
             <div className={styles.ticketRow}>

@@ -9,6 +9,7 @@ interface TourDetailsTableProps {
     title: string;
     title_de?: string;
     price: number;
+    priceEUR?: number;
     description: string;
     description_de?: string;
     transportation?: string;

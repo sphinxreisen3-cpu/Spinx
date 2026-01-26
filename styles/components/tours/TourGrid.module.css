@@ -11,7 +11,7 @@
 .searchInput {
   flex: 1;
   min-width: 200px;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 0.5rem;
   border: 2px solid #e5e7eb;
   border-radius: 8px;
   font-size: 1rem;
@@ -247,6 +247,6 @@
   .searchInput,
   .categorySelect,
   .saleFilter {
-    width: 100%;
+    width: 90%;
   }
 }

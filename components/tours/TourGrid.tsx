@@ -18,6 +18,7 @@ interface TourCard {
   image: string;
   description: string;
   isOnSale: boolean;
+  currencySymbol?: string;
 }
 
 export function TourGrid() {

@@ -74,17 +74,17 @@
 
 /* Tour Cards - Elegant Design */
 .card {
-  position: relative;
-  height: 450px;
-  border-radius: 24px;
-  overflow: hidden;
-  cursor: pointer;
-  background: #333;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
-    0 10px 30px rgba(0, 0, 0, 0.2),
-    0 4px 12px rgba(0, 0, 0, 0.15);
-  transform: translateY(0);
+    position: relative;
+    height: 262px;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #f4bf6f;
+    overflow: hidden;
+    cursor: pointer;
+    background: #333;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 5px 17px rgb(221 147 50 / 98%), 0 4px 12px rgb(0 0 0);
+    transform: translateY(0);
 }
 
 .card:hover {
@@ -205,6 +205,13 @@
     rgba(0, 0, 0, 0.7) 50%,
     rgba(0, 0, 0, 0) 100%
   );
+  opacity: 1;
+  transition: opacity 0.8s ease-in-out;
+}
+
+.cardContent:hover{
+  opacity: 0.5;
+  background: none;
 }
 
 .cardTitle {
@@ -412,8 +419,8 @@
   }
 
   .card {
-    height: 380px;
-    border-radius: 20px;
+  height: 243px;
+  border-radius: 10px;
   }
 
   .cardContent {

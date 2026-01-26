@@ -168,7 +168,7 @@ export function ToursAdminPage() {
   const [saleModal, setSaleModal] = useState<{ tour: TourFull; discount: number } | null>(null);
   const [translationTourId, setTranslationTourId] = useState('');
   const [showTranslationForm, setShowTranslationForm] = useState(false);
-  const [translationFormData, setTranslationFormData] = useState<Partial<TourFull>>({});
+  const [translationFormData, setTranslationFormData] = useState<Record<string, string>>({});
   const [imagePreview, setImagePreview] = useState<(string | null)[]>([null, null, null, null]);
   const fileInputRefs = [
     useRef<HTMLInputElement>(null),
@@ -541,7 +541,7 @@ export function ToursAdminPage() {
         if (priceEURValue === '' || priceEURValue === null || priceEURValue === undefined) {
           translationData.priceEUR = null;
         } else {
-          const numValue = typeof priceEURValue === 'number' ? priceEURValue : parseFloat(String(priceEURValue));
+          const numValue = parseFloat(String(priceEURValue));
           if (!isNaN(numValue) && numValue > 0) {
             translationData.priceEUR = numValue;
           } else {
@@ -553,7 +553,7 @@ export function ToursAdminPage() {
       
       // Process all other German translation fields
       Object.keys(translationFormData).forEach((key) => {
-        const value = translationFormData[key as keyof typeof translationFormData];
+        const value = translationFormData[key];
         // Skip priceEUR as it's already handled above
         if (key === 'priceEUR') {
           return;
@@ -1282,11 +1282,7 @@ export function ToursAdminPage() {
                   <input
                     type="number"
                     className={formStyles.input}
-                    value={
-                      translationFormData.priceEUR != null && translationFormData.priceEUR !== ''
-                        ? String(translationFormData.priceEUR)
-                        : ''
-                    }
+                    value={translationFormData.priceEUR || ''}
                     onChange={(e) => handleTranslationFieldChange('priceEUR', e.target.value)}
                     placeholder="Preis in Euro"
                     step="0.01"
@@ -1552,7 +1548,7 @@ export function ToursAdminPage() {
                     <input
                       type="text"
                       className={formStyles.input}
-                      value={translationFormData[`location${num}_de` as keyof typeof translationFormData] || ''}
+                      value={translationFormData[`location${num}_de`] || ''}
                       onChange={(e) => handleTranslationFieldChange(`location${num}_de`, e.target.value)}
                       placeholder={`Tour-Stopp ${num} auf Deutsch`}
                     />
