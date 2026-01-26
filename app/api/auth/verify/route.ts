@@ -10,11 +10,11 @@ export async function POST(request: NextRequest) {
     const { data, error } = await validateBody(request, loginSchema);
     if (error) return error;
 
-    // Verify admin password
-    const result = await verifyAdmin(data.password);
+    // Verify admin email and password
+    const result = await verifyAdmin(data.email, data.password);
 
     if (!result.success || !result.token) {
-      return errorResponse('Invalid password', 401);
+      return errorResponse('Invalid email or password', 401);
     }
 
     // Create response with token

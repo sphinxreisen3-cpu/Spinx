@@ -59,12 +59,12 @@ export async function verifyToken(token: string): Promise<JWTPayload> {
   }
 }
 
-// Check admin authentication
-export async function verifyAdmin(password: string): Promise<{ success: boolean; token?: string }> {
+// Check admin authentication with email
+export async function verifyAdmin(email: string, password: string): Promise<{ success: boolean; token?: string; admin?: { name: string; email: string } }> {
   try {
     await connectDB();
 
-    const admin = await Admin.findOne();
+    const admin = await Admin.findOne({ email: email.toLowerCase().trim() });
     if (!admin) {
       return { success: false };
     }
@@ -75,7 +75,14 @@ export async function verifyAdmin(password: string): Promise<{ success: boolean;
     }
 
     const token = await generateToken();
-    return { success: true, token };
+    return { 
+      success: true, 
+      token,
+      admin: {
+        name: admin.name,
+        email: admin.email,
+      }
+    };
   } catch (error) {
     throw error;
   }

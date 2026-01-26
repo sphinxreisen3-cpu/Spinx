@@ -58,16 +58,47 @@ export default function TourDetailsPage() {
     createdAt?: string;
   } | null>(null);
 
-  // Fetch tour data
+  // Fetch tour data and reviews in parallel for better performance
   useEffect(() => {
-    const fetchTour = async () => {
+    const fetchData = async () => {
+      if (!slug) return;
+      
       try {
-        const response = await fetch(`/api/tours/${slug}`);
-        if (!response.ok) {
+        setLoading(true);
+        setError(null);
+        
+        // Fetch tour data first (reviews depend on tour._id)
+        const tourResponse = await fetch(`/api/tours/${slug}`, {
+          cache: 'force-cache',
+          next: { revalidate: 300 }, // Revalidate every 5 minutes
+        });
+        
+        if (!tourResponse.ok) {
           throw new Error('Tour not found');
         }
-        const data = await response.json();
-        setTour(data.data.tour);
+        
+        const tourData = await tourResponse.json();
+        const fetchedTour = tourData.data.tour;
+        setTour(fetchedTour);
+        
+        // Fetch reviews in parallel once we have tour ID
+        if (fetchedTour?._id) {
+          try {
+            const reviewsResponse = await fetch(`/api/reviews?tourId=${fetchedTour._id}&limit=50`, {
+              cache: 'force-cache',
+              next: { revalidate: 60 }, // Revalidate every minute
+            });
+            const reviewsData = await reviewsResponse.json();
+            
+            if (reviewsData?.success && reviewsData?.data?.reviews) {
+              setReviews(reviewsData.data.reviews as TourReviewItem[]);
+              setReviewsAverage(reviewsData.data.averageRating || null);
+            }
+          } catch (reviewsErr) {
+            // Don't fail the whole page if reviews fail
+            console.error('Error fetching reviews:', reviewsErr);
+          }
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load tour');
         console.error('Error fetching tour:', err);
@@ -76,9 +107,7 @@ export default function TourDetailsPage() {
       }
     };
 
-    if (slug) {
-      fetchTour();
-    }
+    fetchData();
   }, [slug]);
 
   // Scroll to booking form if hash is present in URL
@@ -92,27 +121,6 @@ export default function TourDetailsPage() {
       }, 100);
     }
   }, [loading, tour]);
-
-  // Fetch reviews for this tour
-  useEffect(() => {
-    const fetchReviews = async () => {
-      if (!tour?._id) return;
-
-      try {
-        const response = await fetch(`/api/reviews?tourId=${tour._id}&limit=50`);
-        const data = await response.json();
-
-        if (data?.success && data?.data?.reviews) {
-          setReviews(data.data.reviews as TourReviewItem[]);
-          setReviewsAverage(data.data.averageRating || null);
-        }
-      } catch (err) {
-        console.error('Error fetching reviews:', err);
-      }
-    };
-
-    fetchReviews();
-  }, [tour?._id]);
 
   // Get bilingual tour content helper
   const getTourField = useMemo(() => {

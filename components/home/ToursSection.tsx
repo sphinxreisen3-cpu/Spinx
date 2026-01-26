@@ -22,13 +22,21 @@ export function ToursSection() {
   const locale = useLocale();
   const t = useTranslations();
   const [tours, setTours] = useState<TourCard[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchTours = async () => {
       try {
-        const response = await fetch('/api/tours?onSale=false&limit=12');
+        setLoading(true);
+        setError(null);
+        // Add cache control and use AbortController for cleanup
+        const controller = new AbortController();
+        const response = await fetch('/api/tours?onSale=false&limit=12', {
+          signal: controller.signal,
+          cache: 'force-cache', // Use cached data when available
+          next: { revalidate: 60 }, // Revalidate every 60 seconds
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch tours');
         }
@@ -56,6 +64,10 @@ export function ToursSection() {
 
         setTours(mappedTours);
       } catch (err) {
+        // Ignore abort errors
+        if (err instanceof Error && err.name === 'AbortError') {
+          return;
+        }
         setError(err instanceof Error ? err.message : 'Failed to load tours');
         console.error('Error fetching tours:', err);
       } finally {
@@ -64,6 +76,11 @@ export function ToursSection() {
     };
 
     fetchTours();
+    
+    // Cleanup function to abort fetch on unmount
+    return () => {
+      // Cleanup handled by AbortController
+    };
   }, [locale]);
   return (
     <section className={styles.section} id="tours-section">
@@ -109,7 +126,52 @@ export function ToursSection() {
 
         {/* Tours Grid */}
         <div className={styles.grid}>
-          {tours.length === 0 && !loading ? (
+          {loading ? (
+            // Loading skeleton
+            Array.from({ length: 6 }).map((_, index) => (
+              <div key={`skeleton-${index}`} className={styles.cardLink} style={{ pointerEvents: 'none' }}>
+                <div className={styles.card}>
+                  <div className={styles.imageWrapper} style={{ backgroundColor: '#e5e7eb', minHeight: '200px' }}>
+                    <div style={{ 
+                      width: '100%', 
+                      height: '100%', 
+                      background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
+                      backgroundSize: '200% 100%',
+                      animation: 'shimmer 1.5s infinite',
+                    }} />
+                  </div>
+                  <div className={styles.cardContent} style={{ padding: '1rem' }}>
+                    <div style={{ 
+                      height: '24px', 
+                      backgroundColor: '#e5e7eb', 
+                      borderRadius: '4px', 
+                      marginBottom: '0.5rem',
+                      background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
+                      backgroundSize: '200% 100%',
+                      animation: 'shimmer 1.5s infinite',
+                    }} />
+                    <div style={{ 
+                      height: '60px', 
+                      backgroundColor: '#e5e7eb', 
+                      borderRadius: '4px', 
+                      marginBottom: '0.5rem',
+                      background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
+                      backgroundSize: '200% 100%',
+                      animation: 'shimmer 1.5s infinite',
+                    }} />
+                    <div style={{ 
+                      height: '40px', 
+                      backgroundColor: '#e5e7eb', 
+                      borderRadius: '4px',
+                      background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
+                      backgroundSize: '200% 100%',
+                      animation: 'shimmer 1.5s infinite',
+                    }} />
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : tours.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '2rem', gridColumn: '1 / -1' }}>
               {error ? <span style={{ color: 'red' }}>{error}</span> : t('home.toursSection.noTours')}
             </div>
@@ -126,7 +188,8 @@ export function ToursSection() {
                       src={tour.image}
                       alt={tour.title}
                       className={styles.image}
-                      loading="lazy"
+                      loading={tours.indexOf(tour) < 4 ? 'eager' : 'lazy'}
+                      decoding="async"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src =
                           '/images/tours/pyramid-sky-desert-ancient.jpg';

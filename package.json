@@ -18,6 +18,7 @@
     "db:test": "tsx scripts/test-db-connection.ts",
     "seed": "tsx scripts/seed-data.ts",
     "db:migrate": "tsx scripts/migrate-data.ts",
+    "create-admin": "tsx scripts/create-admin.ts",
     "analyze": "ANALYZE=true next build",
     "analyze:build": "npm run build -- --analyze"
   },

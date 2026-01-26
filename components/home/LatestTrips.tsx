@@ -25,7 +25,7 @@ export function LatestTrips() {
   const locale = useLocale();
   const t = useTranslations();
   const [tours, setTours] = useState<TourCard[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
@@ -35,8 +35,12 @@ export function LatestTrips() {
     const fetchTours = async () => {
       try {
         setLoading(true);
-        // Fetch all tours (including discounted ones)
-        const response = await fetch('/api/tours?limit=12&isActive=true');
+        setError(null);
+        // Fetch all tours (including discounted ones) with caching
+        const response = await fetch('/api/tours?limit=12&isActive=true', {
+          cache: 'force-cache',
+          next: { revalidate: 60 }, // Revalidate every 60 seconds
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch tours');
         }

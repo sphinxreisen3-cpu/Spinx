@@ -35,4 +35,9 @@ export const adminNav = [
     href: '/admin/testimonials',
     icon: 'message-square',
   },
+  {
+    title: 'Users',
+    href: '/admin/users',
+    icon: 'users',
+  },
 ];

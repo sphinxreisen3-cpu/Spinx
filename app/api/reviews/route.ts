@@ -13,6 +13,7 @@ import {
   isValidObjectId,
 } from '@/lib/api/helpers';
 import { createReviewSchema, reviewQuerySchema } from '@/lib/validations/review.schema';
+import { broadcastNotification } from '@/lib/notifications';
 
 // GET /api/reviews - Get reviews (public with filters)
 export async function GET(request: NextRequest) {
@@ -108,7 +109,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       data: {
         reviews,
@@ -121,6 +122,11 @@ export async function GET(request: NextRequest) {
         },
       },
     });
+
+    // Cache reviews for 60 seconds, revalidate in background
+    response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
+    
+    return response;
   });
 }
 
@@ -157,6 +163,17 @@ export async function POST(request: NextRequest) {
     const review = await Review.create({
       ...data,
       isApproved: true, // Set to false if you want manual moderation
+    });
+
+    // Broadcast notification to admin
+    broadcastNotification('review', {
+      _id: review._id,
+      name: review.name,
+      email: review.email,
+      rating: review.rating,
+      reviewText: review.reviewText?.substring(0, 100), // First 100 chars
+      tourId: review.tourId,
+      isApproved: review.isApproved,
     });
 
     return successResponse(

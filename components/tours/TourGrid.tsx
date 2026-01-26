@@ -51,7 +51,10 @@ export function TourGrid() {
           params.append('onSale', 'true');
         }
 
-        const response = await fetch(`/api/tours?${params.toString()}`);
+        const response = await fetch(`/api/tours?${params.toString()}`, {
+          cache: 'force-cache',
+          next: { revalidate: 60 }, // Revalidate every 60 seconds
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch tours');
         }

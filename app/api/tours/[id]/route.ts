@@ -30,7 +30,12 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
       return errorResponse('Tour not found', 404);
     }
 
-    return successResponse({ tour });
+    const response = successResponse({ tour });
+    
+    // Cache for 5 minutes, revalidate in background (tours change less frequently)
+    response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+    
+    return response;
   });
 }
 

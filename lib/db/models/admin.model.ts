@@ -1,6 +1,8 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface IAdmin extends Document {
+  name: string;
+  email: string;
   password: string;
   createdAt: Date;
   updatedAt: Date;
@@ -8,19 +10,12 @@ export interface IAdmin extends Document {
 
 const AdminSchema = new Schema<IAdmin>(
   {
+    name: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
     password: { type: String, required: true },
   },
   { timestamps: true }
 );
-
-// Ensure only one admin password document exists
-AdminSchema.pre('save', async function (next) {
-  const count = await mongoose.model('Admin').countDocuments();
-  if (count > 0 && this.isNew) {
-    throw new Error('Only one admin password can exist');
-  }
-  next();
-});
 
 export const Admin: Model<IAdmin> =
   mongoose.models.Admin || mongoose.model<IAdmin>('Admin', AdminSchema);

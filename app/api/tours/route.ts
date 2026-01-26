@@ -68,7 +68,8 @@ export async function GET(request: NextRequest) {
       Tour.countDocuments(filter),
     ]);
 
-    return NextResponse.json({
+    // Add caching headers for better performance
+    const response = NextResponse.json({
       success: true,
       data: {
         tours,
@@ -81,6 +82,11 @@ export async function GET(request: NextRequest) {
         },
       },
     });
+
+    // Cache for 60 seconds, revalidate in background
+    response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
+    
+    return response;
   });
 }
 

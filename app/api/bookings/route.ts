@@ -9,6 +9,7 @@ import {
   withErrorHandler,
 } from '@/lib/api/helpers';
 import { createBookingSchema, bookingQuerySchema } from '@/lib/validations/booking.schema';
+import { broadcastNotification } from '@/lib/notifications';
 
 // GET /api/bookings - Get all bookings (admin only)
 export async function GET(request: NextRequest) {
@@ -91,6 +92,18 @@ export async function POST(request: NextRequest) {
       ...data,
       travelDate: new Date(data.travelDate),
       status: 'pending',
+    });
+
+    // Broadcast notification to admin
+    broadcastNotification('booking', {
+      _id: booking._id,
+      name: booking.name,
+      email: booking.email,
+      tourTitle: booking.tourTitle || booking.confirmTrip,
+      travelDate: booking.travelDate,
+      totalPrice: booking.totalPrice,
+      currencySymbol: booking.currencySymbol || '$',
+      status: booking.status,
     });
 
     return successResponse(

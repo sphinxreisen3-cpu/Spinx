@@ -164,6 +164,8 @@ const TourSchema = new Schema<ITour>(
 // Indexes for efficient queries
 TourSchema.index({ category: 1, isActive: 1 });
 TourSchema.index({ onSale: 1, isActive: 1 });
+TourSchema.index({ slug: 1, isActive: 1 }); // Optimize slug + isActive queries (used in tour details)
+TourSchema.index({ isActive: 1, sortOrder: 1 }); // Optimize default listing queries
 TourSchema.index({ title: 'text', description: 'text', category: 'text' });
 
 // Virtual for discounted price
