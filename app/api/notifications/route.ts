@@ -2,9 +2,6 @@ import { NextRequest } from 'next/server';
 import { verifyAdminAuth } from '@/lib/api/helpers';
 import { addConnection, removeConnection } from '@/lib/notifications';
 
-// Re-export for convenience
-export { broadcastNotification } from '@/lib/notifications';
-
 // GET /api/notifications - Server-Sent Events stream for real-time notifications
 export async function GET(request: NextRequest) {
   // Verify admin authentication

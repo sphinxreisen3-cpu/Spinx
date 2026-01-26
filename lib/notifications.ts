@@ -11,7 +11,7 @@ export function broadcastNotification(type: 'booking' | 'review', data: unknown)
   connections.forEach((controller) => {
     try {
       controller.enqueue(new TextEncoder().encode(`data: ${message}\n\n`));
-    } catch (error) {
+    } catch {
       // Connection closed, remove it
       connections.delete(controller);
     }
