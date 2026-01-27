@@ -34,14 +34,6 @@ export function LocationMap() {
         </div>
 
         <div className={styles.infoSection}>
-          <div className={styles.locationInfo}>
-            <span className={styles.locationIcon}>📍</span>
-            <div>
-              <h3 className={styles.locationTitle}>{t('home.map.locationTitle')}</h3>
-              <p className={styles.locationAddress}>{t('home.map.locationAddress')}</p>
-            </div>
-          </div>
-
           <p className={styles.description}>
             {t('home.map.description')}
           </p>
