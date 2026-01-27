@@ -3,27 +3,20 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import type { HomeTestimonial } from '@/types/home.types';
 import styles from '@/styles/components/home/Testimonials.module.css';
 
-export function Testimonials() {
+interface TestimonialsProps {
+  initialTestimonials?: HomeTestimonial[];
+  initialLocale?: string;
+}
+
+export function Testimonials({ initialTestimonials, initialLocale }: TestimonialsProps) {
   const t = useTranslations();
   const locale = useLocale();
   const isGerman = locale === 'de';
-
-  type DisplayTestimonial = {
-    id: string;
-    name: string;
-    country?: string;
-    role?: string;
-    role_de?: string;
-    initials: string;
-    image: string;
-    text: string;
-    text_de?: string;
-  };
-
-  const [apiTestimonials, setApiTestimonials] = useState<DisplayTestimonial[]>([]);
-
+  const hasInitial = Array.isArray(initialTestimonials);
+  const [apiTestimonials, setApiTestimonials] = useState<HomeTestimonial[]>(initialTestimonials ?? []);
   const testimonials = apiTestimonials;
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -41,12 +34,6 @@ export function Testimonials() {
     initials: '',
     text: '',
   });
-
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   const pauseAfterInteraction = () => {
     setIsManualPaused(true);
@@ -91,12 +78,14 @@ export function Testimonials() {
   };
 
   useEffect(() => {
+    if (hasInitial && initialLocale === locale) return;
+
     const ignoreRef = { ignore: false };
     loadTestimonials(ignoreRef);
     return () => {
       ignoreRef.ignore = true;
     };
-  }, []);
+  }, [locale, hasInitial, initialLocale]);
 
   useEffect(() => {
     if (currentIndex >= testimonials.length) {
@@ -239,7 +228,7 @@ export function Testimonials() {
           onFocus={() => setIsHoverPaused(true)}
           onBlur={() => setIsHoverPaused(false)}
         >
-          {isMounted && currentTestimonial && (
+          {currentTestimonial && (
             <>
               <article key={currentTestimonial.id} className={styles.card}>
                 <div className={styles.cardContent}>

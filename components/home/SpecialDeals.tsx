@@ -4,32 +4,34 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import type { Tour } from '@/types/tour.types';
+import type { HomeSaleTourCard } from '@/types/home.types';
 import styles from '@/styles/components/home/SpecialDeals.module.css';
 
-interface SaleTourCard {
-  id: string;
-  slug: string;
-  title: string;
-  category: string;
-  duration: string;
-  originalPrice: string;
-  discountedPrice: string;
-  discount: number;
-  image: string;
-  description: string;
+interface SpecialDealsProps {
+  initialTours?: HomeSaleTourCard[];
+  initialLocale?: string;
 }
 
-export function SpecialDeals() {
+export function SpecialDeals({ initialTours, initialLocale }: SpecialDealsProps) {
   const locale = useLocale();
   const t = useTranslations();
-  const [saleTours, setSaleTours] = useState<SaleTourCard[]>([]);
-  const [loading, setLoading] = useState(false);
+  const hasInitial = Array.isArray(initialTours);
+  const [saleTours, setSaleTours] = useState<HomeSaleTourCard[]>(initialTours ?? []);
+  const [loading, setLoading] = useState(!hasInitial);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (hasInitial && initialLocale === locale) return;
+
+    const controller = new AbortController();
+
     const fetchSaleTours = async () => {
       try {
-        const response = await fetch('/api/tours?onSale=true&limit=6');
+        setLoading(true);
+        setError(null);
+        const response = await fetch('/api/tours?onSale=true&limit=6', {
+          signal: controller.signal,
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch sale tours');
         }
@@ -38,7 +40,7 @@ export function SpecialDeals() {
 
         // Map API tours to SaleTourCard format
         const isGerman = locale === 'de';
-        const mappedTours: SaleTourCard[] = apiTours.map((tour: Tour) => {
+        const mappedTours: HomeSaleTourCard[] = apiTours.map((tour: Tour) => {
           const useEUR = isGerman && tour.priceEUR != null && tour.priceEUR > 0;
           const basePrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
           const currencySymbol = useEUR ? '€' : '$';
@@ -59,6 +61,7 @@ export function SpecialDeals() {
 
         setSaleTours(mappedTours);
       } catch (err) {
+        if (err instanceof Error && err.name === 'AbortError') return;
         setError(err instanceof Error ? err.message : 'Failed to load sale tours');
         console.error('Error fetching sale tours:', err);
       } finally {
@@ -67,7 +70,9 @@ export function SpecialDeals() {
     };
 
     fetchSaleTours();
-  }, [locale]);
+
+    return () => controller.abort();
+  }, [locale, hasInitial, initialLocale]);
 
   return (
     <section className={styles.section}>
@@ -119,6 +124,7 @@ export function SpecialDeals() {
                 key={tour.id}
                 href={`/${locale}/tours/${tour.slug}#book`}
                 className={styles.cardLink}
+                prefetch={false}
               >
                 <div className={styles.card}>
                   <div className={styles.imageWrapper}>

@@ -5,37 +5,32 @@ import { useEffect, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import styles from '@/styles/components/home/ToursSection.module.css';
 import type { Tour } from '@/types/tour.types';
+import type { HomeTourCard } from '@/types/home.types';
 
-interface TourCard {
-  id: string;
-  slug: string;
-  title: string;
-  category: string;
-  duration: string;
-  rating: number;
-  price: string;
-  image: string;
-  description: string;
+interface ToursSectionProps {
+  initialTours?: HomeTourCard[];
+  initialLocale?: string;
 }
 
-export function ToursSection() {
+export function ToursSection({ initialTours, initialLocale }: ToursSectionProps) {
   const locale = useLocale();
   const t = useTranslations();
-  const [tours, setTours] = useState<TourCard[]>([]);
-  const [loading, setLoading] = useState(true);
+  const hasInitial = Array.isArray(initialTours);
+  const [tours, setTours] = useState<HomeTourCard[]>(initialTours ?? []);
+  const [loading, setLoading] = useState(!hasInitial);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (hasInitial && initialLocale === locale) return;
+
+    const controller = new AbortController();
+
     const fetchTours = async () => {
       try {
         setLoading(true);
         setError(null);
-        // Add cache control and use AbortController for cleanup
-        const controller = new AbortController();
         const response = await fetch('/api/tours?onSale=false&limit=12', {
           signal: controller.signal,
-          cache: 'force-cache', // Use cached data when available
-          next: { revalidate: 60 }, // Revalidate every 60 seconds
         });
         if (!response.ok) {
           throw new Error('Failed to fetch tours');
@@ -45,7 +40,7 @@ export function ToursSection() {
 
         // Map API tours to TourCard format
         const isGerman = locale === 'de';
-        const mappedTours: TourCard[] = apiTours.map((tour: Tour) => {
+        const mappedTours: HomeTourCard[] = apiTours.map((tour: Tour) => {
           const useEUR = isGerman && tour.priceEUR != null && tour.priceEUR > 0;
           const displayPrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
           const currencySymbol = useEUR ? '€' : '$';
@@ -76,12 +71,9 @@ export function ToursSection() {
     };
 
     fetchTours();
-    
-    // Cleanup function to abort fetch on unmount
-    return () => {
-      // Cleanup handled by AbortController
-    };
-  }, [locale]);
+
+    return () => controller.abort();
+  }, [locale, hasInitial, initialLocale]);
   return (
     <section className={styles.section} id="tours-section">
       <div className={styles.container}>
@@ -181,6 +173,7 @@ export function ToursSection() {
                 key={tour.id}
                 href={`/${locale}/tours/${tour.slug}#book`}
                 className={styles.cardLink}
+                prefetch={false}
               >
                 <div className={styles.card}>
                   <div className={styles.imageWrapper}>

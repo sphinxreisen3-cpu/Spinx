@@ -6,40 +6,35 @@ import { useLocale, useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from '@/styles/components/home/LatestTrips.module.css';
 import type { Tour } from '@/types/tour.types';
+import type { HomeLatestTripCard } from '@/types/home.types';
 
-interface TourCard {
-  id: string;
-  slug: string;
-  title: string;
-  image: string;
-  category: string;
-  duration: string;
-  rating: number;
-  price: string;
-  originalPrice?: string;
-  discount?: number;
-  isOnSale: boolean;
+interface LatestTripsProps {
+  initialTours?: HomeLatestTripCard[];
+  initialLocale?: string;
 }
 
-export function LatestTrips() {
+export function LatestTrips({ initialTours, initialLocale }: LatestTripsProps) {
   const locale = useLocale();
   const t = useTranslations();
-  const [tours, setTours] = useState<TourCard[]>([]);
-  const [loading, setLoading] = useState(true);
+  const hasInitial = Array.isArray(initialTours);
+  const [tours, setTours] = useState<HomeLatestTripCard[]>(initialTours ?? []);
+  const [loading, setLoading] = useState(!hasInitial);
   const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [windowWidth, setWindowWidth] = useState(0);
 
   useEffect(() => {
+    if (hasInitial && initialLocale === locale) return;
+
+    const controller = new AbortController();
+
     const fetchTours = async () => {
       try {
         setLoading(true);
         setError(null);
-        // Fetch all tours (including discounted ones) with caching
         const response = await fetch('/api/tours?limit=12&isActive=true', {
-          cache: 'force-cache',
-          next: { revalidate: 60 }, // Revalidate every 60 seconds
+          signal: controller.signal,
         });
         if (!response.ok) {
           throw new Error('Failed to fetch tours');
@@ -49,7 +44,7 @@ export function LatestTrips() {
 
         // Map API tours to TourCard format with bilingual support
         const isGerman = locale === 'de';
-        const mappedTours: TourCard[] = apiTours.map((tour: Tour) => {
+        const mappedTours: HomeLatestTripCard[] = apiTours.map((tour: Tour) => {
           const useEUR = isGerman && tour.priceEUR != null && tour.priceEUR > 0;
           const basePrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
           const currencySymbol = useEUR ? '€' : '$';
@@ -75,6 +70,7 @@ export function LatestTrips() {
 
         setTours(mappedTours);
       } catch (err) {
+        if (err instanceof Error && err.name === 'AbortError') return;
         setError(err instanceof Error ? err.message : 'Failed to load tours');
         console.error('Error fetching tours:', err);
       } finally {
@@ -83,7 +79,9 @@ export function LatestTrips() {
     };
 
     fetchTours();
-  }, [locale]);
+
+    return () => controller.abort();
+  }, [locale, hasInitial, initialLocale]);
 
   // Handle window resize for responsive tours per slide
   useEffect(() => {
@@ -180,11 +178,12 @@ export function LatestTrips() {
                   <div key={slideIndex} className={styles.slide}>
                     {tours
                       .slice(slideIndex * toursPerSlide, (slideIndex + 1) * toursPerSlide)
-                      .map((tour: TourCard) => (
+                      .map((tour: HomeLatestTripCard) => (
                         <Link
                           key={tour.id}
                           href={`/${locale}/tours/${tour.slug}#book`}
                           className={styles.cardLink}
+                          prefetch={false}
                         >
                           <div className={styles.card}>
                             <div className={styles.imageWrapper}>

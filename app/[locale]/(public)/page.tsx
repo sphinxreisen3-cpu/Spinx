@@ -5,6 +5,16 @@ import { ServicesSection } from '@/components/home/ServicesSection';
 import { LatestTrips } from '@/components/home/LatestTrips';
 import { CTASection } from '@/components/home/CTASection';
 import { LocationMapClient } from '@/components/home/LocationMap.client';
+import { QuickEnquirySection } from '@/components/home/QuickEnquirySection';
+import type { Tour } from '@/types/tour.types';
+import type {
+  HomeLatestTripCard,
+  HomeSaleTourCard,
+  HomeTestimonial,
+  HomeTourCard,
+} from '@/types/home.types';
+
+export const revalidate = 60;
 
 // Skeleton loader styles for better UX during lazy loading
 const skeletonStyle = {
@@ -98,16 +108,163 @@ const Testimonials = dynamic(
   }
 );
 
-export default function HomePage() {
+type ToursApiResponse = {
+  success: boolean;
+  data?: {
+    tours?: Tour[];
+  };
+};
+
+type TestimonialsApiResponse = {
+  success: boolean;
+  data?: {
+    testimonials?: Array<Record<string, unknown>>;
+  };
+};
+
+const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, '');
+
+const fetchTours = async (query: string): Promise<Tour[] | null> => {
+  try {
+    const response = await fetch(`${baseUrl}/api/tours?${query}`, {
+      next: { revalidate: 60 },
+    });
+    if (!response.ok) return null;
+    const json = (await response.json()) as ToursApiResponse;
+    const tours = json?.data?.tours;
+    return Array.isArray(tours) ? tours : null;
+  } catch {
+    return null;
+  }
+};
+
+const fetchTestimonials = async (limit: number): Promise<HomeTestimonial[] | null> => {
+  try {
+    const response = await fetch(`${baseUrl}/api/testimonials?limit=${limit}`, {
+      next: { revalidate: 60 },
+    });
+    if (!response.ok) return null;
+    const json = (await response.json()) as TestimonialsApiResponse;
+    const raw = json?.data?.testimonials;
+    if (!Array.isArray(raw)) return null;
+
+    const mapped = raw
+      .map((item) => ({
+        id: String((item._id as string) || (item.id as string) || ''),
+        name: String(item.name || ''),
+        country: item.country ? String(item.country) : undefined,
+        role: item.role ? String(item.role) : undefined,
+        role_de: item.role_de ? String(item.role_de) : undefined,
+        initials: String(item.initials || ''),
+        image: String(item.image || 'blue'),
+        text: String(item.text || ''),
+        text_de: item.text_de ? String(item.text_de) : undefined,
+      }))
+      .filter((item) => Boolean(item.id && item.name && item.initials && item.text));
+
+    return mapped;
+  } catch {
+    return null;
+  }
+};
+
+const mapSaleTours = (tours: Tour[], locale: string): HomeSaleTourCard[] => {
+  const isGerman = locale === 'de';
+  return tours.map((tour) => {
+    const useEUR = isGerman && tour.priceEUR != null && tour.priceEUR > 0;
+    const basePrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
+    const currencySymbol = useEUR ? '€' : '$';
+    const discountedPrice = Math.round(basePrice - (basePrice * tour.discount) / 100);
+
+    return {
+      id: tour._id,
+      slug: tour.slug,
+      title: isGerman && tour.title_de ? tour.title_de : tour.title,
+      category: isGerman && tour.category_de ? tour.category_de : tour.category,
+      duration: isGerman && tour.travelType_de ? tour.travelType_de : tour.travelType,
+      originalPrice: `${currencySymbol}${basePrice}`,
+      discountedPrice: `${currencySymbol}${discountedPrice}`,
+      discount: tour.discount,
+      image: tour.image1 || '/images/placeholder-tour.jpg',
+      description: isGerman && tour.description_de ? tour.description_de : tour.description,
+    };
+  });
+};
+
+const mapTours = (tours: Tour[], locale: string): HomeTourCard[] => {
+  const isGerman = locale === 'de';
+  return tours.map((tour) => {
+    const useEUR = isGerman && tour.priceEUR != null && tour.priceEUR > 0;
+    const displayPrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
+    const currencySymbol = useEUR ? '€' : '$';
+
+    return {
+      id: tour._id,
+      slug: tour.slug,
+      title: isGerman && tour.title_de ? tour.title_de : tour.title,
+      category: isGerman && tour.category_de ? tour.category_de : tour.category,
+      duration: isGerman && tour.travelType_de ? tour.travelType_de : tour.travelType,
+      rating: 4.8,
+      price: `${currencySymbol}${displayPrice}`,
+      image: tour.image1 || '/images/placeholder-tour.jpg',
+      description: isGerman && tour.description_de ? tour.description_de : tour.description,
+    };
+  });
+};
+
+const mapLatestTrips = (tours: Tour[], locale: string): HomeLatestTripCard[] => {
+  const isGerman = locale === 'de';
+
+  return tours.map((tour) => {
+    const useEUR = isGerman && tour.priceEUR != null && tour.priceEUR > 0;
+    const basePrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
+    const currencySymbol = useEUR ? '€' : '$';
+    const isOnSale = tour.onSale && tour.discount > 0;
+    const discountedPrice = isOnSale
+      ? Math.round(basePrice - (basePrice * tour.discount) / 100)
+      : basePrice;
+
+    return {
+      id: tour._id,
+      slug: tour.slug,
+      title: isGerman && tour.title_de ? tour.title_de : tour.title,
+      image: tour.image1 || '/images/placeholder-tour.jpg',
+      category: isGerman && tour.category_de ? tour.category_de : tour.category,
+      duration: isGerman && tour.travelType_de ? tour.travelType_de : tour.travelType,
+      rating: 4.8,
+      price: `${currencySymbol}${discountedPrice}`,
+      originalPrice: isOnSale ? `${currencySymbol}${basePrice}` : undefined,
+      discount: tour.discount,
+      isOnSale,
+    };
+  });
+};
+
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+
+  const [saleToursData, toursData, latestTripsData, testimonialsData] = await Promise.all([
+    fetchTours('onSale=true&limit=6'),
+    fetchTours('onSale=false&limit=12'),
+    fetchTours('limit=12&isActive=true'),
+    fetchTestimonials(50),
+  ]);
+
+  const saleTours = saleToursData ? mapSaleTours(saleToursData, locale) : undefined;
+  const tours = toursData ? mapTours(toursData, locale) : undefined;
+  const latestTrips = latestTripsData ? mapLatestTrips(latestTripsData, locale) : undefined;
+  const testimonials = testimonialsData ?? undefined;
+
   return (
     <>
       <HeroSlider />
       <TravelTicker />
-      <SpecialDeals />
-      <ToursSection />
+      <SpecialDeals initialTours={saleTours} initialLocale={locale} />
+      <ToursSection initialTours={tours} initialLocale={locale} />
       <ServicesSection />
-      <LatestTrips />
-      <Testimonials />
+      <LatestTrips initialTours={latestTrips} initialLocale={locale} />
+      <Testimonials initialTestimonials={testimonials} initialLocale={locale} />
+      <QuickEnquirySection />
       <LocationMapClient />
       <CTASection />
     </>
