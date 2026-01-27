@@ -349,6 +349,9 @@
   gap: 6px;
 }
 
+.langButtonInactive {
+}
+
 .langButton::before {
   content: '';
   position: absolute;
@@ -388,26 +391,28 @@
   margin-left: 3px;
 }
 
-.langButton.active {
-  background: linear-gradient(135deg, #d4af37 0%, #ffd700 50%, #ffa500 100%);
-  color: #2c3e50;
-  font-weight: 700;
-  box-shadow:
-    0 4px 15px rgba(212, 175, 55, 0.4),
-    0 2px 8px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  transform: scale(1.02);
+.langButtonActive {
+    color: #060709;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4), 0 2px 8px rgb(0 0 0), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: scale(1.02);
+    background-image: linear-gradient(to right, #db5c2d 0%, #a49139 100%);
 }
 
-.langButton:hover {
+.langButtonInactive:hover {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(255, 215, 0, 0.08) 100%);
   color: #d4af37;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
 }
 
-.langButton:not(.active):hover {
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(255, 215, 0, 0.08) 100%);
-  color: #d4af37;
+.langButtonActive:hover {
+  background: linear-gradient(135deg, #d4af37 0%, #ffd700 50%, #ffa500 100%);
+  color: #2c3e50;
+  box-shadow:
+    0 4px 15px rgba(212, 175, 55, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .langSeparator {

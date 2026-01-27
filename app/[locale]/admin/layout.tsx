@@ -6,6 +6,7 @@ import { adminNav } from '@/config/navigation';
 import { NotificationSystem } from '@/components/admin/NotificationSystem';
 import { AuthGuard } from '@/components/admin/AuthGuard';
 import styles from '@/styles/components/layout/AdminLayout.module.css';
+import { emitAdminAuthChanged } from '@/lib/auth/events';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -15,8 +16,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const handleLogout = async () => {
     try {
       await fetch('/api/auth/verify', { method: 'DELETE' });
+      emitAdminAuthChanged();
       router.push(`/${locale}/admin`);
-      router.refresh();
     } catch (error) {
       console.error('Logout error:', error);
     }

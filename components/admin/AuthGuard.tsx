@@ -1,13 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useEffect, useState, useCallback } from 'react';
 import { LoginForm } from './LoginForm';
 import styles from '@/styles/components/admin/AuthGuard.module.css';
+import { ADMIN_AUTH_EVENT } from '@/lib/auth/events';
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-  const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
   const [needsInit, setNeedsInit] = useState(false);
@@ -15,47 +13,69 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   const [initError, setInitError] = useState('');
   const [initSuccess, setInitSuccess] = useState('');
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await fetch('/api/auth/check', {
-          credentials: 'include',
-        });
-        const data = await response.json();
-        setIsAuthenticated(data.authenticated || false);
-        
-        // Check if we need to initialize (no users exist)
-        if (!data.authenticated) {
-          try {
-            const usersResponse = await fetch('/api/admin/users');
-            const usersData = await usersResponse.json();
-            if (usersData.success && usersData.data.users.length === 0) {
-              setNeedsInit(true);
-            }
-          } catch {
-            // If we can't check, assume we need init
-            setNeedsInit(true);
-          }
-        }
-      } catch (error) {
-        setIsAuthenticated(false);
-        // Try to check if init is needed
-        try {
-          const usersResponse = await fetch('/api/admin/users');
-          const usersData = await usersResponse.json();
-          if (usersData.success && usersData.data.users.length === 0) {
-            setNeedsInit(true);
-          }
-        } catch {
-          setNeedsInit(true);
-        }
-      } finally {
-        setLoading(false);
+  const checkAuth = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/auth/check', {
+        credentials: 'include',
+      });
+      const data = await response.json();
+      const authenticated = data.authenticated || false;
+      setIsAuthenticated(authenticated);
+
+      if (authenticated) {
+        setNeedsInit(false);
+        return;
       }
+
+      // Check if we need to initialize (no users exist)
+      try {
+        const usersResponse = await fetch('/api/admin/users');
+        const usersData = await usersResponse.json();
+        if (usersData.success && usersData.data.users.length === 0) {
+          setNeedsInit(true);
+        } else {
+          setNeedsInit(false);
+        }
+      } catch {
+        // If we can't check, assume we need init
+        setNeedsInit(true);
+      }
+    } catch (error) {
+      setIsAuthenticated(false);
+      // Try to check if init is needed
+      try {
+        const usersResponse = await fetch('/api/admin/users');
+        const usersData = await usersResponse.json();
+        if (usersData.success && usersData.data.users.length === 0) {
+          setNeedsInit(true);
+        } else {
+          setNeedsInit(false);
+        }
+      } catch {
+        setNeedsInit(true);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleAuthChanged = () => {
+      void checkAuth();
     };
 
-    checkAuth();
-  }, []);
+    void checkAuth();
+    if (typeof window !== 'undefined') {
+      window.addEventListener(ADMIN_AUTH_EVENT, handleAuthChanged);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener(ADMIN_AUTH_EVENT, handleAuthChanged);
+      }
+    };
+  }, [checkAuth]);
 
   const handleInit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
 import { Oswald, Lato, Montserrat } from 'next/font/google';
-import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getMessages } from 'next-intl/server';
 import './globals.css';
-import FloatingWhatsApp from '../components/FloatingWhatsApp';
 /*
  * DEV STYLES: Imported after globals so temporary styles can override
  * project defaults at equal specificity. Remove before production or
@@ -42,12 +39,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const locale = await getLocale();
-  const messages = await getMessages();
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang={locale} className={`${oswald.variable} ${lato.variable} ${montserrat.variable}`}>
+    <html lang="en" className={`${oswald.variable} ${lato.variable} ${montserrat.variable}`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
@@ -57,10 +51,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body>
-        <NextIntlClientProvider messages={messages}>
-          {children}
-          <FloatingWhatsApp />
-        </NextIntlClientProvider>
+        {children}
       </body>
     </html>
   );

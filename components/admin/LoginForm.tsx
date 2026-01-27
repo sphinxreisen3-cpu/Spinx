@@ -3,6 +3,7 @@
 import { useState, FormEvent } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import styles from '@/styles/components/admin/LoginForm.module.css';
+import { emitAdminAuthChanged } from '@/lib/auth/events';
 
 export function LoginForm() {
   const router = useRouter();
@@ -27,10 +28,10 @@ export function LoginForm() {
       const data = await response.json();
 
       if (response.ok && data.success) {
+        emitAdminAuthChanged();
         // Redirect to admin dashboard or the page they were trying to access
         const redirectTo = pathname?.includes('/admin') ? pathname : '/admin/tours';
         router.push(redirectTo);
-        router.refresh();
       } else {
         setError(data.error || 'Invalid email or password');
       }
