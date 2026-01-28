@@ -302,8 +302,8 @@ async function TestimonialsSection({ locale }: { locale: string }) {
   return <Testimonials initialTestimonials={testimonials} initialLocale={locale} />;
 }
 
-export default function HomePage({ params }: { params: { locale: string } }) {
-  const { locale } = params;
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
 
   return (
     <>
