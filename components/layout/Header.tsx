@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaFacebookF, FaInstagram, FaMapMarkerAlt, FaTiktok, FaWhatsapp } from 'react-icons/fa';
 import styles from '../../styles/components/layout/Header.module.css';
 
@@ -14,6 +14,8 @@ const navLinks = [
   { key: 'about', href: '/about' },
   { key: 'contact', href: '/contact' },
 ];
+
+const supportedLocales = ['en', 'de'] as const;
 
 const socialLinks = [
   { label: 'WhatsApp', href: 'https://wa.link/l3auw8', icon: <FaWhatsapp /> },
@@ -42,24 +44,30 @@ export function Header() {
     ? pathname.slice(locale.length + 1) || '/'
     : pathname;
 
-  const switchLanguage = (newLocale: string) => {
-    if (newLocale === locale) return;
+  const query = searchParams.toString();
+  const getLocaleHref = (targetLocale: string) =>
+    `/${targetLocale}${basePath === '/' ? '' : basePath}${query ? `?${query}` : ''}`;
 
-    const query = searchParams.toString();
-    router.push(`/${newLocale}${basePath === '/' ? '' : basePath}${query ? `?${query}` : ''}`);
-  };
+  useEffect(() => {
+    supportedLocales
+      .filter((item) => item !== locale)
+      .forEach((targetLocale) => {
+        router.prefetch(getLocaleHref(targetLocale));
+      });
+  }, [locale, router, basePath, query]);
 
   const langButton = (code: string) => (
-    <button
+    <Link
       key={code}
-      onClick={() => switchLanguage(code)}
+      href={getLocaleHref(code)}
       data-lang={code}
       className={`${styles.langButton} ${locale === code ? styles.langButtonActive : styles.langButtonInactive}`}
-      aria-pressed={locale === code}
+      aria-current={locale === code ? 'page' : undefined}
       title={code === 'en' ? 'English' : 'Deutsch'}
+      prefetch={true}
     >
       {code.toUpperCase()}
-    </button>
+    </Link>
   );
 
   return (

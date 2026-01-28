@@ -1,18 +1,10 @@
-'use client';
-
-import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { getTranslations } from 'next-intl/server';
 import styles from '../../styles/components/home/TravelTicker.module.css';
 
-export function TravelTicker() {
-  const [words, setWords] = useState<string[]>([]);
-  const t = useTranslations();
-
-  useEffect(() => {
-    // Create two copies for seamless scrolling
-    const travelWords = t.raw('home.ticker.words') as string[];
-    setWords([...travelWords, ...travelWords]);
-  }, [t]);
+export async function TravelTicker() {
+  const t = await getTranslations();
+  const travelWords = t.raw('home.ticker.words') as string[];
+  const words = Array.isArray(travelWords) ? [...travelWords, ...travelWords] : [];
 
   return (
     <section className={styles.section}>

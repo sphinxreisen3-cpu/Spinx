@@ -1,8 +1,8 @@
 import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
 import { HeroSlider } from '@/components/home/HeroSlider';
 import { TravelTicker } from '@/components/home/TravelTicker';
 import { ServicesSection } from '@/components/home/ServicesSection';
-import { LatestTrips } from '@/components/home/LatestTrips';
 import { CTASection } from '@/components/home/CTASection';
 import { LocationMapClient } from '@/components/home/LocationMap.client';
 import { QuickEnquirySection } from '@/components/home/QuickEnquirySection';
@@ -24,87 +24,125 @@ const skeletonStyle = {
   borderRadius: '8px',
 };
 
+const TravelTickerFallback = () => (
+  <section style={{ padding: '8px 0', background: '#ffffff' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px' }}>
+      <div style={{ ...skeletonStyle, height: '32px', borderRadius: '9999px' }} />
+    </div>
+  </section>
+);
+
+const SpecialDealsFallback = () => (
+  <section style={{ padding: '80px 20px', minHeight: '600px', background: '#1a1a1a' }}>
+    <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+      <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+        <div
+          style={{
+            ...skeletonStyle,
+            height: '60px',
+            width: '300px',
+            margin: '0 auto 1rem',
+            background: '#333',
+          }}
+        />
+        <div
+          style={{
+            ...skeletonStyle,
+            height: '30px',
+            width: '400px',
+            margin: '0 auto',
+            background: '#333',
+          }}
+        />
+      </div>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gap: '2rem',
+        }}
+      >
+        {[1, 2, 3].map((i) => (
+          <div key={i} style={{ ...skeletonStyle, height: '400px', background: '#333' }} />
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const ToursSectionFallback = () => (
+  <section style={{ padding: '60px 20px', minHeight: '500px' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ ...skeletonStyle, height: '40px', width: '250px', marginBottom: '40px' }} />
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+          gap: '24px',
+        }}
+      >
+        {[1, 2, 3].map((i) => (
+          <div key={i} style={{ ...skeletonStyle, height: '350px' }} />
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const LatestTripsFallback = () => (
+  <section style={{ padding: '60px 20px', minHeight: '500px' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ ...skeletonStyle, height: '40px', width: '220px', marginBottom: '40px' }} />
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '24px',
+        }}
+      >
+        {[1, 2, 3].map((i) => (
+          <div key={i} style={{ ...skeletonStyle, height: '360px' }} />
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const TestimonialsFallback = () => (
+  <section style={{ padding: '60px 20px', minHeight: '350px', background: '#f9fafb' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ ...skeletonStyle, height: '40px', width: '200px', margin: '0 auto 40px' }} />
+      <div style={{ ...skeletonStyle, height: '200px', maxWidth: '600px', margin: '0 auto' }} />
+    </div>
+  </section>
+);
+
 // Dynamically import heavy components with lazy loading
 const SpecialDeals = dynamic(
   () => import('@/components/home/SpecialDeals').then((mod) => ({ default: mod.SpecialDeals })),
   {
-    loading: () => (
-      <section style={{ padding: '80px 20px', minHeight: '600px', background: '#1a1a1a' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <div
-              style={{
-                ...skeletonStyle,
-                height: '60px',
-                width: '300px',
-                margin: '0 auto 1rem',
-                background: '#333',
-              }}
-            />
-            <div
-              style={{
-                ...skeletonStyle,
-                height: '30px',
-                width: '400px',
-                margin: '0 auto',
-                background: '#333',
-              }}
-            />
-          </div>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: '2rem',
-            }}
-          >
-            {[1, 2, 3].map((i) => (
-              <div key={i} style={{ ...skeletonStyle, height: '400px', background: '#333' }} />
-            ))}
-          </div>
-        </div>
-      </section>
-    ),
+    loading: () => <SpecialDealsFallback />,
   }
 );
 
 const ToursSection = dynamic(
   () => import('@/components/home/ToursSection').then((mod) => ({ default: mod.ToursSection })),
   {
-    loading: () => (
-      <section style={{ padding: '60px 20px', minHeight: '500px' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ ...skeletonStyle, height: '40px', width: '250px', marginBottom: '40px' }} />
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-              gap: '24px',
-            }}
-          >
-            {[1, 2, 3].map((i) => (
-              <div key={i} style={{ ...skeletonStyle, height: '350px' }} />
-            ))}
-          </div>
-        </div>
-      </section>
-    ),
+    loading: () => <ToursSectionFallback />,
+  }
+);
+
+const LatestTrips = dynamic(
+  () => import('@/components/home/LatestTrips').then((mod) => ({ default: mod.LatestTrips })),
+  {
+    loading: () => <LatestTripsFallback />,
   }
 );
 
 const Testimonials = dynamic(
   () => import('@/components/home/Testimonials').then((mod) => ({ default: mod.Testimonials })),
   {
-    loading: () => (
-      <section style={{ padding: '60px 20px', minHeight: '350px', background: '#f9fafb' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div
-            style={{ ...skeletonStyle, height: '40px', width: '200px', margin: '0 auto 40px' }}
-          />
-          <div style={{ ...skeletonStyle, height: '200px', maxWidth: '600px', margin: '0 auto' }} />
-        </div>
-      </section>
-    ),
+    loading: () => <TestimonialsFallback />,
   }
 );
 
@@ -240,33 +278,61 @@ const mapLatestTrips = (tours: Tour[], locale: string): HomeLatestTripCard[] => 
   });
 };
 
-export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-
-  const [saleToursData, toursData, latestTripsData, testimonialsData] = await Promise.all([
-    fetchTours('onSale=true&limit=6'),
-    fetchTours('onSale=false&limit=12'),
-    fetchTours('limit=12&isActive=true'),
-    fetchTestimonials(50),
-  ]);
-
+async function SpecialDealsSection({ locale }: { locale: string }) {
+  const saleToursData = await fetchTours('onSale=true&limit=6');
   const saleTours = saleToursData ? mapSaleTours(saleToursData, locale) : undefined;
+  return <SpecialDeals initialTours={saleTours} initialLocale={locale} />;
+}
+
+async function ToursSectionBlock({ locale }: { locale: string }) {
+  const toursData = await fetchTours('onSale=false&limit=12');
   const tours = toursData ? mapTours(toursData, locale) : undefined;
+  return <ToursSection initialTours={tours} initialLocale={locale} />;
+}
+
+async function LatestTripsSection({ locale }: { locale: string }) {
+  const latestTripsData = await fetchTours('limit=12&isActive=true');
   const latestTrips = latestTripsData ? mapLatestTrips(latestTripsData, locale) : undefined;
+  return <LatestTrips initialTours={latestTrips} initialLocale={locale} />;
+}
+
+async function TestimonialsSection({ locale }: { locale: string }) {
+  const testimonialsData = await fetchTestimonials(50);
   const testimonials = testimonialsData ?? undefined;
+  return <Testimonials initialTestimonials={testimonials} initialLocale={locale} />;
+}
+
+export default function HomePage({ params }: { params: { locale: string } }) {
+  const { locale } = params;
 
   return (
     <>
       <HeroSlider />
-      <TravelTicker />
-      <SpecialDeals initialTours={saleTours} initialLocale={locale} />
-      <ToursSection initialTours={tours} initialLocale={locale} />
-      <ServicesSection />
-      <LatestTrips initialTours={latestTrips} initialLocale={locale} />
-      <Testimonials initialTestimonials={testimonials} initialLocale={locale} />
-      <QuickEnquirySection />
+      <Suspense fallback={<TravelTickerFallback />}>
+        <TravelTicker />
+      </Suspense>
+      <Suspense fallback={<SpecialDealsFallback />}>
+        <SpecialDealsSection locale={locale} />
+      </Suspense>
+      <Suspense fallback={<ToursSectionFallback />}>
+        <ToursSectionBlock locale={locale} />
+      </Suspense>
+      <Suspense fallback={null}>
+        <ServicesSection />
+      </Suspense>
+      <Suspense fallback={<LatestTripsFallback />}>
+        <LatestTripsSection locale={locale} />
+      </Suspense>
+      <Suspense fallback={<TestimonialsFallback />}>
+        <TestimonialsSection locale={locale} />
+      </Suspense>
+      <Suspense fallback={null}>
+        <QuickEnquirySection />
+      </Suspense>
       <LocationMapClient />
-      <CTASection />
+      <Suspense fallback={null}>
+        <CTASection />
+      </Suspense>
     </>
   );
 }
