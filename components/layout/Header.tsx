@@ -78,16 +78,20 @@ export function Header() {
               />
             </Link>
             <nav className={styles.navContainer}>
-              {navLinks.map(({ key, href }) => (
-                <Link
-                  key={href}
-                  href={`/${locale}${href === '/' ? '' : href}`}
-                  className={styles.navButton}
-                  prefetch={true}
-                >
-                  {t(`nav.${key}`)}
-                </Link>
-              ))}
+              {navLinks.map(({ key, href }) => {
+                const isActive = basePath === href;
+                return (
+                  <Link
+                    key={href}
+                    href={`/${locale}${href === '/' ? '' : href}`}
+                    className={`${styles.navButton} ${isActive ? styles.navButtonActive : styles.navButtonInactive}`}
+                    aria-current={isActive ? 'page' : undefined}
+                    prefetch={true}
+                  >
+                    {t(`nav.${key}`)}
+                  </Link>
+                );
+              })}
             </nav>
           </div>
 
@@ -104,7 +108,14 @@ export function Header() {
             </div> */}
 
             <div className={styles.socialSection}>
-              <FaMapMarkerAlt className={styles.mapIcon} aria-hidden />
+              <Link
+                href={`/${locale}#map`}
+                className={styles.mapIcon}
+                aria-label="View map section"
+                title="View map section"
+              >
+                <FaMapMarkerAlt aria-hidden />
+              </Link>
               <Link
                 href="https://wa.link/l3auw8"
                 target="_blank"

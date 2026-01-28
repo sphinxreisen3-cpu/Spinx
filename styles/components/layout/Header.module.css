@@ -93,6 +93,21 @@
   border: 2px solid #00000059;
 }
 
+.navButtonActive {
+  background: linear-gradient(135deg, rgb(255, 184, 77), rgb(255, 120, 36));
+  color: rgb(10, 8, 6);
+  box-shadow:
+    inset 2px 2px 3px rgba(255, 255, 255, 0.85),
+    inset -4px -3px 3px rgba(0, 0, 0, 0.55),
+    0 10px 20px rgba(0, 0, 0, 0.18);
+  transform: translateY(-1px);
+}
+
+.navButtonInactive {
+  opacity: 0.78;
+  filter: saturate(0.85);
+}
+
 .navButton:hover {
   transform: scale(1.05) translateY(-0.125rem);
   box-shadow:

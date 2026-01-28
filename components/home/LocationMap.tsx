@@ -9,7 +9,7 @@ const mapEmbedSrc =
 export function LocationMap() {
   const t = useTranslations();
   return (
-    <section className={styles.section}>
+    <section className={styles.section} id="map">
       <div className={styles.container}>
         <div className={styles.header}>
           <h2 className={styles.title}>{t('home.map.title')}</h2>

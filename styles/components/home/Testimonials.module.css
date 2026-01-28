@@ -128,8 +128,7 @@
   position: relative;
   overflow: hidden;
   border-radius: 1.35rem;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(248, 250, 252, 0.94) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(248, 250, 252, 0.94) 100%);
   padding: clamp(1.6rem, 1.2rem + 1.4vw, 2.6rem);
   box-shadow:
     0 36px 70px -40px rgba(15, 23, 42, 0.55),
@@ -313,8 +312,7 @@
   width: 100%;
   max-width: 720px;
   border-radius: 20px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
   border: 1px solid rgba(226, 232, 240, 0.9);
   box-shadow: 0 35px 80px -35px rgba(15, 23, 42, 0.55);
   backdrop-filter: blur(14px);
@@ -345,7 +343,9 @@
   cursor: pointer;
   background: rgba(148, 163, 184, 0.25);
   color: rgb(17, 24, 39);
-  transition: background-color 150ms ease, transform 150ms ease;
+  transition:
+    background-color 150ms ease,
+    transform 150ms ease;
 }
 
 .modalClose:hover {
@@ -482,6 +482,7 @@
   backdrop-filter: blur(10px);
   opacity: 0;
   pointer-events: none;
+  display: none;
 }
 
 .wrapper:hover .navButton,
@@ -543,8 +544,8 @@
 
 @media (max-width: 640px) {
   .section {
-    padding-top: 3.2rem;
-    padding-bottom: 3.6rem;
+    padding-top: 1.2rem;
+    padding-bottom: 0.6rem;
   }
 
   .title {
@@ -585,8 +586,9 @@
   }
 
   .addButton {
-    width: 100%;
+    width: 70%;
     max-width: 420px;
+    margin: auto;
   }
 
   .formGrid {

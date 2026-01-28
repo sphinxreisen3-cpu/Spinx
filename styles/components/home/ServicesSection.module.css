@@ -114,3 +114,8 @@
   line-height: 1.625;
   color: rgb(75, 85, 99);
 }
+@media (max-width: 640px) {
+  .card {
+    padding-bottom: 0px;
+  }
+}

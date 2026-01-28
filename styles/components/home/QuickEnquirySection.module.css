@@ -2,10 +2,9 @@
 
 .section {
   position: relative;
-    overflow: hidden;
-    padding: clamp(1.9rem, 2.2vw + 1.4rem, 3rem);
-    margin: 0 auto;
-
+  overflow: hidden;
+  padding: clamp(1.9rem, 2.2vw + 1.4rem, 3rem);
+  margin: 0 auto;
 }
 
 .section::before {
@@ -152,7 +151,10 @@
     0 20px 36px -20px rgba(15, 23, 42, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
   cursor: pointer;
-  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease;
 }
 
 .primaryCta:hover {
@@ -189,11 +191,21 @@
 
   .formActions {
     align-items: flex-start;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 
 @media (max-width: 480px) {
   .section {
     padding: 1.7rem 1.2rem;
+  }
+  .sectionHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
 }

@@ -164,3 +164,8 @@
 .ctaButton:hover .arrow {
   transform: translateX(2px);
 }
+@media (max-width: 640px) {
+  .ctaBanner {
+    padding-top: 2px;
+  }
+}
