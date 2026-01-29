@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import styles from '@/styles/components/admin/NotificationSystem.module.css';
 
 interface Notification {
@@ -14,76 +14,93 @@ interface Notification {
 export function NotificationSystem() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isConnected, setIsConnected] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isSoundReady, setIsSoundReady] = useState(false);
+  const [isSoundBlocked, setIsSoundBlocked] = useState(false);
+  const soundPoolRef = useRef<HTMLAudioElement[]>([]);
+  const soundIndexRef = useRef(0);
   const eventSourceRef = useRef<EventSource | null>(null);
 
-  // Initialize audio for notification sound
-  useEffect(() => {
-    let audioContext: AudioContext | null = null;
-    
-    // Function to play notification sound
-    const playNotificationSound = async () => {
-      try {
-        // Create or resume audio context (browsers require user interaction first)
-        if (!audioContext) {
-          audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
-        }
-        
-        // Resume context if suspended (required after user interaction)
-        if (audioContext.state === 'suspended') {
-          await audioContext.resume();
-        }
-        
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
-        // Create a pleasant notification sound (two-tone chime)
-        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-        oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
-        
-        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-        
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.3);
-      } catch (error) {
-        console.error('Error playing notification sound:', error);
+  const enableSound = useCallback((playSample: boolean) => {
+    const pool = soundPoolRef.current;
+    if (!pool.length) return;
+    const audio = pool[0];
+
+    const run = async () => {
+      if (playSample) {
+        audio.muted = false;
+        audio.pause();
+        audio.currentTime = 0;
+        await audio.play();
+        setIsSoundReady(true);
+        setIsSoundBlocked(false);
+        return;
       }
+
+      audio.muted = true;
+      await audio.play();
+      audio.pause();
+      audio.currentTime = 0;
+      audio.muted = false;
+      setIsSoundReady(true);
+      setIsSoundBlocked(false);
     };
 
-    // Store play function for use in notifications
-    (window as unknown as { playNotificationSound: () => void }).playNotificationSound = playNotificationSound;
-
-    // Initialize audio context on first user interaction
-    const initAudio = async () => {
-      if (!audioContext) {
-        audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
-        // Play silent sound to unlock audio context
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        oscillator.start();
-        oscillator.stop(audioContext.currentTime + 0.001);
-      }
-    };
-
-    // Try to initialize on any user interaction
-    const events = ['click', 'keydown', 'touchstart'];
-    events.forEach((event) => {
-      document.addEventListener(event, initAudio, { once: true });
+    run().catch((error) => {
+      console.error('Error enabling notification sound:', error);
+      setIsSoundBlocked(true);
     });
+  }, []);
+
+  const playNotificationSound = useCallback(() => {
+    const pool = soundPoolRef.current;
+    if (!pool.length) return;
+    const index = soundIndexRef.current % pool.length;
+    soundIndexRef.current += 1;
+    const audio = pool[index];
+
+    try {
+      audio.pause();
+      audio.currentTime = 0;
+      const playPromise = audio.play();
+      if (playPromise) {
+        playPromise.catch((error) => {
+          console.error('Error playing notification sound:', error);
+          setIsSoundBlocked(true);
+        });
+      }
+    } catch (error) {
+      console.error('Error playing notification sound:', error);
+      setIsSoundBlocked(true);
+    }
+  }, []);
+
+  // Initialize audio for notification sound (unlock on first user interaction)
+  useEffect(() => {
+    const soundSrc = '/sounds/mixkit-arabian-mystery-harp-notification-2489.wav';
+    const pool = Array.from({ length: 3 }, () => {
+      const audio = new Audio(soundSrc);
+      audio.volume = 0.9;
+      audio.preload = 'auto';
+      return audio;
+    });
+    soundPoolRef.current = pool;
+
+    const unlockAudio = () => enableSound(false);
+
+    document.addEventListener('click', unlockAudio, { once: true });
+    document.addEventListener('keydown', unlockAudio, { once: true });
+    document.addEventListener('touchstart', unlockAudio, { once: true });
 
     return () => {
-      if (audioContext) {
-        audioContext.close();
-      }
+      document.removeEventListener('click', unlockAudio);
+      document.removeEventListener('keydown', unlockAudio);
+      document.removeEventListener('touchstart', unlockAudio);
+      soundPoolRef.current.forEach((audio) => {
+        audio.pause();
+      });
+      soundPoolRef.current = [];
     };
-  }, []);
+  }, [enableSound]);
 
   // Connect to SSE stream
   useEffect(() => {
@@ -115,10 +132,7 @@ export function NotificationSystem() {
 
             // Play notification sound
             if (notification.type === 'booking' || notification.type === 'review') {
-              const playSound = (window as unknown as { playNotificationSound?: () => void }).playNotificationSound;
-              if (playSound) {
-                playSound();
-              }
+              playNotificationSound();
             }
 
             // Show browser notification if permission granted
@@ -172,7 +186,7 @@ export function NotificationSystem() {
         eventSourceRef.current.close();
       }
     };
-  }, []);
+  }, [playNotificationSound]);
 
   // Auto-remove notifications after 5 seconds
   useEffect(() => {
@@ -207,12 +221,29 @@ export function NotificationSystem() {
   return (
     <div className={styles.container}>
       {/* Connection Status Indicator */}
-      <div className={`${styles.statusIndicator} ${isConnected ? styles.connected : styles.disconnected}`}>
-        <span className={styles.statusDot}></span>
-        <span className={styles.statusText}>
-          {isConnected ? 'Live' : 'Connecting...'}
-        </span>
+      <div className={styles.headerRow}>
+        <div className={`${styles.statusIndicator} ${isConnected ? styles.connected : styles.disconnected}`}>
+          <span className={styles.statusDot}></span>
+          <span className={styles.statusText}>
+            {isConnected ? 'Live' : 'Connecting...'}
+          </span>
+        </div>
+
+        <button
+          type="button"
+          className={styles.soundButton}
+          onClick={() => enableSound(true)}
+          title={isSoundReady ? 'Test notification sound' : 'Enable notification sound'}
+        >
+          {isSoundReady ? 'Test sound' : 'Enable sound'}
+        </button>
       </div>
+
+      {isSoundBlocked && (
+        <div className={styles.soundHint}>
+          Sound is blocked by the browser. Click "Enable sound" to allow it.
+        </div>
+      )}
 
       {/* Notifications List */}
       {notifications.length > 0 && (

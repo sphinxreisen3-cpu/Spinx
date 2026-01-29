@@ -9,6 +9,13 @@
   max-width: 350px;
 }
 
+.headerRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
 .statusIndicator {
   display: flex;
   align-items: center;
@@ -20,6 +27,36 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   font-size: 0.75rem;
   font-weight: 600;
+}
+
+.soundButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.soundButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+  border-color: hsl(var(--foreground) / 0.25);
+}
+
+.soundHint {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+  background: hsl(var(--card));
+  border: 1px dashed hsl(var(--border));
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
 }
 
 .statusDot {
