@@ -6,6 +6,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { BookingTicket } from '@/components/bookings/BookingTicket';
+import SketchItineraryCard from '@/components/tours/SketchItineraryCard';
 import type { Tour } from '@/types/tour.types';
 
 interface TourReviewItem {
@@ -205,6 +206,53 @@ export default function TourDetailsPage() {
     if (tour.image4) images.push({ src: tour.image4, alt: tourContent.tourTitle });
     return images;
   }, [tour, tourContent.tourTitle]);
+
+  const itineraryStops = useMemo(() => {
+    if (!tour) return [];
+
+    const icons = [
+      '\u{1F4CD}',
+      '\u{1F9ED}',
+      '\u{1F5FA}',
+      '\u{1F3D6}',
+      '\u{1F30A}',
+      '\u{1F6F6}',
+    ];
+
+    const locations = [
+      getLocation(0),
+      getLocation(1),
+      getLocation(2),
+      getLocation(3),
+      getLocation(4),
+      getLocation(5),
+    ].filter(Boolean);
+
+    const stops = locations.map((location, index) => ({
+      id: `location-${index}`,
+      name: location,
+      icon: icons[index % icons.length],
+    }));
+
+    if (tourContent.tourTrip) {
+      stops.push({
+        id: 'trip-highlights',
+        name: t('itinerary.tripHighlights'),
+        description: tourContent.tourTrip,
+        icon: '\u{2B50}',
+      });
+    }
+
+    if (stops.length === 0) {
+      stops.push({
+        id: 'no-itinerary',
+        name: t('itinerary.noItinerary'),
+        icon: '\u{1F4CD}',
+      });
+    }
+
+    return stops;
+  }, [tour, getLocation, tourContent.tourTrip, t]);
 
   // Image slider auto-advance effect
   useEffect(() => {
@@ -778,64 +826,7 @@ export default function TourDetailsPage() {
           </div>
 
           <div className="itinerary-column">
-            <h2 className="section-title">{t('itinerary.title')}</h2>
-            <div className="itinerary-list">
-              {/* Display location stops */}
-              {[
-                getLocation(0),
-                getLocation(1),
-                getLocation(2),
-                getLocation(3),
-                getLocation(4),
-                getLocation(5),
-              ]
-                .filter(Boolean)
-                .map((location, index) => (
-                  <div key={`location-${index}`} className="itinerary-item">
-                    <span className="itinerary-number">{index + 1}</span>
-                    <span className="itinerary-text">{location}</span>
-                  </div>
-                ))}
-
-              {/* Display trip highlights if available */}
-              {tourTrip && (
-                <div className="itinerary-item">
-                  <span className="itinerary-number">
-                    {[
-                      getLocation(0),
-                      getLocation(1),
-                      getLocation(2),
-                      getLocation(3),
-                      getLocation(4),
-                      getLocation(5),
-                    ].filter(Boolean).length + 1}
-                  </span>
-                  <span className="itinerary-text">
-                    <strong>{t('itinerary.tripHighlights')}</strong> {tourTrip}
-                  </span>
-                </div>
-              )}
-
-              {/* Show message if no itinerary data */}
-              {(() => {
-                const locationStops = [
-                  getLocation(0),
-                  getLocation(1),
-                  getLocation(2),
-                  getLocation(3),
-                  getLocation(4),
-                  getLocation(5),
-                ].filter(Boolean);
-
-                return locationStops.length === 0 && !tourTrip ? (
-                  <div className="itinerary-item">
-                    <span className="itinerary-text" style={{ fontStyle: 'italic', color: '#666' }}>
-                      {t('itinerary.noItinerary')}
-                    </span>
-                  </div>
-                ) : null;
-              })()}
-            </div>
+            <SketchItineraryCard title={tourTitle} stops={itineraryStops} />
           </div>
         </div>
       </section>
