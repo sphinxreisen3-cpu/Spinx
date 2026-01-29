@@ -370,8 +370,15 @@ export function ToursAdminPage() {
 
   const startEdit = (tour: TourFull) => {
     setEditingTour(tour);
-    setFormData({ ...tour });
-    setImagePreview([tour.image1, tour.image2, tour.image3, tour.image4]);
+    const { _id, createdAt, updatedAt, ...rest } = tour;
+    const nextFormData = { ...emptyTour, ...rest };
+    (Object.keys(emptyTour) as Array<keyof typeof emptyTour>).forEach((key) => {
+      if (nextFormData[key] === null || nextFormData[key] === undefined) {
+        nextFormData[key] = emptyTour[key];
+      }
+    });
+    setFormData(nextFormData);
+    setImagePreview([tour.image1, tour.image2, tour.image3, tour.image4].map((img) => img || null));
     setShowForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
