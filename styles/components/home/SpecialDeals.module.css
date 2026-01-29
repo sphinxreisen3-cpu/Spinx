@@ -169,14 +169,14 @@
   position: absolute;
   top: 20px;
   left: 20px;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgb(255 255 255 / 74%);
   color: #333;
   padding: 8px 16px;
   border-radius: 20px;
   font-weight: 600;
   font-size: 0.75rem;
   z-index: 3;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(3px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition:
@@ -485,9 +485,9 @@
   }
 
   .categoryBadge {
-    top: 16px;
+    top: 9px;
     left: 16px;
-    padding: 6px 12px;
+    padding: 5px 10px;
     font-size: 0.6875rem;
   }
 }
