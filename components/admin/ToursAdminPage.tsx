@@ -370,13 +370,13 @@ export function ToursAdminPage() {
 
   const startEdit = (tour: TourFull) => {
     setEditingTour(tour);
-    const { _id, createdAt, updatedAt, ...rest } = tour;
-    const nextFormData = { ...emptyTour, ...rest };
-    (Object.keys(emptyTour) as Array<keyof typeof emptyTour>).forEach((key) => {
-      if (nextFormData[key] === null || nextFormData[key] === undefined) {
-        nextFormData[key] = emptyTour[key];
-      }
-    });
+    const { _id: _ignoredId, createdAt: _ignoredCreatedAt, updatedAt: _ignoredUpdatedAt, ...rest } = tour;
+    const nextFormData = Object.fromEntries(
+      (Object.keys(emptyTour) as Array<keyof typeof emptyTour>).map((key) => [
+        key,
+        rest[key] ?? emptyTour[key],
+      ])
+    ) as typeof emptyTour;
     setFormData(nextFormData);
     setImagePreview([tour.image1, tour.image2, tour.image3, tour.image4].map((img) => img || null));
     setShowForm(true);
