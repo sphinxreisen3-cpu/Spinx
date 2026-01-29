@@ -241,7 +241,7 @@ export function NotificationSystem() {
 
       {isSoundBlocked && (
         <div className={styles.soundHint}>
-          Sound is blocked by the browser. Click "Enable sound" to allow it.
+          Sound is blocked by the browser. Click &quot;Enable sound&quot; to allow it.
         </div>
       )}
 
