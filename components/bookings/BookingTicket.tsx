@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
+import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import styles from '@/styles/components/bookings/BookingTicket.module.css';
 
@@ -32,35 +33,50 @@ export function BookingTicket({ booking, onClose }: BookingTicketProps) {
   const locale = useLocale();
   const t = useTranslations('booking.ticket');
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString(locale === 'de' ? 'de-DE' : 'en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
   const formatBookingId = (id?: string) => {
     if (!id) return 'N/A';
     return id.substring(0, 8).toUpperCase();
+  };
+
+  const formatShortDate = (dateString: string) => {
+    const date = new Date(dateString);
+    if (Number.isNaN(date.getTime())) return dateString;
+    return date.toLocaleDateString(locale === 'de' ? 'de-DE' : 'en-US', {
+      weekday: 'short',
+      day: '2-digit',
+      month: 'short',
+    });
   };
 
   const downloadTicket = async () => {
     if (!ticketRef.current) return;
 
     try {
+      if (document?.fonts?.ready) {
+        await document.fonts.ready;
+      }
+
+      const images = Array.from(ticketRef.current.querySelectorAll('img'));
+      await Promise.all(
+        images.map((img) => {
+          if (img.complete) return Promise.resolve();
+          return new Promise<void>((resolve) => {
+            img.onload = () => resolve();
+            img.onerror = () => resolve();
+          });
+        })
+      );
+
       // Dynamically import libraries to avoid build-time issues
-      const [html2canvas, jsPDF] = await Promise.all([
-        import('html2canvas'),
-        import('jspdf'),
-      ]);
+      const [html2canvas, jsPDF] = await Promise.all([import('html2canvas'), import('jspdf')]);
 
       // Create canvas from ticket element
       const canvas = await html2canvas.default(ticketRef.current, {
         scale: 2,
         backgroundColor: '#ffffff',
         logging: false,
+        useCORS: true,
+        allowTaint: true,
       });
 
       // Convert canvas to image
@@ -110,61 +126,69 @@ export function BookingTicket({ booking, onClose }: BookingTicketProps) {
     return parts.join(', ');
   };
 
+  const tourTitle = booking.tourTitle || booking.confirmTrip || '';
+  const totalTickets = booking.adults + booking.children + booking.infants;
+  const ticketCount = totalTickets > 0 ? totalTickets : 1;
+  const statusText = booking.status ? booking.status.toUpperCase() : 'CONFIRMED';
+  const pickupText = booking.pickupLocation || 'Pickup details shared after confirmation';
+
   return (
     <div className={styles.ticketOverlay} onClick={onClose}>
       <div className={styles.ticketContainer} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.ticketHeader}>
-          <h2 className={styles.ticketTitle}>{t('title')}</h2>
-          {onClose && (
-            <button onClick={onClose} className={styles.closeButton} aria-label="Close">
-              ✕
-            </button>
-          )}
-        </div>
+        {onClose && (
+          <button onClick={onClose} className={styles.closeButton} aria-label="Close">
+            x
+          </button>
+        )}
 
-        <div ref={ticketRef} className={styles.ticket}>
-          <div className={styles.ticketContent}>
-            <div className={styles.ticketRow}>
-              <span className={styles.ticketLabel}>{t('tourName')}:</span>
-              <span className={styles.ticketValue}>{booking.tourTitle || booking.confirmTrip || ''}</span>
-            </div>
+        <div ref={ticketRef} className={styles['m-ticket']}>
+          <div className={styles['ticket-logo']}>
+            <Image src="/images/logo/logo.webp" alt="Site logo" width={120} height={40} priority />
+          </div>
+          <p className={styles.m}>M-Ticket</p>
 
-            <div className={styles.ticketRow}>
-              <span className={styles.ticketLabel}>{t('travelDate')}:</span>
-              <span className={styles.ticketValue}>{formatDate(booking.travelDate)}</span>
-            </div>
-
-            <div className={styles.ticketRow}>
-              <span className={styles.ticketLabel}>{t('travelers')}:</span>
-              <span className={styles.ticketValue}>{formatTravelers()}</span>
-            </div>
-
-            {booking.pickupLocation && (
-              <div className={styles.ticketRow}>
-                <span className={styles.ticketLabel}>{t('pickupLocation')}:</span>
-                <span className={styles.ticketValue}>{booking.pickupLocation}</span>
-              </div>
-            )}
-
-            <div className={styles.ticketRow}>
-              <span className={styles.ticketLabel}>{t('totalAmount')}:</span>
-              <span className={styles.ticketValuePrice}>
-                {booking.currencySymbol}
-                {booking.totalPrice.toLocaleString()}
-              </span>
-            </div>
-
-            <div className={styles.ticketRow}>
-              <span className={styles.ticketLabel}>{t('bookingReference')}:</span>
-              <span className={styles.ticketValueRef}>#{formatBookingId(booking._id)}</span>
+          <div className={styles['movie-details']}>
+            <div className={styles.movie}>
+              <h4>{tourTitle}</h4>
+              <p>{formatTravelers()}</p>
+              <p>{formatShortDate(booking.travelDate)}</p>
+              <p>{pickupText}</p>
             </div>
           </div>
 
-          <div className={styles.ticketFooter}>
-            <button onClick={downloadTicket} className={styles.downloadButton}>
-              {t('downloadTicket')}
-            </button>
+          <div className={styles.info}>we will contact you soon</div>
+
+          <div className={styles['ticket-details']}>
+            <img
+              className={styles.scan}
+              src="/images/ticket-logo.png"
+              alt="Ticket logo"
+            />
+
+            <div className={styles.ticket}>
+              <p>{ticketCount}Ticket(s)</p>
+              <b>{statusText}</b>
+              <p>{pickupText}</p>
+              <h6>
+                {t('bookingReference')}: {formatBookingId(booking._id)}
+              </h6>
+            </div>
           </div>
+
+          <div className={styles['info-cancel']}>Thank you for booking with us!</div>
+          <p>pay on arrival</p>
+
+          <div className={styles['total-amount']}>
+            <p>{t('totalAmount')}</p>
+            <p>
+              {booking.currencySymbol}
+              {booking.totalPrice.toLocaleString()}
+            </p>
+          </div>
+
+          <button type="button" className={styles['download-button']} onClick={downloadTicket}>
+            {t('downloadTicket')}
+          </button>
         </div>
       </div>
     </div>
