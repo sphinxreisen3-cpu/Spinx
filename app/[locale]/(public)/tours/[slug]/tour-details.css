@@ -24,44 +24,48 @@
   overflow-x: hidden;
 }
 
-/* Section 1: Booking Form */
+/* Section 1: Booking Form + Image Slider */
+.booking-slider-section {
+  padding: 135px 20px 25px;
+  background-image: linear-gradient(355deg, #fdfcfb 0%, #f1f8f0 100%);
+  border-bottom: 3px solid #8c8b8500;
+  box-shadow: 2px 11px 38px #f6e7c1;
+}
+
+.booking-slider-grid {
+  max-width: 1179px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
 .booking-section {
-  padding: 135px 20px 60px;
-  display: flex;
-  justify-content: center;
+  display: block;
   position: relative;
-  overflow: hidden;
-}
-
-.booking-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url('/images/tours/pyramid-sky-desert-ancient.jpg') center/cover;
-}
-
-.booking-section::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.3),
-    rgba(0, 0, 0, 0.1),
-    rgba(0, 0, 0, 0.05)
-  );
-  pointer-events: none;
+  overflow: visible;
+  padding: 0;
+  grid-column: 2;
+  grid-row: 1 / span 2;
 }
 
 .booking-container {
   position: relative;
   border: 1px solid #e9dfcb;
   border-radius: var(--radius);
-  max-width: 1100px;
+  max-width: none;
   width: 100%;
   padding: 25px;
   box-shadow: 0px 0px 12px black;
-  background: rgb(255 255 255 / 32%);
+  background-image: linear-gradient(
+    to top,
+    #e3dab4 0%,
+    #f5f2e7 1%,
+    #f9f0d3 31%,
+    #e8d8b8 75%,
+    #fbf1d7 100%
+  );
   backdrop-filter: blur(5px);
 }
 
@@ -282,13 +286,54 @@
 
 /* Section 2: Image Slider */
 .slider-section {
-  padding: 60px 20px 40px;
+  padding: 0;
+  background: transparent;
+  grid-column: 1;
+}
+
+.map-section {
+  padding: 0;
+  background: transparent;
+  grid-column: 1;
+}
+
+.map-container {
+  position: relative;
+  border-radius: 22px;
+  border: 1px solid #e9dfcb;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  aspect-ratio: 16/9;
   background: #ffffff;
 }
 
+.map-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.map-placeholder {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: rgba(31, 42, 58, 0.75);
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.map-icon {
+  font-size: 28px;
+}
+
 .slider-container {
-  max-width: 1100px;
-  margin: 0 auto;
+  max-width: none;
+  margin: 0;
+  width: 100%;
   position: relative;
 }
 
@@ -408,27 +453,29 @@
 
 /* Section 5: Tour Information & Itinerary */
 .tour-info-section {
-    padding: 67px 10px;
-    background: #eeeded38;
+  padding: 27px 10px;
+  background: #eeeded38;
 }
 
 .tour-info-container {
-  max-width: 1100px;
+  max-width: 1179px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 26px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
 }
 
 .section-title {
   font-size: 24px;
   margin: 0 0 18px;
   color: #1f2a3a;
+  display: none;
 }
 
 .details-table {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid #e9dfcb;
+  background: rgb(252 244 208 / 15%);
+  border: 3px solid #b0aca391;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: var(--shadow);
@@ -500,7 +547,7 @@
 
 /* Section 6: Reviews */
 .reviews-section {
-  padding: 70px 20px 90px;
+  padding: 18px 16px 25px;
   background: white;
 }
 
@@ -639,6 +686,18 @@
 
 /* Responsive Design */
 @media (max-width: 960px) {
+  .booking-slider-section {
+    padding: 90px 16px 40px;
+  }
+  .booking-slider-grid {
+    grid-template-columns: 1fr;
+  }
+  .booking-section,
+  .slider-section,
+  .map-section {
+    grid-column: auto;
+    grid-row: auto;
+  }
   .tour-info-container {
     grid-template-columns: 1fr;
   }
@@ -650,12 +709,12 @@
     align-items: flex-start;
   }
   .booking-container {
-        padding: 10px 10px;
-        margin-top: 20px;
+    padding: 10px 10px;
+    margin-top: 20px;
   }
-  .slider-section{
-        padding: 3px 8px 6px;
-    background: #fff1df;
+  .slider-section {
+    padding: 0;
+    background: transparent;
   }
   .slider-wrapper {
     overflow: hidden;
@@ -664,23 +723,25 @@
     box-shadow: var(--shadow);
     position: relative;
     box-shadow: 2px 10px 22px #412214;
-}
-.tour-info-section {
+  }
+  .map-container {
+    border-radius: 10px;
+  }
+  .tour-info-section {
     padding: 10px 10px;
-    background: #e3c35838;
-}
+  }
 }
 
 @media (max-width: 640px) {
-  .booking-section {
-    padding: 60px 16px;
+  .booking-slider-section {
+    padding: 60px 16px 30px;
   }
   .traveler-group {
     grid-template-columns: 1fr;
   }
   .quantity-selector {
     width: 100%;
-        padding: 1px;
+    padding: 1px;
     justify-content: space-between;
   }
   .slider-nav {
@@ -690,10 +751,10 @@
     font-size: 28px;
   }
   .form-row {
-  gap: 10px;
-}
-.travelers-section{
-      display: grid;
+    gap: 10px;
+  }
+  .travelers-section {
+    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(156px, 1fr));
     align-items: center;
     justify-items: center;
@@ -702,5 +763,8 @@
     place-content: center;
     place-items: center;
     gap: 9px;
-}
+  }
+  .booking-container {
+    width: 95%;
+  }
 }

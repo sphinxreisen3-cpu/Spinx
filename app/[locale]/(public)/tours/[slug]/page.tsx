@@ -299,6 +299,7 @@ export default function TourDetailsPage() {
     tourTrip,
     tourTravelType,
   } = tourContent;
+  const mapQuery = tourLocation || getLocation(0) || tourTitle;
 
   // Calculate prices based on actual tour price
   const getTourPrice = () => {
@@ -455,8 +456,10 @@ export default function TourDetailsPage() {
         />
       )}
 
-      {/* Section 1: Booking Form */}
-      <section id="booking-section" className="booking-section">
+      {/* Section 1: Booking Form + Image Slider */}
+      <div className="booking-slider-section">
+        <div className="booking-slider-grid">
+          <section id="booking-section" className="booking-section">
         <div className="booking-container">
           <h1 className="booking-title">{t('bookNow')}</h1>
 
@@ -664,6 +667,27 @@ export default function TourDetailsPage() {
         </div>
       </section>
 
+      <section className="map-section">
+        <div className="map-container">
+          {mapQuery ? (
+            <iframe
+              className="map-frame"
+              title={`Map for ${tourTitle}`}
+              src={`https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          ) : (
+            <div className="map-placeholder">
+              <div className="map-icon">Map</div>
+              <div className="map-text">Location not available</div>
+            </div>
+          )}
+        </div>
+      </section>
+        </div>
+      </div>
+
       {/* Section 4: Tour Information & Itinerary */}
       <section className="tour-info-section">
         <div className="tour-info-container">
@@ -829,7 +853,7 @@ export default function TourDetailsPage() {
             <SketchItineraryCard title={tourTitle} stops={itineraryStops} />
           </div>
         </div>
-      </section>
+          </section>
 
       {/* Section 6: Customer Reviews */}
       <section className="reviews-section">
@@ -915,7 +939,7 @@ export default function TourDetailsPage() {
             ))}
           </div>
         </div>
-      </section>
+          </section>
     </div>
   );
 }

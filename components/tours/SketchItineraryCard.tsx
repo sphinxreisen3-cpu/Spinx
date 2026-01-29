@@ -105,8 +105,8 @@ export default function SketchItineraryCard({
         <div className={styles['trip-card__stops-list']}>
           {stops.map((stop) => (
             <div key={stop.id} className={styles['trip-card__stop-item']}>
-              <div className={styles['trip-card__stop-icon-box']}>
-                {stop.icon || '\u{1F4CD}'}
+              <div className={styles['trip-card__stop-icon-box']} aria-hidden="true">
+                <span className={styles['trip-card__stop-pin']}>📍</span>
               </div>
               <div className={styles['trip-card__stop-content']}>
                 <h3 className={styles['trip-card__stop-name']}>{stop.name}</h3>

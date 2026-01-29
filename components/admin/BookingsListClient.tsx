@@ -122,27 +122,31 @@ export function BookingsListClient() {
       const result = await response.json();
 
       if (response.ok && result?.success && result?.data?.bookings) {
-        const apiBookings = (result.data.bookings as Array<Record<string, unknown>>).map((b) => ({
-          _id: String(b._id || ''),
-          name: String(b.name || ''),
-          phone: String(b.phone || ''),
-          email: String(b.email || ''),
-          adults: typeof b.adults === 'number' ? b.adults : Number(b.adults || 0),
-          children: typeof b.children === 'number' ? b.children : Number(b.children || 0),
-          infants: typeof b.infants === 'number' ? b.infants : Number(b.infants || 0),
-          travelDate: String(b.travelDate || ''),
-          confirmTrip: String(b.confirmTrip || ''),
-          tourTitle: typeof b.tourTitle === 'string' ? b.tourTitle : undefined,
-          notes: typeof b.notes === 'string' ? b.notes : undefined,
-          pickupLocation: typeof b.pickupLocation === 'string' ? b.pickupLocation : undefined,
-          requirements: typeof b.requirements === 'string' ? b.requirements : undefined,
-          totalPrice: typeof b.totalPrice === 'number' ? b.totalPrice : Number(b.totalPrice || 0),
-          currency: (b.currency as Booking['currency']) || 'USD',
-          currencySymbol: (b.currencySymbol as Booking['currencySymbol']) || '$',
-          status: (b.status as Booking['status']) || 'pending',
-          createdAt: String(b.createdAt || ''),
-          updatedAt: String(b.updatedAt || ''),
-        } as Booking));
+        const apiBookings = (result.data.bookings as Array<Record<string, unknown>>).map(
+          (b) =>
+            ({
+              _id: String(b._id || ''),
+              name: String(b.name || ''),
+              phone: String(b.phone || ''),
+              email: String(b.email || ''),
+              adults: typeof b.adults === 'number' ? b.adults : Number(b.adults || 0),
+              children: typeof b.children === 'number' ? b.children : Number(b.children || 0),
+              infants: typeof b.infants === 'number' ? b.infants : Number(b.infants || 0),
+              travelDate: String(b.travelDate || ''),
+              confirmTrip: String(b.confirmTrip || ''),
+              tourTitle: typeof b.tourTitle === 'string' ? b.tourTitle : undefined,
+              notes: typeof b.notes === 'string' ? b.notes : undefined,
+              pickupLocation: typeof b.pickupLocation === 'string' ? b.pickupLocation : undefined,
+              requirements: typeof b.requirements === 'string' ? b.requirements : undefined,
+              totalPrice:
+                typeof b.totalPrice === 'number' ? b.totalPrice : Number(b.totalPrice || 0),
+              currency: (b.currency as Booking['currency']) || 'USD',
+              currencySymbol: (b.currencySymbol as Booking['currencySymbol']) || '$',
+              status: (b.status as Booking['status']) || 'pending',
+              createdAt: String(b.createdAt || ''),
+              updatedAt: String(b.updatedAt || ''),
+            }) as Booking
+        );
 
         setFilteredBookings(apiBookings);
       }
@@ -187,7 +191,10 @@ export function BookingsListClient() {
       });
       const result = await response.json();
       if (response.ok && result?.success && result?.data?.booking) {
-        await fetchBookings({ status: statusFilter || undefined, search: searchQuery || undefined });
+        await fetchBookings({
+          status: statusFilter || undefined,
+          search: searchQuery || undefined,
+        });
       } else {
         alert(result?.error || 'Failed to update booking');
       }
@@ -205,7 +212,10 @@ export function BookingsListClient() {
       const response = await fetch(`/api/bookings/${bookingId}`, { method: 'DELETE' });
       const result = await response.json();
       if (response.ok && result?.success) {
-        await fetchBookings({ status: statusFilter || undefined, search: searchQuery || undefined });
+        await fetchBookings({
+          status: statusFilter || undefined,
+          search: searchQuery || undefined,
+        });
       } else {
         alert(result?.error || 'Failed to delete booking');
       }
