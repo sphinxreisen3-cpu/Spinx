@@ -228,11 +228,13 @@ export default function TourDetailsPage() {
       getLocation(5),
     ].filter(Boolean);
 
-    const stops = locations.map((location, index) => ({
-      id: `location-${index}`,
-      name: location,
-      icon: icons[index % icons.length],
-    }));
+    const stops: Array<{ id: string; name: string; icon: string; description?: string }> = locations.map(
+      (location, index) => ({
+        id: `location-${index}`,
+        name: location,
+        icon: icons[index % icons.length],
+      }),
+    );
 
     if (tourContent.tourTrip) {
       stops.push({
@@ -296,7 +298,6 @@ export default function TourDetailsPage() {
     tourFoodBeverages,
     tourWhatToTake,
     tourHighlights,
-    tourTrip,
     tourTravelType,
   } = tourContent;
   const mapQuery = tourLocation || getLocation(0) || tourTitle;

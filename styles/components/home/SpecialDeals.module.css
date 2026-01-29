@@ -23,7 +23,7 @@
 .title {
   font-size: 3rem;
   font-weight: 800;
-  color: #f32626;
+  color: rgb(239, 97, 21);
   margin-bottom: 1rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
