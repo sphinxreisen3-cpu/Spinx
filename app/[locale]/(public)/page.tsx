@@ -312,7 +312,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     <>
       <HeroSlider />
       <Suspense fallback={<TravelTickerFallback />}>
-        <TravelTicker />
+        <TravelTicker locale={locale} />
       </Suspense>
       <Suspense fallback={<SpecialDealsFallback />}>
         <SpecialDealsSection locale={locale} />

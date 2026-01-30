@@ -81,6 +81,9 @@
       "paused": "Pausiert",
       "prevAria": "Vorherige Folie",
       "nextAria": "Nächste Folie",
+      "searchPlaceholder": "Touren, Reiseziele suchen...",
+      "searchButton": "Suchen",
+      "searchAria": "Touren suchen",
       "slides": {
         "1": {
           "title": "Entdecken Sie faszinierende Reiseziele",

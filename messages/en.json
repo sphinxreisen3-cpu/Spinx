@@ -81,6 +81,9 @@
       "paused": "Paused",
       "prevAria": "Previous slide",
       "nextAria": "Next slide",
+      "searchPlaceholder": "Search tours, destinations...",
+      "searchButton": "Search",
+      "searchAria": "Search tours",
       "slides": {
         "1": {
           "title": "Discover Amazing Destinations",
