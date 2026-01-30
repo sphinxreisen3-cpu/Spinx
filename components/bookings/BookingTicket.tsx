@@ -145,28 +145,24 @@ export function BookingTicket({ booking, onClose }: BookingTicketProps) {
           <div className={styles['ticket-logo']}>
             <Image src="/images/logo/logo.webp" alt="Site logo" width={120} height={40} priority />
           </div>
+          <p>{t('eliteTagline')}</p>
           <p className={styles.m}>M-Ticket</p>
 
           <div className={styles['movie-details']}>
             <div className={styles.movie}>
               <h4>{tourTitle}</h4>
+              <p>Traveler: {booking.name}</p>
               <p>{formatTravelers()}</p>
               <p>{formatShortDate(booking.travelDate)}</p>
               <p>{pickupText}</p>
             </div>
           </div>
 
-          <div className={styles.info}>we will contact you soon</div>
+          <div className={styles.info}>{t('contactSoon')}</div>
 
           <div className={styles['ticket-details']}>
-            <img
-              className={styles.scan}
-              src="/images/ticket-logo.png"
-              alt="Ticket logo"
-            />
-
             <div className={styles.ticket}>
-              <p>{ticketCount}Ticket(s)</p>
+              <p>📞+20 100 905 9295</p>
               <b>{statusText}</b>
               <p>{pickupText}</p>
               <h6>
@@ -175,8 +171,8 @@ export function BookingTicket({ booking, onClose }: BookingTicketProps) {
             </div>
           </div>
 
-          <div className={styles['info-cancel']}>Thank you for booking with us!</div>
-          <p>pay on arrival</p>
+          <div className={styles['info-cancel']}>{t('thankYou')}</div>
+          <p>{t('payDuringTransfer')}</p>
 
           <div className={styles['total-amount']}>
             <p>{t('totalAmount')}</p>

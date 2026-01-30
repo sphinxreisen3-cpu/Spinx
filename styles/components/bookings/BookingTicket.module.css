@@ -103,7 +103,7 @@
 
 .m-ticket > .ticket-logo :global(img) {
   width: auto;
-  height: 40px;
+  height: 50px;
   object-fit: contain;
 }
 
@@ -198,14 +198,30 @@
   margin: 12px 0 20px;
   width: 90%;
   max-width: 280px;
-  background: #f97316;
+  background:
+    radial-gradient(
+      ellipse farthest-corner at right bottom,
+      #fedb37 0%,
+      #fdb931 8%,
+      #d99d4d 30%,
+      #c99f3e 40%,
+      transparent 80%
+    ),
+    radial-gradient(
+      ellipse farthest-corner at left top,
+      #ffffff 0%,
+      #ffffac 8%,
+      #d1b464 25%,
+      #d48333 62.5%,
+      #947734 100%
+    );
   border: none;
-  color: #fff;
+  color: black;
   padding: 10px 0;
   border-radius: 999px;
   font-weight: 600;
   letter-spacing: 0.02em;
-  box-shadow: 0 6px 12px rgba(249, 115, 22, 0.3);
+  box-shadow: 0 5px 3px rgb(0 0 0 / 56%);
   cursor: pointer;
   transition: transform 0.2s ease;
 }
