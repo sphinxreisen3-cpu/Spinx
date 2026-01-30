@@ -5,7 +5,6 @@ import { TravelTicker } from '@/components/home/TravelTicker';
 import { ServicesSection } from '@/components/home/ServicesSection';
 import { CTASection } from '@/components/home/CTASection';
 import { LocationMapClient } from '@/components/home/LocationMap.client';
-import { QuickEnquirySection } from '@/components/home/QuickEnquirySection';
 import type { Tour } from '@/types/tour.types';
 import type {
   HomeLatestTripCard,
@@ -329,9 +328,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </Suspense>
       <Suspense fallback={<TestimonialsFallback />}>
         <TestimonialsSection locale={locale} />
-      </Suspense>
-      <Suspense fallback={null}>
-        <QuickEnquirySection />
       </Suspense>
       <LocationMapClient />
       <Suspense fallback={null}>
