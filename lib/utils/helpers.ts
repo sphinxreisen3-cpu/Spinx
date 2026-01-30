@@ -18,14 +18,22 @@ export function isProduction(): boolean {
   return process.env.NODE_ENV === 'production';
 }
 
+export function normalizeBaseUrl(url: string): string {
+  const isLocalhost = /^http:\/\/(localhost|127\.0\.0\.1|\[::1\]|0\.0\.0\.0)(:\d+)?(\/|$)/i.test(url);
+  if (!isLocalhost && url.startsWith('http://')) {
+    return `https://${url.slice('http://'.length)}`;
+  }
+  return url;
+}
+
 export function getBaseUrl(): string {
   if (typeof window !== 'undefined') return window.location.origin;
-  if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
+  if (process.env.NEXT_PUBLIC_APP_URL) return normalizeBaseUrl(process.env.NEXT_PUBLIC_APP_URL);
   // Railway provides RAILWAY_PUBLIC_DOMAIN for public URLs
   if (process.env.RAILWAY_PUBLIC_DOMAIN) return `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`;
   // Fallback to Vercel for backwards compatibility
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  return 'http://localhost:3000';
+  return normalizeBaseUrl('http://localhost:3000');
 }
 
 export function parseBoolean(value: string | undefined, defaultValue: boolean = false): boolean {

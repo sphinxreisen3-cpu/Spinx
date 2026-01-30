@@ -1,7 +1,10 @@
 import { MetadataRoute } from 'next';
+import { normalizeBaseUrl } from '@/lib/utils/helpers';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://sphinxreisen.com';
+  const baseUrl = normalizeBaseUrl(
+    process.env.NEXT_PUBLIC_APP_URL || 'https://sphinxreisen.com'
+  );
 
   return [
     {

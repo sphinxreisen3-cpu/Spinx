@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Oswald, Lato, Montserrat } from 'next/font/google';
 import './globals.css';
+import { normalizeBaseUrl } from '@/lib/utils/helpers';
 /*
  * DEV STYLES: Imported after globals so temporary styles can override
  * project defaults at equal specificity. Remove before production or
@@ -36,7 +37,9 @@ export const metadata: Metadata = {
     template: '%s | Sphinx Reisen',
   },
   description: 'Entdecken Sie unvergessliche Reisen mit Sphinx Reisen',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  metadataBase: new URL(
+    normalizeBaseUrl(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000')
+  ),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

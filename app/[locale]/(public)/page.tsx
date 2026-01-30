@@ -13,6 +13,7 @@ import type {
   HomeTestimonial,
   HomeTourCard,
 } from '@/types/home.types';
+import { normalizeBaseUrl } from '@/lib/utils/helpers';
 
 export const revalidate = 60;
 
@@ -160,7 +161,10 @@ type TestimonialsApiResponse = {
   };
 };
 
-const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, '');
+const baseUrl = normalizeBaseUrl(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(
+  /\/$/,
+  ''
+);
 
 const fetchTours = async (query: string): Promise<Tour[] | null> => {
   try {

@@ -1,8 +1,10 @@
+import { normalizeBaseUrl } from '@/lib/utils/helpers';
+
 // Site configuration
 export const siteConfig = {
   name: 'Sphinx Reisen',
   description: 'Your trusted travel partner for unforgettable adventures',
-  url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+  url: normalizeBaseUrl(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   ogImage: '/images/og-image.jpg',
   links: {
     facebook: 'https://facebook.com/sphinxreisen',
