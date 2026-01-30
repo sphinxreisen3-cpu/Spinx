@@ -41,6 +41,9 @@ export const metadata: Metadata = {
     template: '%s | Sphinx Reisen',
   },
   description: defaultDescription,
+  icons: {
+    icon: '/images/favicon.png',
+  },
   metadataBase: new URL(
     normalizeBaseUrl(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000')
   ),
