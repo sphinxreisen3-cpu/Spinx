@@ -10,6 +10,10 @@ import {
   withErrorHandler,
   generateSlug,
 } from '@/lib/api/helpers';
+
+function escapeRegex(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 import { createTourSchema, tourQuerySchema } from '@/lib/validations/tour.schema';
 
 // GET /api/tours - Get all tours (public, with optional filters)
@@ -28,10 +32,11 @@ export async function GET(request: NextRequest) {
     // Build query filter
     type QueryFilter = {
       isActive?: boolean;
-      category?: string;
+      category?: string | RegExp;
+      primaryLocation?: RegExp;
       onSale?: boolean | { $ne: boolean };
-      $text?: { $search: string };
-      $or?: Array<{ onSale?: boolean | { $exists: boolean } | null }>;
+      $or?: Array<Record<string, unknown>>;
+      $and?: Array<Record<string, unknown>>;
     };
     const filter: QueryFilter = {};
 
@@ -41,7 +46,11 @@ export async function GET(request: NextRequest) {
     }
 
     if (query.category) {
-      filter.category = query.category;
+      filter.category = new RegExp(`^${escapeRegex(query.category)}$`, 'i');
+    }
+
+    if (query.primaryLocation) {
+      filter.primaryLocation = new RegExp(`^${escapeRegex(query.primaryLocation)}$`, 'i');
     }
 
     // Handle onSale filtering
@@ -51,9 +60,24 @@ export async function GET(request: NextRequest) {
       filter.$or = [{ onSale: false }, { onSale: { $exists: false } }, { onSale: null }];
     }
 
-    // Text search if provided
-    if (query.search) {
-      filter.$text = { $search: query.search };
+    // Search: use substring (regex) so typing any letter filters matches immediately
+    const searchTerm = query.search?.trim();
+    let finalFilter: Record<string, unknown> = { ...filter };
+    if (searchTerm) {
+      const searchRegex = new RegExp(escapeRegex(searchTerm), 'i');
+      const searchOr = [
+        { title: searchRegex },
+        { title_de: searchRegex },
+        { description: searchRegex },
+        { description_de: searchRegex },
+        { category: searchRegex },
+        { category_de: searchRegex },
+      ];
+      const onSaleOr = finalFilter.$or;
+      delete finalFilter.$or;
+      const andParts: Record<string, unknown>[] = [finalFilter, { $or: searchOr }];
+      if (onSaleOr) andParts.push({ $or: onSaleOr });
+      finalFilter = { $and: andParts };
     }
 
     // Build sort options
@@ -62,10 +86,9 @@ export async function GET(request: NextRequest) {
     const sortField = query.sortBy || 'sortOrder';
     sortOptions[sortField] = query.sortOrder === 'asc' ? 1 : -1;
 
-    // Execute query with pagination
     const [tours, total] = await Promise.all([
-      Tour.find(filter).sort(sortOptions).skip(skip).limit(limit).lean(),
-      Tour.countDocuments(filter),
+      Tour.find(finalFilter).sort(sortOptions).skip(skip).limit(limit).lean(),
+      Tour.countDocuments(finalFilter),
     ]);
 
     // Add caching headers for better performance

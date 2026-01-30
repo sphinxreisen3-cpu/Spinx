@@ -2,11 +2,14 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { BookingTicket } from '@/components/bookings/BookingTicket';
 import SketchItineraryCard from '@/components/tours/SketchItineraryCard';
+import { LOCATIONS } from '@/config/locations';
+import { getCategorySeoBySlug, categoryToSlug } from '@/config/categories';
 import type { Tour } from '@/types/tour.types';
 
 interface TourReviewItem {
@@ -941,6 +944,46 @@ export default function TourDetailsPage() {
           </div>
         </div>
           </section>
+
+      {/* Internal linking: location + category landing pages */}
+      {(tour.primaryLocation || tour.category) && (
+        <section className="reviews-section" style={{ borderTop: '1px solid #eee', paddingTop: '2rem' }}>
+          <div className="reviews-container">
+            <h2 className="reviews-title">{isGerman ? 'Mehr entdecken' : 'Explore more'}</h2>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+              {tour.primaryLocation && (() => {
+                const loc = LOCATIONS.find(
+                  (l) =>
+                    l.name === tour.primaryLocation ||
+                    l.nameDe === tour.primaryLocation
+                );
+                return loc ? (
+                  <Link
+                    href={`/${locale}/tours/location/${loc.slug}`}
+                    className="submit-review-btn"
+                    style={{ textDecoration: 'none', display: 'inline-block' }}
+                  >
+                    {isGerman ? `Mehr Touren in ${loc.nameDe || loc.name}` : `More tours in ${loc.name}`}
+                  </Link>
+                ) : null;
+              })()}
+              {tour.category && (() => {
+                const categorySlug = categoryToSlug(tour.category);
+                const cat = getCategorySeoBySlug(categorySlug);
+                return cat ? (
+                  <Link
+                    href={`/${locale}/tours/category/${cat.slug}`}
+                    className="submit-review-btn"
+                    style={{ textDecoration: 'none', display: 'inline-block', marginLeft: 0 }}
+                  >
+                    {isGerman ? `Mehr ${cat.nameDe || cat.name}` : `More ${cat.name}`}
+                  </Link>
+                ) : null;
+              })()}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

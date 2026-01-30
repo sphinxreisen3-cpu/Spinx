@@ -1,16 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 
-// Internationalization middleware
+const LOCALES = ['en', 'de'] as const;
+
 const intlMiddleware = createMiddleware({
-  locales: ['en', 'de'] as const,
+  locales: LOCALES,
   defaultLocale: 'en',
-  localePrefix: 'never',
+  localePrefix: 'always',
 });
 
 export default function middleware(request: NextRequest) {
-  // Apply internationalization only
-  return intlMiddleware(request);
+  const response = intlMiddleware(request);
+  const pathname = request.nextUrl.pathname;
+  const segments = pathname.split('/').filter(Boolean);
+  const locale = segments[0];
+  if (LOCALES.includes(locale as (typeof LOCALES)[number])) {
+    response.headers.set('x-next-locale', locale);
+  }
+  response.headers.set('x-pathname', pathname);
+  return response;
 }
 
 export const config = {

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import styles from '@/styles/components/tours/TourGrid.module.css';
 import type { Tour } from '@/types/tour.types';
@@ -24,14 +25,15 @@ interface TourCard {
 export function TourGrid() {
   const locale = useLocale();
   const t = useTranslations();
+  const searchParams = useSearchParams();
+
   const [tours, setTours] = useState<TourCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filters, setFilters] = useState({
-    category: '',
-    search: '',
-    onSale: '',
-  });
+
+  const category = searchParams.get('category') ?? '';
+  const search = searchParams.get('search') ?? '';
+  const onSale = searchParams.get('onSale') ?? '';
 
   useEffect(() => {
     const fetchTours = async () => {
@@ -40,20 +42,12 @@ export function TourGrid() {
         const params = new URLSearchParams();
         params.append('limit', '24');
         params.append('isActive', 'true');
-        
-        if (filters.category) {
-          params.append('category', filters.category);
-        }
-        if (filters.search) {
-          params.append('search', filters.search);
-        }
-        if (filters.onSale === 'true') {
-          params.append('onSale', 'true');
-        }
+        if (category) params.append('category', category);
+        if (search.trim()) params.append('search', search.trim());
+        if (onSale === 'true') params.append('onSale', 'true');
 
         const response = await fetch(`/api/tours?${params.toString()}`, {
-          cache: 'force-cache',
-          next: { revalidate: 60 }, // Revalidate every 60 seconds
+          cache: 'no-store',
         });
         if (!response.ok) {
           throw new Error('Failed to fetch tours');
@@ -61,10 +55,8 @@ export function TourGrid() {
         const data = await response.json();
         const apiTours: Tour[] = data.data.tours;
 
-        // Map API tours to TourCard format with bilingual support
         const isGerman = locale === 'de';
         const mappedTours: TourCard[] = apiTours.map((tour: Tour) => {
-          // Check if priceEUR exists and is greater than 0
           const useEUR = isGerman && tour.priceEUR != null && tour.priceEUR > 0;
           const basePrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
           const isOnSale = tour.onSale && tour.discount > 0;
@@ -98,15 +90,7 @@ export function TourGrid() {
     };
 
     fetchTours();
-  }, [filters, locale]);
-
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilters((prev) => ({ ...prev, category: e.target.value }));
-  };
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters((prev) => ({ ...prev, search: e.target.value }));
-  };
+  }, [category, search, onSale, locale]);
 
   if (loading) {
     return (
@@ -140,35 +124,7 @@ export function TourGrid() {
   }
 
   return (
-    <>
-      {/* Quick Filters */}
-      <div className={styles.filtersBar}>
-        <input
-          type="text"
-          placeholder={t('home.toursSection.searchPlaceholder')}
-          value={filters.search}
-          onChange={handleSearchChange}
-          className={styles.searchInput}
-        />
-        <select value={filters.category} onChange={handleCategoryChange} className={styles.categorySelect}>
-          <option value="">{t('home.toursSection.allCategories')}</option>
-          <option value="Ancient Wonders">{t('home.toursSection.categories.ancientWonders')}</option>
-          <option value="Water Sports">{t('home.toursSection.categories.waterSports')}</option>
-          <option value="Beach Resort">{t('home.toursSection.categories.beachResort')}</option>
-          <option value="Cultural">{t('home.toursSection.categories.cultural')}</option>
-          <option value="Adventure">{t('home.toursSection.categories.adventure')}</option>
-          <option value="Historical">{t('home.toursSection.categories.historical')}</option>
-        </select>
-        <button
-          onClick={() => setFilters((prev) => ({ ...prev, onSale: prev.onSale === 'true' ? '' : 'true' }))}
-          className={`${styles.saleFilter} ${filters.onSale === 'true' ? styles.active : ''}`}
-        >
-          🔥 {t('home.specialDeals.title')}
-        </button>
-      </div>
-
-      {/* Tours Grid */}
-      <div className={styles.grid}>
+    <div className={styles.grid}>
         {tours.map((tour) => (
           <Link key={tour.id} href={`/${locale}/tours/${tour.slug}#book`} className={styles.cardLink}>
             <div className={styles.card}>
@@ -216,7 +172,6 @@ export function TourGrid() {
             </div>
           </Link>
         ))}
-      </div>
-    </>
+    </div>
   );
 }

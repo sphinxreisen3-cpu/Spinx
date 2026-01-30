@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { Oswald, Lato, Montserrat } from 'next/font/google';
 import './globals.css';
-import { normalizeBaseUrl } from '@/lib/utils/helpers';
+import { normalizeBaseUrl, getBaseUrl } from '@/lib/utils/helpers';
 /*
  * DEV STYLES: Imported after globals so temporary styles can override
  * project defaults at equal specificity. Remove before production or
@@ -31,20 +32,55 @@ const montserrat = Montserrat({
   preload: false, // Less critical font, load on demand
 });
 
+const defaultTitle = 'Sphinx Reisen - Ihr Reiseveranstalter';
+const defaultDescription = 'Entdecken Sie unvergessliche Reisen mit Sphinx Reisen';
+
 export const metadata: Metadata = {
   title: {
-    default: 'Sphinx Reisen - Ihr Reiseveranstalter',
+    default: defaultTitle,
     template: '%s | Sphinx Reisen',
   },
-  description: 'Entdecken Sie unvergessliche Reisen mit Sphinx Reisen',
+  description: defaultDescription,
   metadataBase: new URL(
     normalizeBaseUrl(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000')
   ),
+  openGraph: {
+    siteName: 'Sphinx Reisen',
+    type: 'website',
+    title: defaultTitle,
+    description: defaultDescription,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: defaultTitle,
+    description: defaultDescription,
+  },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+function OrganizationJsonLd() {
+  const baseUrl = getBaseUrl().replace(/\/$/, '');
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Sphinx Reisen',
+    url: baseUrl,
+    logo: `${baseUrl}/images/logo/logo.webp`,
+  };
   return (
-    <html lang="en" className={`${oswald.variable} ${lato.variable} ${montserrat.variable}`}>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  );
+}
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const headersList = await headers();
+  const locale = headersList.get('x-next-locale') || 'en';
+  const lang = ['en', 'de'].includes(locale) ? locale : 'en';
+
+  return (
+    <html lang={lang} className={`${oswald.variable} ${lato.variable} ${montserrat.variable}`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
@@ -54,6 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <OrganizationJsonLd />
         {children}
       </body>
     </html>

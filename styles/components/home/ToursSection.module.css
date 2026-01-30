@@ -64,10 +64,33 @@
 
 @media (min-width: 768px) {
   .filterRow {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 220px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 220px) auto;
     align-items: center;
     padding: 1rem;
   }
+}
+
+.searchButton {
+  border-radius: 14px;
+  background: linear-gradient(90deg, rgb(251, 191, 36) 0%, rgb(249, 115, 22) 100%);
+  padding: 0.85rem 1.25rem;
+  font-weight: 600;
+  font-size: 1rem;
+  color: rgb(255, 255, 255);
+  border: none;
+  cursor: pointer;
+  box-shadow:
+    0 4px 12px rgba(249, 115, 22, 0.3),
+    0 2px 6px rgba(249, 115, 22, 0.2);
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.searchButton:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 20px rgba(249, 115, 22, 0.4),
+    0 4px 12px rgba(249, 115, 22, 0.3);
 }
 
 .searchWrapper {

@@ -48,3 +48,19 @@ export function safeJsonParse<T>(json: string, fallback: T): T {
     return fallback;
   }
 }
+
+/** SEO: truncate meta title to ~60 chars; block empty. */
+export function truncateMetaTitle(text: string | undefined, maxLength: number = 60): string {
+  if (!text || typeof text !== 'string') return '';
+  const stripped = text.replace(/\s+/g, ' ').trim();
+  if (stripped.length <= maxLength) return stripped;
+  return stripped.slice(0, maxLength - 3) + '...';
+}
+
+/** SEO: truncate meta description to 150–160 chars; block empty. */
+export function truncateMetaDescription(text: string | undefined, maxLength: number = 158): string {
+  if (!text || typeof text !== 'string') return '';
+  const stripped = text.replace(/\s+/g, ' ').trim();
+  if (stripped.length <= maxLength) return stripped;
+  return stripped.slice(0, maxLength - 3) + '...';
+}

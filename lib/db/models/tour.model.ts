@@ -72,6 +72,16 @@ export interface ITour extends Document {
   onSale: boolean;
   discount: number;
 
+  // Optional SEO overrides (safe fallbacks to auto-generated if empty)
+  seoTitle?: string;
+  seoDescription?: string;
+  seoNoindex?: boolean;
+  ogImage?: string;
+  seoKeywords?: string[];
+  canonicalUrl?: string;
+  primaryLocation?: string; // e.g. "Cairo", "Giza" for location landing pages
+  previousSlugs?: string[]; // for redirect when slug changes
+
   // Timestamps
   createdAt: Date;
   updatedAt: Date;
@@ -153,6 +163,16 @@ const TourSchema = new Schema<ITour>(
     isActive: { type: Boolean, default: true },
     onSale: { type: Boolean, default: false },
     discount: { type: Number, min: 0, max: 100, default: 0 },
+
+    // Optional SEO overrides
+    seoTitle: { type: String, maxlength: 60 },
+    seoDescription: { type: String, maxlength: 160 },
+    seoNoindex: { type: Boolean, default: false },
+    ogImage: { type: String },
+    seoKeywords: [{ type: String }],
+    canonicalUrl: { type: String },
+    primaryLocation: { type: String, maxlength: 100 },
+    previousSlugs: [{ type: String }],
   },
   {
     timestamps: true,

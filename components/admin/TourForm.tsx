@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import type { Tour, CreateTourInput } from '@/types/tour.types';
+import { LOCATIONS } from '@/config/locations';
 import styles from '@/styles/components/admin/TourForm.module.css';
 import pageStyles from '@/styles/pages/admin/AdminPage.module.css';
 
@@ -51,6 +52,13 @@ export function TourForm({ tour, onSubmit }: TourFormProps) {
 
   const [highlightsText, setHighlightsText] = useState((tour?.highlights || []).join('\n'));
 
+  const [slug, setSlug] = useState(tour?.slug || '');
+  const [seoTitle, setSeoTitle] = useState(tour?.seoTitle || '');
+  const [seoDescription, setSeoDescription] = useState(tour?.seoDescription || '');
+  const [seoNoindex, setSeoNoindex] = useState(tour?.seoNoindex ?? false);
+  const [ogImage, setOgImage] = useState(tour?.ogImage || '');
+  const [primaryLocation, setPrimaryLocation] = useState(tour?.primaryLocation || '');
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -65,11 +73,19 @@ export function TourForm({ tour, onSubmit }: TourFormProps) {
       isActive,
       onSale,
       discount,
+      slug: slug.trim() || undefined,
+      seoTitle: seoTitle.trim() || undefined,
+      seoDescription: seoDescription.trim() || undefined,
+      seoNoindex: seoNoindex || undefined,
+      ogImage: ogImage.trim() || undefined,
+      primaryLocation: primaryLocation.trim() || undefined,
     };
 
     try {
-      const response = await fetch('/api/tours', {
-        method: 'POST',
+      const url = isEdit && tour?._id ? `/api/tours/${tour._id}` : '/api/tours';
+      const method = isEdit && tour?._id ? 'PUT' : 'POST';
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -78,13 +94,11 @@ export function TourForm({ tour, onSubmit }: TourFormProps) {
 
       if (response.ok) {
         const result = await response.json();
-        console.log('Tour created successfully:', result);
-        // Redirect to tours list or show success message
+        console.log(isEdit ? 'Tour updated successfully' : 'Tour created successfully:', result);
         window.location.href = '/admin/tours';
       } else {
-        const error = await response.json();
-        console.error('Failed to create tour:', error);
-        alert(`Failed to create tour: ${error.message || 'Unknown error'}`);
+        const err = await response.json();
+        alert(`Failed to ${isEdit ? 'update' : 'create'} tour: ${err.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Error creating tour:', error);
@@ -263,6 +277,88 @@ export function TourForm({ tour, onSubmit }: TourFormProps) {
               />
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* SEO (optional overrides; fallbacks to auto-generated) */}
+      <section>
+        <h3 className={styles.sectionTitle}>SEO (optional)</h3>
+        <p className={styles.helpText} style={{ marginBottom: '1rem' }}>
+          Title ≤60 chars, description 150–160 chars. Empty = use auto-generated. Only noindex per item.
+        </p>
+        <div className={styles.formRow}>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>URL Slug</label>
+            <input
+              type="text"
+              className={styles.input}
+              value={slug}
+              onChange={(e) => setSlug(e.target.value.replace(/\s+/g, '-').toLowerCase())}
+              placeholder="tour-url-slug"
+            />
+            <p className={styles.helpText}>Leave empty to auto-generate from title. Changing slug creates redirect from old URL.</p>
+          </div>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Primary location (for landing pages)</label>
+            <select
+              className={styles.select}
+              value={primaryLocation}
+              onChange={(e) => setPrimaryLocation(e.target.value)}
+            >
+              <option value="">— None —</option>
+              {LOCATIONS.map((loc) => (
+                <option key={loc.slug} value={loc.name}>
+                  {loc.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>SEO title override (≤60 chars)</label>
+          <input
+            type="text"
+            className={styles.input}
+            value={seoTitle}
+            onChange={(e) => setSeoTitle(e.target.value.slice(0, 60))}
+            placeholder="Auto: Tour name | Location Tours | Sphinx Reisen"
+            maxLength={60}
+          />
+          <span className={styles.helpText}>{seoTitle.length}/60</span>
+        </div>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Meta description override (150–160 chars)</label>
+          <textarea
+            className={styles.textarea}
+            rows={2}
+            value={seoDescription}
+            onChange={(e) => setSeoDescription(e.target.value.slice(0, 160))}
+            placeholder="Auto from tour description"
+            maxLength={160}
+          />
+          <span className={styles.helpText}>{seoDescription.length}/160</span>
+        </div>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>OG image override (URL)</label>
+          <input
+            type="text"
+            className={styles.input}
+            value={ogImage}
+            onChange={(e) => setOgImage(e.target.value)}
+            placeholder="Or leave empty to use first tour image"
+          />
+        </div>
+        <div className={styles.checkboxGroup} style={{ marginTop: '0.5rem' }}>
+          <input
+            type="checkbox"
+            id="seoNoindex"
+            className={styles.checkbox}
+            checked={seoNoindex}
+            onChange={(e) => setSeoNoindex(e.target.checked)}
+          />
+          <label htmlFor="seoNoindex" className={styles.checkboxLabel}>
+            Noindex this tour (e.g. sold-out, duplicate)
+          </label>
         </div>
       </section>
 

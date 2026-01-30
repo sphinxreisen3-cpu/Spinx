@@ -21,6 +21,11 @@ export const adminNav = [
     icon: 'map',
   },
   {
+    title: 'SEO',
+    href: '/admin/seo',
+    icon: 'search',
+  },
+  {
     title: 'Bookings',
     href: '/admin/bookings',
     icon: 'calendar',

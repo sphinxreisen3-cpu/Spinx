@@ -71,6 +71,39 @@ export const createTourSchema = z.object({
   isActive: z.boolean().optional().default(true),
   onSale: z.boolean().optional().default(false),
   discount: z.number().min(0).max(100).optional().default(0),
+
+  // Optional SEO overrides (validated lengths; empty string = omit)
+  seoTitle: z
+    .string()
+    .max(60, 'SEO title must be ≤60 characters')
+    .transform((s) => (s?.trim() === '' ? undefined : s?.trim()))
+    .optional()
+    .nullable(),
+  seoDescription: z
+    .string()
+    .max(160, 'Meta description must be ≤160 characters')
+    .transform((s) => (s?.trim() === '' ? undefined : s?.trim()))
+    .optional()
+    .nullable(),
+  seoNoindex: z.boolean().optional(),
+  ogImage: z
+    .string()
+    .transform((s) => (s?.trim() === '' ? undefined : s?.trim()))
+    .optional()
+    .nullable(),
+  seoKeywords: z.array(z.string().max(50)).max(20).optional(),
+  canonicalUrl: z
+    .string()
+    .url('Canonical URL must be valid')
+    .transform((s) => (s?.trim() === '' ? undefined : s?.trim()))
+    .optional()
+    .nullable(),
+  primaryLocation: z
+    .string()
+    .max(100)
+    .transform((s) => (s?.trim() === '' ? undefined : s?.trim()))
+    .optional()
+    .nullable(),
 });
 
 // Tour update schema (all fields optional)
@@ -79,6 +112,7 @@ export const updateTourSchema = createTourSchema.partial();
 // Query params schema
 export const tourQuerySchema = z.object({
   category: z.string().optional(),
+  primaryLocation: z.string().optional(),
   onSale: z.enum(['true', 'false']).optional(),
   isActive: z.enum(['true', 'false']).optional(),
   search: z.string().optional(),

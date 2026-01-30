@@ -60,8 +60,15 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       data.slug = generateSlug(data.title);
     }
 
-    // Check for duplicate slug if updating
-    if (data.slug) {
+    const current = await Tour.findById(id).select('slug previousSlugs').lean();
+    if (!current) {
+      return errorResponse('Tour not found', 404);
+    }
+
+    // When slug changes: add old slug to previousSlugs for redirect handling
+    const slugChanged = data.slug != null && data.slug !== current.slug;
+    const updatePayload: Record<string, unknown> = { ...data };
+    if (slugChanged) {
       const existing = await Tour.findOne({
         slug: data.slug,
         _id: { $ne: id },
@@ -69,12 +76,15 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       if (existing) {
         return errorResponse('A tour with this slug already exists', 409);
       }
+      updatePayload.previousSlugs = [...(current.previousSlugs || []), current.slug].filter(
+        (s, i, arr) => arr.lastIndexOf(s) === i
+      );
     }
 
     // Update tour
     const tour = await Tour.findByIdAndUpdate(
       id,
-      { $set: data },
+      { $set: updatePayload },
       { new: true, runValidators: true }
     ).lean();
 

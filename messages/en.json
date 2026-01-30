@@ -155,13 +155,16 @@
       "searchPlaceholder": "Search tours by destination, activity, or description...",
       "allCategories": "All Categories",
       "categories": {
-        "ancientWonders": "Ancient Wonders",
-        "waterSports": "Water Sports",
-        "beachResort": "Beach Resort",
         "cultural": "Cultural",
         "adventure": "Adventure",
-        "historical": "Historical"
+        "historical": "Historical",
+        "beach": "Beach",
+        "desert": "Desert",
+        "cruise": "Cruise"
       },
+      "searchTours": "Search tours",
+      "loadMore": "Load more tours",
+      "onSale": "On Sale",
       "noTours": "No tours available.",
       "bookNow": "Book Now"
     },

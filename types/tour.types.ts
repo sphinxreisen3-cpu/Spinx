@@ -71,6 +71,16 @@ export interface Tour {
   onSale: boolean;
   discount: number;
 
+  // Optional SEO overrides
+  seoTitle?: string;
+  seoDescription?: string;
+  seoNoindex?: boolean;
+  ogImage?: string;
+  seoKeywords?: string[];
+  canonicalUrl?: string;
+  primaryLocation?: string;
+  previousSlugs?: string[];
+
   // Timestamps
   createdAt: string;
   updatedAt: string;
@@ -108,6 +118,14 @@ export interface CreateTourInput {
   isActive?: boolean;
   onSale?: boolean;
   discount?: number;
+  slug?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoNoindex?: boolean;
+  ogImage?: string;
+  seoKeywords?: string[];
+  canonicalUrl?: string;
+  primaryLocation?: string;
 }
 
 export interface UpdateTourInput extends Partial<CreateTourInput> {

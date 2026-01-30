@@ -155,13 +155,16 @@
       "searchPlaceholder": "Touren nach Ziel, Aktivität oder Beschreibung suchen...",
       "allCategories": "Alle Kategorien",
       "categories": {
-        "ancientWonders": "Antike Wunder",
-        "waterSports": "Wassersport",
-        "beachResort": "Strandresort",
         "cultural": "Kultur",
         "adventure": "Abenteuer",
-        "historical": "Historisch"
+        "historical": "Historisch",
+        "beach": "Strand",
+        "desert": "Wüste",
+        "cruise": "Kreuzfahrt"
       },
+      "searchTours": "Touren suchen",
+      "loadMore": "Weitere Touren laden",
+      "onSale": "Im Angebot",
       "noTours": "Keine Touren verfügbar.",
       "bookNow": "Jetzt buchen"
     },
