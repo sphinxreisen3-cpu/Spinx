@@ -77,32 +77,36 @@ export function BookingTicket({ booking, onClose }: BookingTicketProps) {
         logging: false,
         useCORS: true,
         allowTaint: true,
+        width: ticketRef.current.offsetWidth,
+        height: ticketRef.current.offsetHeight,
+        scrollX: 0,
+        scrollY: 0,
+        x: 0,
+        y: 0,
       });
 
       // Convert canvas to image
-      const imgData = canvas.toDataURL('image/png');
+      const imgData = canvas.toDataURL('image/png', 1.0);
 
-      // Create PDF
+      // Calculate PDF dimensions (divide by scale to get actual size)
+      const actualWidth = canvas.width / 2;
+      const actualHeight = canvas.height / 2;
+      
+      // Convert pixels to mm (assuming 96 DPI)
+      const pxToMm = 25.4 / 96;
+      const pdfWidth = actualWidth * pxToMm;
+      const pdfHeight = actualHeight * pxToMm;
+
+      // Create PDF with custom dimensions
       const { default: jsPDFClass } = jsPDF;
-      const pdf = new jsPDFClass('p', 'mm', 'a4');
-      const imgWidth = 210; // A4 width in mm
-      const pageHeight = 297; // A4 height in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
+      const pdf = new jsPDFClass({
+        orientation: pdfWidth > pdfHeight ? 'landscape' : 'portrait',
+        unit: 'mm',
+        format: [pdfWidth, pdfHeight]
+      });
 
-      let position = 0;
-
-      // Add first page
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      // Add additional pages if needed
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
+      // Add the image to fill the entire page
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
 
       // Download PDF
       pdf.save(`booking-ticket-${formatBookingId(booking._id)}.pdf`);
