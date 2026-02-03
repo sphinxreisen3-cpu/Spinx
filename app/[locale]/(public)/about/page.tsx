@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import styles from '@/styles/pages/about/AboutPage.module.css';
 
@@ -14,15 +15,11 @@ export default async function AboutPage() {
             <div className={styles.heroContent}>
               <h1 className={styles.heroTitle}>{t('hero.title')}</h1>
               <div className={styles.heroDivider}></div>
-              <h2 className={styles.heroSubtitle}>
-                {t('hero.subtitle')}
-              </h2>
-              <p className={styles.heroText}>
-                {t('hero.description')}
-              </p>
-              <button type="button" className={styles.heroButton}>
+              <h2 className={styles.heroSubtitle}>{t('hero.subtitle')}</h2>
+              <p className={styles.heroText}>{t('hero.description')}</p>
+              <Link href="/tours" className={styles.heroButton}>
                 {t('hero.button')}
-              </button>
+              </Link>
             </div>
             <div className={styles.heroImageWrapper}>
               <div className={styles.heroImageCard}>
@@ -51,9 +48,7 @@ export default async function AboutPage() {
                 <span className={styles.serviceIcon}>🏛️</span>
               </div>
               <h3 className={styles.serviceTitle}>{t('services.ancient.title')}</h3>
-              <p className={styles.serviceText}>
-                {t('services.ancient.description')}
-              </p>
+              <p className={styles.serviceText}>{t('services.ancient.description')}</p>
             </div>
 
             {/* Hurghada Resorts */}
@@ -62,9 +57,7 @@ export default async function AboutPage() {
                 <span className={styles.serviceIcon}>🏖️</span>
               </div>
               <h3 className={styles.serviceTitle}>{t('services.resorts.title')}</h3>
-              <p className={styles.serviceText}>
-                {t('services.resorts.description')}
-              </p>
+              <p className={styles.serviceText}>{t('services.resorts.description')}</p>
             </div>
 
             {/* Red Sea Diving */}
@@ -73,9 +66,7 @@ export default async function AboutPage() {
                 <span className={styles.serviceIcon}>🤿</span>
               </div>
               <h3 className={styles.serviceTitle}>{t('services.diving.title')}</h3>
-              <p className={styles.serviceText}>
-                {t('services.diving.description')}
-              </p>
+              <p className={styles.serviceText}>{t('services.diving.description')}</p>
             </div>
 
             {/* Nile Cruises */}
@@ -84,9 +75,7 @@ export default async function AboutPage() {
                 <span className={styles.serviceIcon}>🚢</span>
               </div>
               <h3 className={styles.serviceTitle}>{t('services.cruises.title')}</h3>
-              <p className={styles.serviceText}>
-                {t('services.cruises.description')}
-              </p>
+              <p className={styles.serviceText}>{t('services.cruises.description')}</p>
             </div>
           </div>
         </div>
@@ -98,9 +87,7 @@ export default async function AboutPage() {
           <div className={styles.timelineHeader}>
             <h2 className={styles.timelineTitle}>{t('timeline.title')}</h2>
             <div className={styles.timelineDivider}></div>
-            <p className={styles.timelineSubtitle}>
-              {t('timeline.subtitle')}
-            </p>
+            <p className={styles.timelineSubtitle}>{t('timeline.subtitle')}</p>
           </div>
 
           <div className={styles.timelineLayout}>
@@ -208,9 +195,9 @@ export default async function AboutPage() {
         <div className={styles.container}>
           <p className={styles.ctaText}>
             <strong>{t('cta.strong')}</strong> {t('cta.text')}
-            <button type="button" className={styles.ctaLink}>
+            <Link href="/tours" className={styles.ctaLink}>
               {t('cta.button')}
-            </button>
+            </Link>
           </p>
         </div>
       </section>
