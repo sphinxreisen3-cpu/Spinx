@@ -129,8 +129,10 @@ export function BookingTicket({ booking, onClose }: BookingTicketProps) {
   const tourTitle = booking.tourTitle || booking.confirmTrip || '';
   const totalTickets = booking.adults + booking.children + booking.infants;
   const ticketCount = totalTickets > 0 ? totalTickets : 1;
-  const statusText = booking.status ? booking.status.toUpperCase() : 'CONFIRMED';
-  const pickupText = booking.pickupLocation || 'Pickup details shared after confirmation';
+  const statusText = booking.status
+    ? t(`status.${booking.status.toLowerCase()}`) || booking.status.toUpperCase()
+    : t('status.confirmed');
+  const pickupText = booking.pickupLocation || t('pickupDetailsShared');
 
   return (
     <div className={styles.ticketOverlay} onClick={onClose}>
@@ -151,7 +153,9 @@ export function BookingTicket({ booking, onClose }: BookingTicketProps) {
           <div className={styles['movie-details']}>
             <div className={styles.movie}>
               <h4>{tourTitle}</h4>
-              <p>Traveler: {booking.name}</p>
+              <p>
+                {t('customer')}: {booking.name}
+              </p>
               <p>{formatTravelers()}</p>
               <p>{formatShortDate(booking.travelDate)}</p>
               <p>{pickupText}</p>

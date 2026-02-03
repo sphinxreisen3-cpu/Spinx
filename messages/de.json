@@ -41,7 +41,9 @@
       "tourName": "Tourname",
       "travelDate": "Reisedatum",
       "travelers": "Reisende",
+      "customer": "Kundenname",
       "pickupLocation": "Abholort",
+      "pickupDetailsShared": "Abholdetails werden nach Bestätigung mitgeteilt",
       "totalAmount": "Gesamtbetrag",
       "bookingReference": "Buchungsreferenz",
       "downloadTicket": "Ticket herunterladen",
@@ -54,7 +56,12 @@
       "child": "Kind",
       "children": "Kinder",
       "infant": "Kleinkind",
-      "infants": "Kleinkinder"
+      "infants": "Kleinkinder",
+      "status": {
+        "confirmed": "Bestätigt",
+        "pending": "Ausstehend",
+        "cancelled": "Storniert"
+      }
     }
   },
   "common": {
@@ -263,7 +270,7 @@
   },
   "about": {
     "hero": {
-      "title": "Willkommen bei Egypt-Tours",
+      "title": "Willkommen bei SphinxReisen",
       "subtitle": "Ihr Tor zu Ägyptens Wundern & Hurghadas Paradies",
       "description": "Entdecken Sie die Magie des alten Ägypten und die Schönheit der Hurghada-Rotmeer-Küste. Mit über 15 Jahren Erfahrung sind wir darauf spezialisiert, unvergessliche Reisen durch Ägyptens reiche Geschichte und atemberaubende Strandziele zu gestalten. Von den majestätischen Pyramiden von Gizeh bis zu den unberührten Stränden von Hurghada bieten wir Ihnen das Beste aus beiden Welten.",
       "button": "Ägypten entdecken"
@@ -287,7 +294,7 @@
       }
     },
     "timeline": {
-      "title": "Egypt-Tours Reise",
+      "title": "SphinxReisen",
       "subtitle": "Unsere Geschichte, Ägyptens Wunder in die Welt zu bringen - von antiken Pyramiden bis zum Roten Meer-Paradies",
       "items": {
         "2008": {
@@ -364,6 +371,8 @@
     "price": {
       "adults": "Erwachsene",
       "children": "Kinder",
+      "infants": "Säuglinge",
+      "free": "Kostenlos",
       "totalCost": "Gesamtkosten:",
       "perPerson": "pro Person"
     },

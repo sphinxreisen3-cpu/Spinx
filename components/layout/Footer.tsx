@@ -106,12 +106,7 @@ export function Footer() {
               <FaWhatsapp aria-hidden />
               <span>{t('footer.whatsappSupport')}</span>
             </a>
-            <a
-              href="https://maps.app.goo.gl/w6UgCtGAbvvNc6L3A"
-              target="_blank"
-              rel="noreferrer"
-              className={styles.contactItem}
-            >
+            <a href="#map" className={styles.contactItem}>
               <FaMapMarkerAlt aria-hidden />
               <span>{t('footer.findUsOnMap')}</span>
             </a>
@@ -139,7 +134,9 @@ export function Footer() {
 
       <div className={styles.bottomBar}>
         <div className={styles.bottomInner}>
-          <span>© {year} {t('footer.rights')}</span>
+          <span>
+            © {year} {t('footer.rights')}
+          </span>
           <a href="#" className={styles.copyrightLink}>
             {t('footer.designBy')}
           </a>

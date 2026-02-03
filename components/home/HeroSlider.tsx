@@ -25,19 +25,19 @@ const slides = [
   {
     id: 1,
     image: '/images/pexels-bassel-zaki-706250525-18614692.webp',
-    ctaLink: '#tours-section',
+    ctaLink: '/tours',
     stats: { destinations: '500+', experience: '15+', countries: '50+' },
   },
   {
     id: 2,
     image: '/images/pexels-freestockpro-1540108.webp',
-    ctaLink: '#tours-section',
+    ctaLink: '/tours',
     stats: { happy: '10K+', tours: '250+', awards: '25+' },
   },
   {
     id: 3,
     image: '/images/byramids.webp',
-    ctaLink: '#tours-section',
+    ctaLink: '/tours',
     stats: { insights: '1000+', guides: '50+', languages: '12+' },
   },
 ];
@@ -212,7 +212,9 @@ export function HeroSlider() {
                       onFocus={onHeroSearchFocus}
                       aria-label={t('home.hero.searchPlaceholder')}
                       autoComplete="off"
-                      aria-expanded={showSearchDropdown && (heroSearchLoading || heroSearchResults.length > 0)}
+                      aria-expanded={
+                        showSearchDropdown && (heroSearchLoading || heroSearchResults.length > 0)
+                      }
                       aria-haspopup="listbox"
                     />
                     <button type="submit" className={styles.heroSearchButton}>
@@ -286,14 +288,18 @@ export function HeroSlider() {
                         className={`${styles.premiumBadge} ${index === currentSlide ? styles.premiumBadgeActive : ''}`}
                       >
                         <Star className={styles.premiumBadgeIcon} />
-                        <span className={styles.premiumBadgeText}>{t('home.hero.premiumBadge')}</span>
+                        <span className={styles.premiumBadgeText}>
+                          {t('home.hero.premiumBadge')}
+                        </span>
                       </div>
 
                       {/* Title */}
                       <div
                         className={`${styles.titleSection} ${index === currentSlide ? styles.titleSectionActive : ''}`}
                       >
-                        <h1 className={styles.mainTitle}>{t(`home.hero.slides.${slide.id}.title`)}</h1>
+                        <h1 className={styles.mainTitle}>
+                          {t(`home.hero.slides.${slide.id}.title`)}
+                        </h1>
                         <div className={styles.titleDivider}></div>
                       </div>
 
@@ -315,12 +321,14 @@ export function HeroSlider() {
                       <div
                         className={`${styles.highlights} ${index === currentSlide ? styles.highlightsActive : ''}`}
                       >
-                        {(t.raw(`home.hero.slides.${slide.id}.highlights`) as string[]).map((highlight, idx) => (
-                          <div key={idx} className={styles.highlightItem}>
-                            <div className={styles.highlightDot}></div>
-                            <span className={styles.highlightText}>{highlight}</span>
-                          </div>
-                        ))}
+                        {(t.raw(`home.hero.slides.${slide.id}.highlights`) as string[]).map(
+                          (highlight, idx) => (
+                            <div key={idx} className={styles.highlightItem}>
+                              <div className={styles.highlightDot}></div>
+                              <span className={styles.highlightText}>{highlight}</span>
+                            </div>
+                          )
+                        )}
                       </div>
 
                       {/* CTA Buttons */}
@@ -335,13 +343,10 @@ export function HeroSlider() {
                           <div className={styles.primaryCtaOverlay}></div>
                         </Link>
 
-                        <button
-                          onClick={() => goToSlide((currentSlide + 1) % slides.length)}
-                          className={styles.secondaryCta}
-                        >
+                        <Link href="/tours" className={styles.secondaryCta}>
                           <Calendar className={styles.secondaryCtaIcon} />
                           {t('home.hero.secondaryCta')}
-                        </button>
+                        </Link>
                       </div>
                     </div>
 
@@ -355,9 +360,7 @@ export function HeroSlider() {
                             <div className={styles.statCardOverlay}></div>
                             <div className={styles.statCardContent}>
                               <div className={styles.statValue}>{value}</div>
-                              <div className={styles.statLabel}>
-                                {t(`home.hero.stats.${key}`)}
-                              </div>
+                              <div className={styles.statLabel}>{t(`home.hero.stats.${key}`)}</div>
                             </div>
                           </div>
                         ))}

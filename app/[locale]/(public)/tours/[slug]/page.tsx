@@ -38,7 +38,9 @@ export default function TourDetailsPage() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const [reviews, setReviews] = useState<TourReviewItem[]>([]);
-  const [reviewsAverage, setReviewsAverage] = useState<{ average: number; count: number } | null>(null);
+  const [reviewsAverage, setReviewsAverage] = useState<{ average: number; count: number } | null>(
+    null
+  );
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
 
   const [isSubmittingBooking, setIsSubmittingBooking] = useState(false);
@@ -66,25 +68,25 @@ export default function TourDetailsPage() {
   useEffect(() => {
     const fetchData = async () => {
       if (!slug) return;
-      
+
       try {
         setLoading(true);
         setError(null);
-        
+
         // Fetch tour data first (reviews depend on tour._id)
         const tourResponse = await fetch(`/api/tours/${slug}`, {
           cache: 'force-cache',
           next: { revalidate: 300 }, // Revalidate every 5 minutes
         });
-        
+
         if (!tourResponse.ok) {
           throw new Error('Tour not found');
         }
-        
+
         const tourData = await tourResponse.json();
         const fetchedTour = tourData.data.tour;
         setTour(fetchedTour);
-        
+
         // Fetch reviews in parallel once we have tour ID
         if (fetchedTour?._id) {
           try {
@@ -93,7 +95,7 @@ export default function TourDetailsPage() {
               next: { revalidate: 60 }, // Revalidate every minute
             });
             const reviewsData = await reviewsResponse.json();
-            
+
             if (reviewsData?.success && reviewsData?.data?.reviews) {
               setReviews(reviewsData.data.reviews as TourReviewItem[]);
               setReviewsAverage(reviewsData.data.averageRating || null);
@@ -139,24 +141,24 @@ export default function TourDetailsPage() {
       return {
         tourTitle: '',
         tourCategory: '',
-      tourDescription: '',
-      tourLongDescription: '',
-      tourDescription2: '',
-      tourDetails: '',
-      tourTransportation: '',
-      tourPickup: '',
-      tourPickupLocation: '',
-      tourVanLocation: '',
-      tourBriefing: '',
-      tourDaysDurations: '',
-      tourLocation: '',
-      tourProgram: '',
-      tourFoodBeverages: '',
-      tourWhatToTake: '',
-      tourHighlights: [] as string[],
-      tourTrip: '',
-      tourTravelType: '',
-    };
+        tourDescription: '',
+        tourLongDescription: '',
+        tourDescription2: '',
+        tourDetails: '',
+        tourTransportation: '',
+        tourPickup: '',
+        tourPickupLocation: '',
+        tourVanLocation: '',
+        tourBriefing: '',
+        tourDaysDurations: '',
+        tourLocation: '',
+        tourProgram: '',
+        tourFoodBeverages: '',
+        tourWhatToTake: '',
+        tourHighlights: [] as string[],
+        tourTrip: '',
+        tourTravelType: '',
+      };
     }
 
     return {
@@ -213,14 +215,7 @@ export default function TourDetailsPage() {
   const itineraryStops = useMemo(() => {
     if (!tour) return [];
 
-    const icons = [
-      '\u{1F4CD}',
-      '\u{1F9ED}',
-      '\u{1F5FA}',
-      '\u{1F3D6}',
-      '\u{1F30A}',
-      '\u{1F6F6}',
-    ];
+    const icons = ['\u{1F4CD}', '\u{1F9ED}', '\u{1F5FA}', '\u{1F3D6}', '\u{1F30A}', '\u{1F6F6}'];
 
     const locations = [
       getLocation(0),
@@ -231,13 +226,12 @@ export default function TourDetailsPage() {
       getLocation(5),
     ].filter(Boolean);
 
-    const stops: Array<{ id: string; name: string; icon: string; description?: string }> = locations.map(
-      (location, index) => ({
+    const stops: Array<{ id: string; name: string; icon: string; description?: string }> =
+      locations.map((location, index) => ({
         id: `location-${index}`,
         name: location,
         icon: icons[index % icons.length],
-      }),
-    );
+      }));
 
     if (tourContent.tourTrip) {
       stops.push({
@@ -309,7 +303,7 @@ export default function TourDetailsPage() {
   const getTourPrice = () => {
     if (!tour) return 0;
     const useEUR = isGerman && tour.priceEUR != null && tour.priceEUR > 0;
-    const basePrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
+    const basePrice = useEUR ? tour.priceEUR || tour.price : tour.price;
     // Use discounted price if on sale
     if (tour.onSale && tour.discount > 0) {
       return Math.round(basePrice - (basePrice * tour.discount) / 100);
@@ -319,7 +313,7 @@ export default function TourDetailsPage() {
 
   const pricePerAdult = getTourPrice();
   const pricePerChild = Math.round(pricePerAdult * 0.5); // 50% of adult price
-  const pricePerInfant = Math.round(pricePerAdult * 0.25); // 25% of adult price
+  const pricePerInfant = 0; // Infants are free
   const totalPrice = adults * pricePerAdult + children * pricePerChild + infants * pricePerInfant;
   const useEUR = isGerman && tour?.priceEUR != null && tour.priceEUR > 0;
   const currencySymbol = useEUR ? '€' : '$';
@@ -338,7 +332,7 @@ export default function TourDetailsPage() {
     const selectedDate = new Date(travelDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     if (selectedDate < today) {
       alert(t('form.travelDate') + ' must be in the future');
       return;
@@ -454,241 +448,263 @@ export default function TourDetailsPage() {
     <div className="tour-page">
       {/* Booking Confirmation Ticket */}
       {showTicket && bookingData && (
-        <BookingTicket
-          booking={bookingData}
-          onClose={() => setShowTicket(false)}
-        />
+        <BookingTicket booking={bookingData} onClose={() => setShowTicket(false)} />
       )}
 
       {/* Section 1: Booking Form + Image Slider */}
       <div className="booking-slider-section">
         <div className="booking-slider-grid">
           <section id="booking-section" className="booking-section">
-        <div className="booking-container">
-          <h1 className="booking-title">{t('bookNow')}</h1>
+            <div className="booking-container">
+              <h1 className="booking-title">{t('bookNow')}</h1>
 
-          <form className="booking-form" onSubmit={handleBookingSubmit}>
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="fullname">{t('form.fullName')}</label>
-                <input type="text" id="fullname" name="fullname" required />
-              </div>
-              <div className="form-group">
-                <label htmlFor="email">{t('form.email')}</label>
-                <input type="email" id="email" name="email" required />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="phone">{t('form.phone')}</label>
-                <input type="tel" id="phone" name="phone" required />
-              </div>
-              <div className="form-group">
-                <label htmlFor="date">{t('form.travelDate')}</label>
-                <input
-                  type="date"
-                  id="date"
-                  name="date"
-                  min={new Date().toISOString().split('T')[0]}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="travelers-section">
-              <div className="traveler-group">
-                <div className="traveler-label">
-                  <label>{t('form.adults')}</label>
-                </div>
-                <div className="quantity-selector">
-                  <button
-                    type="button"
-                    onClick={() => setAdults(Math.max(1, adults - 1))}
-                    className="qty-btn"
-                  >
-                    −
-                  </button>
-                  <span className="qty-value">{adults}</span>
-                  <button type="button" onClick={() => setAdults(adults + 1)} className="qty-btn">
-                    +
-                  </button>
-                </div>
-              </div>
-
-              <div className="traveler-group">
-                <div className="traveler-label">
-                  <label>{t('form.children')}</label>
-                </div>
-                <div className="quantity-selector">
-                  <button
-                    type="button"
-                    onClick={() => setChildren(Math.max(0, children - 1))}
-                    className="qty-btn"
-                  >
-                    −
-                  </button>
-                  <span className="qty-value">{children}</span>
-                  <button
-                    type="button"
-                    onClick={() => setChildren(children + 1)}
-                    className="qty-btn"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              <div className="traveler-group">
-                <div className="traveler-label">
-                  <label>{t('form.infants')}</label>
-                </div>
-                <div className="quantity-selector">
-                  <button
-                    type="button"
-                    onClick={() => setInfants(Math.max(0, infants - 1))}
-                    className="qty-btn"
-                  >
-                    −
-                  </button>
-                  <span className="qty-value">{infants}</span>
-                  <button type="button" onClick={() => setInfants(infants + 1)} className="qty-btn">
-                    +
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="pickup">{t('form.pickupLocation')}</label>
-                <input
-                  type="text"
-                  id="pickup"
-                  name="pickup"
-                  placeholder={t('form.pickupPlaceholder')}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="outside-pickup">{t('form.outsidePickup')}</label>
-                <input type="text" id="outside-pickup" name="outside-pickup" />
-                <span className="warning-note">
-                  {t('form.outsidePickupWarning')}
-                </span>
-              </div>
-            </div>
-
-            <div className="form-group full-width">
-              <textarea
-                id="requirements"
-                name="requirements"
-                rows={4}
-                placeholder={t('form.requirements')}
-              ></textarea>
-            </div>
-
-            <div className="price-section">
-              <div className="price-breakdown">
-                <div className="price-item">
-                  <span>
-                    {adults} {t('price.adults')} × {currencySymbol}{pricePerAdult}
-                  </span>
-                  <span>{currencySymbol}{adults * pricePerAdult}</span>
-                </div>
-                {children > 0 && (
-                  <div className="price-item">
-                    <span>
-                      {children} {t('price.children')} × {currencySymbol}{pricePerChild}
-                    </span>
-                    <span>{currencySymbol}{children * pricePerChild}</span>
+              <form className="booking-form" onSubmit={handleBookingSubmit}>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="fullname">{t('form.fullName')}</label>
+                    <input type="text" id="fullname" name="fullname" required />
                   </div>
-                )}
-                <div className="price-total">
-                  <span>{t('price.totalCost')}</span>
-                  <span className="total-amount">{currencySymbol}{totalPrice}</span>
+                  <div className="form-group">
+                    <label htmlFor="email">{t('form.email')}</label>
+                    <input type="email" id="email" name="email" required />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="phone">{t('form.phone')}</label>
+                    <input type="tel" id="phone" name="phone" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="date">{t('form.travelDate')}</label>
+                    <input
+                      type="date"
+                      id="date"
+                      name="date"
+                      min={new Date().toISOString().split('T')[0]}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="travelers-section">
+                  <div className="traveler-group">
+                    <div className="traveler-label">
+                      <label>{t('form.adults')}</label>
+                    </div>
+                    <div className="quantity-selector">
+                      <button
+                        type="button"
+                        onClick={() => setAdults(Math.max(1, adults - 1))}
+                        className="qty-btn"
+                      >
+                        −
+                      </button>
+                      <span className="qty-value">{adults}</span>
+                      <button
+                        type="button"
+                        onClick={() => setAdults(adults + 1)}
+                        className="qty-btn"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="traveler-group">
+                    <div className="traveler-label">
+                      <label>{t('form.children')}</label>
+                    </div>
+                    <div className="quantity-selector">
+                      <button
+                        type="button"
+                        onClick={() => setChildren(Math.max(0, children - 1))}
+                        className="qty-btn"
+                      >
+                        −
+                      </button>
+                      <span className="qty-value">{children}</span>
+                      <button
+                        type="button"
+                        onClick={() => setChildren(children + 1)}
+                        className="qty-btn"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="traveler-group">
+                    <div className="traveler-label">
+                      <label>{t('form.infants')}</label>
+                    </div>
+                    <div className="quantity-selector">
+                      <button
+                        type="button"
+                        onClick={() => setInfants(Math.max(0, infants - 1))}
+                        className="qty-btn"
+                      >
+                        −
+                      </button>
+                      <span className="qty-value">{infants}</span>
+                      <button
+                        type="button"
+                        onClick={() => setInfants(infants + 1)}
+                        className="qty-btn"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="pickup">{t('form.pickupLocation')}</label>
+                    <input
+                      type="text"
+                      id="pickup"
+                      name="pickup"
+                      placeholder={t('form.pickupPlaceholder')}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="outside-pickup">{t('form.outsidePickup')}</label>
+                    <input type="text" id="outside-pickup" name="outside-pickup" />
+                    <span className="warning-note">{t('form.outsidePickupWarning')}</span>
+                  </div>
+                </div>
+
+                <div className="form-group full-width">
+                  <textarea
+                    id="requirements"
+                    name="requirements"
+                    rows={4}
+                    placeholder={t('form.requirements')}
+                  ></textarea>
+                </div>
+
+                <div className="price-section">
+                  <div className="price-breakdown">
+                    <div className="price-item">
+                      <span>
+                        {adults} {t('price.adults')} × {currencySymbol}
+                        {pricePerAdult}
+                      </span>
+                      <span>
+                        {currencySymbol}
+                        {adults * pricePerAdult}
+                      </span>
+                    </div>
+                    {children > 0 && (
+                      <div className="price-item">
+                        <span>
+                          {children} {t('price.children')} × {currencySymbol}
+                          {pricePerChild}
+                        </span>
+                        <span>
+                          {currencySymbol}
+                          {children * pricePerChild}
+                        </span>
+                      </div>
+                    )}
+                    {infants > 0 && (
+                      <div className="price-item">
+                        <span>
+                          {infants} {t('price.infants')} × {t('price.free')}
+                        </span>
+                        <span>{t('price.free')}</span>
+                      </div>
+                    )}
+                    <div className="price-total">
+                      <span>{t('price.totalCost')}</span>
+                      <span className="total-amount">
+                        {currencySymbol}
+                        {totalPrice}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" className="submit-btn" disabled={isSubmittingBooking}>
+                  {isSubmittingBooking ? t('form.submitting') : t('form.submit')}
+                </button>
+              </form>
+            </div>
+          </section>
+
+          {/* Section 2: Image Slider */}
+          <section className="slider-section">
+            <div className="slider-container">
+              <div className="slider-wrapper">
+                <div
+                  className="slider-track"
+                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                >
+                  {sliderImages.map((image, index) => (
+                    <div key={index} className="slide">
+                      <Image
+                        src={image.src || '/placeholder.svg'}
+                        alt={image.alt}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                        priority={index === 0}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
 
-            <button type="submit" className="submit-btn" disabled={isSubmittingBooking}>
-              {isSubmittingBooking ? t('form.submitting') : t('form.submit')}
-            </button>
-          </form>
-        </div>
-      </section>
-
-      {/* Section 2: Image Slider */}
-      <section className="slider-section">
-        <div className="slider-container">
-          <div className="slider-wrapper">
-            <div
-              className="slider-track"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-            >
-              {sliderImages.map((image, index) => (
-                <div key={index} className="slide">
-                  <Image
-                    src={image.src || '/placeholder.svg'}
-                    alt={image.alt}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    priority={index === 0}
+              {/* Indicators */}
+              <div className="slider-indicators">
+                {sliderImages.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`indicator ${index === currentSlide ? 'active' : ''}`}
+                    onClick={() => setCurrentSlide(index)}
+                    aria-label={`Go to slide ${index + 1}`}
                   />
-                </div>
-              ))}
-            </div>
-          </div>
+                ))}
+              </div>
 
-          {/* Indicators */}
-          <div className="slider-indicators">
-            {sliderImages.map((_, index) => (
+              {/* Navigation Arrows */}
               <button
-                key={index}
-                className={`indicator ${index === currentSlide ? 'active' : ''}`}
-                onClick={() => setCurrentSlide(index)}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
-
-          {/* Navigation Arrows */}
-          <button
-            className="slider-nav prev"
-            onClick={() =>
-              setCurrentSlide((prev) => (prev - 1 + sliderImages.length) % sliderImages.length)
-            }
-            aria-label={t('slider.prevAria')}
-          >
-            ‹
-          </button>
-          <button
-            className="slider-nav next"
-            onClick={() => setCurrentSlide((prev) => (prev + 1) % sliderImages.length)}
-            aria-label={t('slider.nextAria')}
-          >
-            ›
-          </button>
-        </div>
-      </section>
-
-      <section className="map-section">
-        <div className="map-container">
-          {mapQuery ? (
-            <iframe
-              className="map-frame"
-              title={`Map for ${tourTitle}`}
-              src={`https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          ) : (
-            <div className="map-placeholder">
-              <div className="map-icon">Map</div>
-              <div className="map-text">Location not available</div>
+                className="slider-nav prev"
+                onClick={() =>
+                  setCurrentSlide((prev) => (prev - 1 + sliderImages.length) % sliderImages.length)
+                }
+                aria-label={t('slider.prevAria')}
+              >
+                ‹
+              </button>
+              <button
+                className="slider-nav next"
+                onClick={() => setCurrentSlide((prev) => (prev + 1) % sliderImages.length)}
+                aria-label={t('slider.nextAria')}
+              >
+                ›
+              </button>
             </div>
-          )}
-        </div>
-      </section>
+          </section>
+
+          <section className="map-section">
+            <div className="map-container">
+              {mapQuery ? (
+                <iframe
+                  className="map-frame"
+                  title={`Map for ${tourTitle}`}
+                  src={`https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              ) : (
+                <div className="map-placeholder">
+                  <div className="map-icon">Map</div>
+                  <div className="map-text">Location not available</div>
+                </div>
+              )}
+            </div>
+          </section>
         </div>
       </div>
 
@@ -711,21 +727,33 @@ export default function TourDetailsPage() {
                 <span className="detail-value price-value">
                   {(() => {
                     const useEUR = isGerman && tour.priceEUR != null && tour.priceEUR > 0;
-                    const displayPrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
+                    const displayPrice = useEUR ? tour.priceEUR || tour.price : tour.price;
                     const currencySymbol = useEUR ? '€' : '$';
-                    const originalPrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
-                    
+                    const originalPrice = useEUR ? tour.priceEUR || tour.price : tour.price;
+
                     if (tour.onSale && tour.discount > 0) {
-                      const discountedPrice = Math.round(originalPrice - (originalPrice * tour.discount) / 100);
+                      const discountedPrice = Math.round(
+                        originalPrice - (originalPrice * tour.discount) / 100
+                      );
                       return (
                         <>
-                          <span style={{ textDecoration: 'line-through', opacity: 0.7, marginRight: '0.5rem' }}>
-                            {currencySymbol}{originalPrice}
+                          <span
+                            style={{
+                              textDecoration: 'line-through',
+                              opacity: 0.7,
+                              marginRight: '0.5rem',
+                            }}
+                          >
+                            {currencySymbol}
+                            {originalPrice}
                           </span>
                           <span style={{ color: '#ef4444', fontWeight: 700 }}>
-                            {currencySymbol}{discountedPrice}
+                            {currencySymbol}
+                            {discountedPrice}
                           </span>
-                          <span style={{ fontSize: '0.875rem', marginLeft: '0.5rem', color: '#ef4444' }}>
+                          <span
+                            style={{ fontSize: '0.875rem', marginLeft: '0.5rem', color: '#ef4444' }}
+                          >
                             ({tour.discount}% OFF)
                           </span>
                         </>
@@ -857,7 +885,7 @@ export default function TourDetailsPage() {
             <SketchItineraryCard title={tourTitle} stops={itineraryStops} />
           </div>
         </div>
-          </section>
+      </section>
 
       {/* Section 6: Customer Reviews */}
       <section className="reviews-section">
@@ -872,7 +900,8 @@ export default function TourDetailsPage() {
               </div>
               <span className="rating-number">{averageRating.toFixed(2)}</span>
               <span className="review-count">
-                {t('reviews.basedOn')} {reviewsAverage?.count ?? reviews.length} {t('reviews.reviews')}
+                {t('reviews.basedOn')} {reviewsAverage?.count ?? reviews.length}{' '}
+                {t('reviews.reviews')}
               </span>
             </div>
 
@@ -929,11 +958,14 @@ export default function TourDetailsPage() {
                   <div className="review-author-info">
                     <h4 className="review-author">{review.name}</h4>
                     <span className="review-date">
-                      {new Date(review.createdAt).toLocaleDateString(locale === 'de' ? 'de-DE' : 'en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
+                      {new Date(review.createdAt).toLocaleDateString(
+                        locale === 'de' ? 'de-DE' : 'en-US',
+                        {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        }
+                      )}
                     </span>
                   </div>
                   <div className="review-rating">{'★'.repeat(review.rating)}</div>
@@ -943,43 +975,48 @@ export default function TourDetailsPage() {
             ))}
           </div>
         </div>
-          </section>
+      </section>
 
       {/* Internal linking: location + category landing pages */}
       {(tour.primaryLocation || tour.category) && (
-        <section className="reviews-section" style={{ borderTop: '1px solid #eee', paddingTop: '2rem' }}>
+        <section
+          className="reviews-section"
+          style={{ borderTop: '1px solid #eee', paddingTop: '2rem' }}
+        >
           <div className="reviews-container">
             <h2 className="reviews-title">{isGerman ? 'Mehr entdecken' : 'Explore more'}</h2>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-              {tour.primaryLocation && (() => {
-                const loc = LOCATIONS.find(
-                  (l) =>
-                    l.name === tour.primaryLocation ||
-                    l.nameDe === tour.primaryLocation
-                );
-                return loc ? (
-                  <Link
-                    href={`/${locale}/tours/location/${loc.slug}`}
-                    className="submit-review-btn"
-                    style={{ textDecoration: 'none', display: 'inline-block' }}
-                  >
-                    {isGerman ? `Mehr Touren in ${loc.nameDe || loc.name}` : `More tours in ${loc.name}`}
-                  </Link>
-                ) : null;
-              })()}
-              {tour.category && (() => {
-                const categorySlug = categoryToSlug(tour.category);
-                const cat = getCategorySeoBySlug(categorySlug);
-                return cat ? (
-                  <Link
-                    href={`/${locale}/tours/category/${cat.slug}`}
-                    className="submit-review-btn"
-                    style={{ textDecoration: 'none', display: 'inline-block', marginLeft: 0 }}
-                  >
-                    {isGerman ? `Mehr ${cat.nameDe || cat.name}` : `More ${cat.name}`}
-                  </Link>
-                ) : null;
-              })()}
+              {tour.primaryLocation &&
+                (() => {
+                  const loc = LOCATIONS.find(
+                    (l) => l.name === tour.primaryLocation || l.nameDe === tour.primaryLocation
+                  );
+                  return loc ? (
+                    <Link
+                      href={`/${locale}/tours/location/${loc.slug}`}
+                      className="submit-review-btn"
+                      style={{ textDecoration: 'none', display: 'inline-block' }}
+                    >
+                      {isGerman
+                        ? `Mehr Touren in ${loc.nameDe || loc.name}`
+                        : `More tours in ${loc.name}`}
+                    </Link>
+                  ) : null;
+                })()}
+              {tour.category &&
+                (() => {
+                  const categorySlug = categoryToSlug(tour.category);
+                  const cat = getCategorySeoBySlug(categorySlug);
+                  return cat ? (
+                    <Link
+                      href={`/${locale}/tours/category/${cat.slug}`}
+                      className="submit-review-btn"
+                      style={{ textDecoration: 'none', display: 'inline-block', marginLeft: 0 }}
+                    >
+                      {isGerman ? `Mehr ${cat.nameDe || cat.name}` : `More ${cat.name}`}
+                    </Link>
+                  ) : null;
+                })()}
             </div>
           </div>
         </section>

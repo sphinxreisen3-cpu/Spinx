@@ -41,7 +41,9 @@
       "tourName": "Tour Name",
       "travelDate": "Travel Date",
       "travelers": "Travelers",
+      "customer": "Customer",
       "pickupLocation": "Pickup Location",
+      "pickupDetailsShared": "Pickup details shared after confirmation",
       "totalAmount": "Total Amount",
       "bookingReference": "Booking Reference",
       "downloadTicket": "Download Ticket",
@@ -54,7 +56,12 @@
       "child": "Child",
       "children": "Children",
       "infant": "Infant",
-      "infants": "Infants"
+      "infants": "Infants",
+      "status": {
+        "confirmed": "Confirmed",
+        "pending": "Pending",
+        "cancelled": "Cancelled"
+      }
     }
   },
   "common": {
@@ -263,7 +270,7 @@
   },
   "about": {
     "hero": {
-      "title": "Welcome to Egypt-Tours",
+      "title": "Welcome to SphinxReisen",
       "subtitle": "Your Gateway to Egypt's Wonders & Hurghada's Paradise",
       "description": "Discover the magic of ancient Egypt and the beauty of Hurghada's Red Sea coast. With over 15 years of experience, we specialize in creating unforgettable journeys through Egypt's rich history and stunning beach destinations. From the majestic pyramids of Giza to the pristine beaches of Hurghada, we bring you the best of both worlds.",
       "button": "Explore Egypt"
@@ -287,7 +294,7 @@
       }
     },
     "timeline": {
-      "title": "Egypt-Tours Journey",
+      "title": "SphinxReisen",
       "subtitle": "Our story of bringing Egypt's wonders to the world, from ancient pyramids to Red Sea paradise",
       "items": {
         "2008": {
@@ -364,6 +371,8 @@
     "price": {
       "adults": "Adult(s)",
       "children": "Child(ren)",
+      "infants": "Infant(s)",
+      "free": "Free",
       "totalCost": "Total Cost:",
       "perPerson": "per person"
     },
