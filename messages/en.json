@@ -103,7 +103,11 @@
           "title": "Exclusive Travel Insights",
           "subtitle": "Unlock Hidden Gems & Local Secrets",
           "description": "Dive deep into authentic travel experiences with our expert insights. Discover off-the-beaten-path destinations, connect with local cultures, and experience extraordinary places.",
-          "highlights": ["Hidden Gems Uncovered", "Authentic Local Experiences", "Cultural Immersion"],
+          "highlights": [
+            "Hidden Gems Uncovered",
+            "Authentic Local Experiences",
+            "Cultural Immersion"
+          ],
           "ctaText": "Discover Hidden Treasures"
         }
       },
@@ -151,7 +155,8 @@
       "errorTitle": "Unable to Load Deals",
       "noDealsTitle": "No Special Deals Right Now",
       "noDealsDesc": "Check back soon for amazing discounts!",
-      "bookNow": "Book Now"
+      "bookNow": "Book Now",
+      "off": "OFF"
     },
     "toursSection": {
       "title": "Amazing Destinations",

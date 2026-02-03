@@ -89,7 +89,11 @@
           "title": "Entdecken Sie faszinierende Reiseziele",
           "subtitle": "Ihr globales Abenteuer beginnt hier",
           "description": "Starten Sie unvergessliche Reisen zu atemberaubenden Destinationen weltweit. Von romantischen Gassen über lebendige Strände bis hin zu antiken Wundern – wir gestalten außergewöhnliche Erlebnisse.",
-          "highlights": ["500+ Reiseziele weltweit", "Lokale Experten-Guides", "Bestpreis-Garantie"],
+          "highlights": [
+            "500+ Reiseziele weltweit",
+            "Lokale Experten-Guides",
+            "Bestpreis-Garantie"
+          ],
           "ctaText": "Jetzt entdecken"
         },
         "2": {
@@ -151,7 +155,8 @@
       "errorTitle": "Angebote konnten nicht geladen werden",
       "noDealsTitle": "Aktuell keine Sonderangebote",
       "noDealsDesc": "Schauen Sie bald wieder vorbei – neue Rabatte kommen!",
-      "bookNow": "Jetzt buchen"
+      "bookNow": "Jetzt buchen",
+      "off": "Rabatt"
     },
     "toursSection": {
       "title": "Traumhafte Reiseziele",

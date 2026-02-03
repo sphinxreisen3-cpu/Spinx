@@ -42,7 +42,7 @@ export function SpecialDeals({ initialTours, initialLocale }: SpecialDealsProps)
         const isGerman = locale === 'de';
         const mappedTours: HomeSaleTourCard[] = apiTours.map((tour: Tour) => {
           const useEUR = isGerman && tour.priceEUR != null && tour.priceEUR > 0;
-          const basePrice = useEUR ? (tour.priceEUR || tour.price) : tour.price;
+          const basePrice = useEUR ? tour.priceEUR || tour.price : tour.price;
           const currencySymbol = useEUR ? '€' : '$';
           const discountedPrice = Math.round(basePrice - (basePrice * tour.discount) / 100);
           return {
@@ -78,44 +78,28 @@ export function SpecialDeals({ initialTours, initialLocale }: SpecialDealsProps)
     <section className={styles.section}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <h2 className={styles.title}>
-            🔥 {t('home.specialDeals.title')}
-          </h2>
-          <p className={styles.subtitle}>
-            {t('home.specialDeals.subtitle')}
-          </p>
+          <h2 className={styles.title}>🔥 {t('home.specialDeals.title')}</h2>
+          <p className={styles.subtitle}>{t('home.specialDeals.subtitle')}</p>
           <div className={styles.titleUnderline}></div>
         </div>
 
         {loading ? (
           <div className={styles.content}>
             <div className={styles.iconEmoji}>🏷️</div>
-            <h3 className={styles.loadingTitle}>
-              {t('home.specialDeals.loadingTitle')}
-            </h3>
-            <p className={styles.loadingText}>
-              {t('home.specialDeals.loadingDesc')}
-            </p>
+            <h3 className={styles.loadingTitle}>{t('home.specialDeals.loadingTitle')}</h3>
+            <p className={styles.loadingText}>{t('home.specialDeals.loadingDesc')}</p>
           </div>
         ) : error ? (
           <div className={styles.content}>
             <div className={styles.iconEmoji}>❌</div>
-            <h3 className={styles.loadingTitle}>
-              {t('home.specialDeals.errorTitle')}
-            </h3>
-            <p className={styles.loadingText}>
-              {error}
-            </p>
+            <h3 className={styles.loadingTitle}>{t('home.specialDeals.errorTitle')}</h3>
+            <p className={styles.loadingText}>{error}</p>
           </div>
         ) : saleTours.length === 0 ? (
           <div className={styles.content}>
             <div className={styles.iconEmoji}>🎉</div>
-            <h3 className={styles.loadingTitle}>
-              {t('home.specialDeals.noDealsTitle')}
-            </h3>
-            <p className={styles.loadingText}>
-              {t('home.specialDeals.noDealsDesc')}
-            </p>
+            <h3 className={styles.loadingTitle}>{t('home.specialDeals.noDealsTitle')}</h3>
+            <p className={styles.loadingText}>{t('home.specialDeals.noDealsDesc')}</p>
           </div>
         ) : (
           <div className={styles.grid}>
@@ -140,26 +124,16 @@ export function SpecialDeals({ initialTours, initialLocale }: SpecialDealsProps)
                     />
                   </div>
                   <div className={styles.discountBadge}>
-                    {tour.discount}% OFF
+                    {tour.discount}% {t('home.specialDeals.off')}
                   </div>
-                  <div className={styles.categoryBadge}>
-                    {tour.category}
-                  </div>
+                  <div className={styles.categoryBadge}>{tour.category}</div>
                   <div className={styles.cardContent}>
-                    <h3 className={styles.cardTitle}>
-                      {tour.title}
-                    </h3>
-                    <p className={styles.cardDescription}>
-                      {tour.description}
-                    </p>
+                    <h3 className={styles.cardTitle}>{tour.title}</h3>
+                    <p className={styles.cardDescription}>{tour.description}</p>
                     <div className={styles.priceSection}>
                       <div className={styles.priceContainer}>
-                        <span className={styles.originalPrice}>
-                          {tour.originalPrice}
-                        </span>
-                        <span className={styles.discountedPrice}>
-                          {tour.discountedPrice}
-                        </span>
+                        <span className={styles.originalPrice}>{tour.originalPrice}</span>
+                        <span className={styles.discountedPrice}>{tour.discountedPrice}</span>
                       </div>
                       <button className={styles.bookButton}>
                         {t('home.specialDeals.bookNow')}

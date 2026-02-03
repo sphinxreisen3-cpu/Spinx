@@ -26,7 +26,7 @@ export default async function ContactPage() {
     },
     {
       title: t('options.visitUs'),
-      value: 'Cairo, Egypt',
+      value: 'Egypt Red Sea Hurghada',
       href: 'https://maps.app.goo.gl/w6UgCtGAbvvNc6L3A',
       cta: t('options.viewMaps'),
     },
@@ -104,7 +104,12 @@ export default async function ContactPage() {
             </label>
             <label className={styles.field}>
               <span>{t('form.subject')}</span>
-              <input name="subject" type="text" placeholder={t('form.subjectPlaceholder')} required />
+              <input
+                name="subject"
+                type="text"
+                placeholder={t('form.subjectPlaceholder')}
+                required
+              />
             </label>
           </div>
           <label className={styles.field}>
