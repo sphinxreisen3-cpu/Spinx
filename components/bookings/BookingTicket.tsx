@@ -91,7 +91,7 @@ export function BookingTicket({ booking, onClose }: BookingTicketProps) {
       // Calculate PDF dimensions (divide by scale to get actual size)
       const actualWidth = canvas.width / 2;
       const actualHeight = canvas.height / 2;
-      
+
       // Convert pixels to mm (assuming 96 DPI)
       const pxToMm = 25.4 / 96;
       const pdfWidth = actualWidth * pxToMm;
@@ -102,7 +102,7 @@ export function BookingTicket({ booking, onClose }: BookingTicketProps) {
       const pdf = new jsPDFClass({
         orientation: pdfWidth > pdfHeight ? 'landscape' : 'portrait',
         unit: 'mm',
-        format: [pdfWidth, pdfHeight]
+        format: [pdfWidth, pdfHeight],
       });
 
       // Add the image to fill the entire page
