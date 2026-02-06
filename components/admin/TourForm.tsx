@@ -7,7 +7,22 @@ import { LOCATIONS } from '@/config/locations';
 import styles from '@/styles/components/admin/TourForm.module.css';
 import pageStyles from '@/styles/pages/admin/AdminPage.module.css';
 
-const travelTypes = ['1 day', '2 days', '3 days', '1 week', '2 weeks'];
+const travelTypes = [
+  '1 day',
+  '2 days',
+  '3 days',
+  '4 days',
+  '5 days',
+  '6 days',
+  '7 days',
+  '8 days',
+  '9 days',
+  '10 days',
+  '2 weeks',
+  '3 weeks',
+  '1 month',
+  'more',
+];
 const categories = ['Cultural', 'Adventure', 'Historical', 'Beach', 'Desert', 'Cruise'];
 
 interface TourFormProps {
@@ -284,7 +299,8 @@ export function TourForm({ tour, onSubmit }: TourFormProps) {
       <section>
         <h3 className={styles.sectionTitle}>SEO (optional)</h3>
         <p className={styles.helpText} style={{ marginBottom: '1rem' }}>
-          Title ≤60 chars, description 150–160 chars. Empty = use auto-generated. Only noindex per item.
+          Title ≤60 chars, description 150–160 chars. Empty = use auto-generated. Only noindex per
+          item.
         </p>
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
@@ -296,7 +312,9 @@ export function TourForm({ tour, onSubmit }: TourFormProps) {
               onChange={(e) => setSlug(e.target.value.replace(/\s+/g, '-').toLowerCase())}
               placeholder="tour-url-slug"
             />
-            <p className={styles.helpText}>Leave empty to auto-generate from title. Changing slug creates redirect from old URL.</p>
+            <p className={styles.helpText}>
+              Leave empty to auto-generate from title. Changing slug creates redirect from old URL.
+            </p>
           </div>
           <div className={styles.formGroup}>
             <label className={styles.label}>Primary location (for landing pages)</label>

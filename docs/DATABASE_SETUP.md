@@ -106,6 +106,7 @@ This will:
      ```
 
 2. **Example: Create Tour**
+
    ```typescript
    // app/api/tours/route.ts
    export async function POST(request: NextRequest) {
@@ -176,7 +177,21 @@ interface ITour {
   title: string;
   title_de?: string;
   price: number;
-  travelType: '1 day' | '2 days' | '3 days' | '1 week' | '2 weeks';
+  travelType:
+    | '1 day'
+    | '2 days'
+    | '3 days'
+    | '4 days'
+    | '5 days'
+    | '6 days'
+    | '7 days'
+    | '8 days'
+    | '9 days'
+    | '10 days'
+    | '2 weeks'
+    | '3 weeks'
+    | '1 month'
+    | 'more';
   category: string;
   description: string;
   slug: string;

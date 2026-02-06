@@ -68,7 +68,22 @@ interface TourFull {
   updatedAt: string;
 }
 
-const durationOptions = ['1 day', '2 days', '3 days', '1 week', '2 weeks'];
+const durationOptions = [
+  '1 day',
+  '2 days',
+  '3 days',
+  '4 days',
+  '5 days',
+  '6 days',
+  '7 days',
+  '8 days',
+  '9 days',
+  '10 days',
+  '2 weeks',
+  '3 weeks',
+  '1 month',
+  'more',
+];
 
 const categoryColors: Record<string, string> = {
   adventure: '#f97316',
@@ -370,7 +385,12 @@ export function ToursAdminPage() {
 
   const startEdit = (tour: TourFull) => {
     setEditingTour(tour);
-    const { _id: _ignoredId, createdAt: _ignoredCreatedAt, updatedAt: _ignoredUpdatedAt, ...rest } = tour;
+    const {
+      _id: _ignoredId,
+      createdAt: _ignoredCreatedAt,
+      updatedAt: _ignoredUpdatedAt,
+      ...rest
+    } = tour;
     const nextFormData = Object.fromEntries(
       (Object.keys(emptyTour) as Array<keyof typeof emptyTour>).map((key) => [
         key,
@@ -541,7 +561,7 @@ export function ToursAdminPage() {
     try {
       // Prepare only German translation fields
       const translationData: Record<string, string | number | null> = {};
-      
+
       // Always include priceEUR in the update if it exists in form data (even if empty)
       if ('priceEUR' in translationFormData) {
         const priceEURValue = translationFormData.priceEUR;
@@ -557,7 +577,7 @@ export function ToursAdminPage() {
           }
         }
       }
-      
+
       // Process all other German translation fields
       Object.keys(translationFormData).forEach((key) => {
         const value = translationFormData[key];
@@ -1222,16 +1242,25 @@ export function ToursAdminPage() {
               }}
             >
               <p style={{ margin: 0, fontSize: '0.875rem', color: 'hsl(var(--muted-foreground))' }}>
-                <strong>Translating:</strong> {selectedTranslationTour.title} ({selectedTranslationTour.category})
+                <strong>Translating:</strong> {selectedTranslationTour.title} (
+                {selectedTranslationTour.category})
               </p>
-              <p style={{ margin: '0.5rem 0 0', fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))' }}>
+              <p
+                style={{
+                  margin: '0.5rem 0 0',
+                  fontSize: '0.75rem',
+                  color: 'hsl(var(--muted-foreground))',
+                }}
+              >
                 Fill in the German translations below. English values are shown as reference.
               </p>
             </div>
 
             {/* Basic Information */}
             <div style={{ marginBottom: '2rem' }}>
-              <h4 style={{ margin: '0 0 1rem', fontSize: '1rem', fontWeight: 600 }}>Basic Information</h4>
+              <h4 style={{ margin: '0 0 1rem', fontSize: '1rem', fontWeight: 600 }}>
+                Basic Information
+              </h4>
               <div
                 style={{
                   display: 'grid',
@@ -1251,7 +1280,13 @@ export function ToursAdminPage() {
                     placeholder="Tour-Titel auf Deutsch"
                     required
                   />
-                  <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                  <p
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'hsl(var(--muted-foreground))',
+                      margin: '0.25rem 0 0',
+                    }}
+                  >
                     EN: {selectedTranslationTour.title}
                   </p>
                 </div>
@@ -1267,7 +1302,13 @@ export function ToursAdminPage() {
                     placeholder="Kategorie auf Deutsch"
                     required
                   />
-                  <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                  <p
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'hsl(var(--muted-foreground))',
+                      margin: '0.25rem 0 0',
+                    }}
+                  >
                     EN: {selectedTranslationTour.category}
                   </p>
                 </div>
@@ -1280,7 +1321,13 @@ export function ToursAdminPage() {
                     onChange={(e) => handleTranslationFieldChange('travelType_de', e.target.value)}
                     placeholder="z.B., 1 Tag, 2 Tage, 1 Woche"
                   />
-                  <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                  <p
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'hsl(var(--muted-foreground))',
+                      margin: '0.25rem 0 0',
+                    }}
+                  >
                     EN: {selectedTranslationTour.travelType}
                   </p>
                 </div>
@@ -1295,7 +1342,13 @@ export function ToursAdminPage() {
                     step="0.01"
                     min="0"
                   />
-                  <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                  <p
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'hsl(var(--muted-foreground))',
+                      margin: '0.25rem 0 0',
+                    }}
+                  >
                     USD: ${selectedTranslationTour.price}
                   </p>
                 </div>
@@ -1304,7 +1357,9 @@ export function ToursAdminPage() {
 
             {/* Descriptions */}
             <div style={{ marginBottom: '2rem' }}>
-              <h4 style={{ margin: '0 0 1rem', fontSize: '1rem', fontWeight: 600 }}>Descriptions</h4>
+              <h4 style={{ margin: '0 0 1rem', fontSize: '1rem', fontWeight: 600 }}>
+                Descriptions
+              </h4>
               <div
                 style={{
                   display: 'grid',
@@ -1324,7 +1379,13 @@ export function ToursAdminPage() {
                     required
                     style={{ minHeight: '120px' }}
                   />
-                  <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                  <p
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'hsl(var(--muted-foreground))',
+                      margin: '0.25rem 0 0',
+                    }}
+                  >
                     EN: {truncate(selectedTranslationTour.description, 100)}
                   </p>
                 </div>
@@ -1333,12 +1394,20 @@ export function ToursAdminPage() {
                   <textarea
                     className={formStyles.textarea}
                     value={translationFormData.description2_de || ''}
-                    onChange={(e) => handleTranslationFieldChange('description2_de', e.target.value)}
+                    onChange={(e) =>
+                      handleTranslationFieldChange('description2_de', e.target.value)
+                    }
                     placeholder="Zusätzliche Beschreibung auf Deutsch..."
                     style={{ minHeight: '120px' }}
                   />
                   {selectedTranslationTour.description2 && (
-                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    <p
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'hsl(var(--muted-foreground))',
+                        margin: '0.25rem 0 0',
+                      }}
+                    >
                       EN: {truncate(selectedTranslationTour.description2, 100)}
                     </p>
                   )}
@@ -1353,7 +1422,13 @@ export function ToursAdminPage() {
                     style={{ minHeight: '120px' }}
                   />
                   {selectedTranslationTour.details && (
-                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    <p
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'hsl(var(--muted-foreground))',
+                        margin: '0.25rem 0 0',
+                      }}
+                    >
                       EN: {truncate(selectedTranslationTour.details, 100)}
                     </p>
                   )}
@@ -1363,12 +1438,20 @@ export function ToursAdminPage() {
                   <textarea
                     className={formStyles.textarea}
                     value={translationFormData.transportation_de || ''}
-                    onChange={(e) => handleTranslationFieldChange('transportation_de', e.target.value)}
+                    onChange={(e) =>
+                      handleTranslationFieldChange('transportation_de', e.target.value)
+                    }
                     placeholder="Transport auf Deutsch..."
                     style={{ minHeight: '120px' }}
                   />
                   {selectedTranslationTour.transportation && (
-                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    <p
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'hsl(var(--muted-foreground))',
+                        margin: '0.25rem 0 0',
+                      }}
+                    >
                       EN: {truncate(selectedTranslationTour.transportation, 100)}
                     </p>
                   )}
@@ -1383,7 +1466,13 @@ export function ToursAdminPage() {
                     placeholder="Standort auf Deutsch"
                   />
                   {selectedTranslationTour.location && (
-                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    <p
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'hsl(var(--muted-foreground))',
+                        margin: '0.25rem 0 0',
+                      }}
+                    >
                       EN: {selectedTranslationTour.location}
                     </p>
                   )}
@@ -1393,7 +1482,9 @@ export function ToursAdminPage() {
 
             {/* Itinerary & Logistics */}
             <div style={{ marginBottom: '2rem' }}>
-              <h4 style={{ margin: '0 0 1rem', fontSize: '1rem', fontWeight: 600 }}>Itinerary & Logistics</h4>
+              <h4 style={{ margin: '0 0 1rem', fontSize: '1rem', fontWeight: 600 }}>
+                Itinerary & Logistics
+              </h4>
               <div
                 style={{
                   display: 'grid',
@@ -1411,7 +1502,13 @@ export function ToursAdminPage() {
                     style={{ minHeight: '100px' }}
                   />
                   {selectedTranslationTour.pickup && (
-                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    <p
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'hsl(var(--muted-foreground))',
+                        margin: '0.25rem 0 0',
+                      }}
+                    >
                       EN: {truncate(selectedTranslationTour.pickup, 80)}
                     </p>
                   )}
@@ -1426,7 +1523,13 @@ export function ToursAdminPage() {
                     style={{ minHeight: '100px' }}
                   />
                   {selectedTranslationTour.briefing && (
-                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    <p
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'hsl(var(--muted-foreground))',
+                        margin: '0.25rem 0 0',
+                      }}
+                    >
                       EN: {truncate(selectedTranslationTour.briefing, 80)}
                     </p>
                   )}
@@ -1441,7 +1544,13 @@ export function ToursAdminPage() {
                     style={{ minHeight: '100px' }}
                   />
                   {selectedTranslationTour.program && (
-                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    <p
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'hsl(var(--muted-foreground))',
+                        margin: '0.25rem 0 0',
+                      }}
+                    >
                       EN: {truncate(selectedTranslationTour.program, 80)}
                     </p>
                   )}
@@ -1456,7 +1565,13 @@ export function ToursAdminPage() {
                     style={{ minHeight: '100px' }}
                   />
                   {selectedTranslationTour.trip && (
-                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    <p
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'hsl(var(--muted-foreground))',
+                        margin: '0.25rem 0 0',
+                      }}
+                    >
                       EN: {truncate(selectedTranslationTour.trip, 80)}
                     </p>
                   )}
@@ -1466,12 +1581,20 @@ export function ToursAdminPage() {
                   <textarea
                     className={formStyles.textarea}
                     value={translationFormData.foodAndBeverages_de || ''}
-                    onChange={(e) => handleTranslationFieldChange('foodAndBeverages_de', e.target.value)}
+                    onChange={(e) =>
+                      handleTranslationFieldChange('foodAndBeverages_de', e.target.value)
+                    }
                     placeholder="Essen & Getränke auf Deutsch..."
                     style={{ minHeight: '100px' }}
                   />
                   {selectedTranslationTour.foodAndBeverages && (
-                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    <p
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'hsl(var(--muted-foreground))',
+                        margin: '0.25rem 0 0',
+                      }}
+                    >
                       EN: {truncate(selectedTranslationTour.foodAndBeverages, 80)}
                     </p>
                   )}
@@ -1486,7 +1609,13 @@ export function ToursAdminPage() {
                     style={{ minHeight: '100px' }}
                   />
                   {selectedTranslationTour.whatToTake && (
-                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    <p
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'hsl(var(--muted-foreground))',
+                        margin: '0.25rem 0 0',
+                      }}
+                    >
                       EN: {truncate(selectedTranslationTour.whatToTake, 80)}
                     </p>
                   )}
@@ -1496,12 +1625,20 @@ export function ToursAdminPage() {
                   <textarea
                     className={formStyles.textarea}
                     value={translationFormData.daysAndDurations_de || ''}
-                    onChange={(e) => handleTranslationFieldChange('daysAndDurations_de', e.target.value)}
+                    onChange={(e) =>
+                      handleTranslationFieldChange('daysAndDurations_de', e.target.value)
+                    }
                     placeholder="Tage & Dauer auf Deutsch..."
                     style={{ minHeight: '100px' }}
                   />
                   {selectedTranslationTour.daysAndDurations && (
-                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    <p
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'hsl(var(--muted-foreground))',
+                        margin: '0.25rem 0 0',
+                      }}
+                    >
                       EN: {truncate(selectedTranslationTour.daysAndDurations, 80)}
                     </p>
                   )}
@@ -1511,7 +1648,9 @@ export function ToursAdminPage() {
 
             {/* Locations */}
             <div style={{ marginBottom: '2rem' }}>
-              <h4 style={{ margin: '0 0 1rem', fontSize: '1rem', fontWeight: 600 }}>Locations & Stops</h4>
+              <h4 style={{ margin: '0 0 1rem', fontSize: '1rem', fontWeight: 600 }}>
+                Locations & Stops
+              </h4>
               <div
                 style={{
                   display: 'grid',
@@ -1525,11 +1664,19 @@ export function ToursAdminPage() {
                     type="text"
                     className={formStyles.input}
                     value={translationFormData.pickupLocation_de || ''}
-                    onChange={(e) => handleTranslationFieldChange('pickupLocation_de', e.target.value)}
+                    onChange={(e) =>
+                      handleTranslationFieldChange('pickupLocation_de', e.target.value)
+                    }
                     placeholder="Abholort auf Deutsch"
                   />
                   {selectedTranslationTour.pickupLocation && (
-                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    <p
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'hsl(var(--muted-foreground))',
+                        margin: '0.25rem 0 0',
+                      }}
+                    >
                       EN: {selectedTranslationTour.pickupLocation}
                     </p>
                   )}
@@ -1544,7 +1691,13 @@ export function ToursAdminPage() {
                     placeholder="Van/Bus Treffpunkt auf Deutsch"
                   />
                   {selectedTranslationTour.vanLocation && (
-                    <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
+                    <p
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'hsl(var(--muted-foreground))',
+                        margin: '0.25rem 0 0',
+                      }}
+                    >
                       EN: {selectedTranslationTour.vanLocation}
                     </p>
                   )}
@@ -1556,12 +1709,27 @@ export function ToursAdminPage() {
                       type="text"
                       className={formStyles.input}
                       value={translationFormData[`location${num}_de`] || ''}
-                      onChange={(e) => handleTranslationFieldChange(`location${num}_de`, e.target.value)}
+                      onChange={(e) =>
+                        handleTranslationFieldChange(`location${num}_de`, e.target.value)
+                      }
                       placeholder={`Tour-Stopp ${num} auf Deutsch`}
                     />
-                    {selectedTranslationTour[`location${num}` as keyof typeof selectedTranslationTour] && (
-                      <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', margin: '0.25rem 0 0' }}>
-                        EN: {selectedTranslationTour[`location${num}` as keyof typeof selectedTranslationTour] as string}
+                    {selectedTranslationTour[
+                      `location${num}` as keyof typeof selectedTranslationTour
+                    ] && (
+                      <p
+                        style={{
+                          fontSize: '0.75rem',
+                          color: 'hsl(var(--muted-foreground))',
+                          margin: '0.25rem 0 0',
+                        }}
+                      >
+                        EN:{' '}
+                        {
+                          selectedTranslationTour[
+                            `location${num}` as keyof typeof selectedTranslationTour
+                          ] as string
+                        }
                       </p>
                     )}
                   </div>

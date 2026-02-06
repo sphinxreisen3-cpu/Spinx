@@ -5,7 +5,21 @@ export interface Tour {
   title_de?: string;
   price: number;
   priceEUR?: number;
-  travelType: '1 day' | '2 days' | '3 days' | '1 week' | '2 weeks';
+  travelType:
+    | '1 day'
+    | '2 days'
+    | '3 days'
+    | '4 days'
+    | '5 days'
+    | '6 days'
+    | '7 days'
+    | '8 days'
+    | '9 days'
+    | '10 days'
+    | '2 weeks'
+    | '3 weeks'
+    | '1 month'
+    | 'more';
   travelType_de?: string;
   category: string;
   category_de?: string;
