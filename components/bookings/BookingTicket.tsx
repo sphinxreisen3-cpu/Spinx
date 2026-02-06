@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
-import Image from 'next/image';
+import React, { useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import styles from '@/styles/components/bookings/BookingTicket.module.css';
 
@@ -32,6 +31,7 @@ export function BookingTicket({ booking, onClose }: BookingTicketProps) {
   const ticketRef = useRef<HTMLDivElement>(null);
   const locale = useLocale();
   const t = useTranslations('booking.ticket');
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const formatBookingId = (id?: string) => {
     if (!id) return 'N/A';
@@ -52,6 +52,12 @@ export function BookingTicket({ booking, onClose }: BookingTicketProps) {
     if (!ticketRef.current) return;
 
     try {
+      // Set downloading state to true to hide button and show text logo
+      setIsDownloading(true);
+
+      // Wait a moment for the state to update and DOM to re-render
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       if (document?.fonts?.ready) {
         await document.fonts.ready;
       }
@@ -113,6 +119,9 @@ export function BookingTicket({ booking, onClose }: BookingTicketProps) {
     } catch (error) {
       console.error('Error generating ticket:', error);
       alert('Failed to download ticket. Please try again.');
+    } finally {
+      // Reset downloading state
+      setIsDownloading(false);
     }
   };
 
@@ -149,7 +158,9 @@ export function BookingTicket({ booking, onClose }: BookingTicketProps) {
 
         <div ref={ticketRef} className={styles['m-ticket']}>
           <div className={styles['ticket-logo']}>
-            <Image src="/images/logo/logo.webp" alt="Site logo" width={120} height={40} priority />
+            <h1 style={{ fontSize: '1.8em', margin: '8px 0', fontWeight: 'bold', color: '#000' }}>
+              SphinxReisen
+            </h1>
           </div>
           <p>{t('eliteTagline')}</p>
           <p className={styles.m}>M-Ticket</p>
@@ -190,9 +201,11 @@ export function BookingTicket({ booking, onClose }: BookingTicketProps) {
             </p>
           </div>
 
-          <button type="button" className={styles['download-button']} onClick={downloadTicket}>
-            {t('downloadTicket')}
-          </button>
+          {!isDownloading && (
+            <button type="button" className={styles['download-button']} onClick={downloadTicket}>
+              {t('downloadTicket')}
+            </button>
+          )}
         </div>
       </div>
     </div>

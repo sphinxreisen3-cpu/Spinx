@@ -186,20 +186,20 @@
     "services": {
       "title": "Our Services",
       "transportations": {
-        "title": "Transportations",
-        "description": "We provide reliable and comfortable transportation services including airport transfers, private car rentals, and luxury vehicle options to ensure your travel is seamless and stress-free."
+        "title": "About Us",
+        "description": "Welcome to Sphinx Reisen. As your dedicated Egypt travel experts, we combine years of local expertise with a deep passion for our heritage. Our mission is to provide you with an authentic and comfortable journey through the wonders of Egypt."
       },
       "guiding": {
-        "title": "Tour Guiding",
-        "description": "Our professional tour guides are knowledgeable locals who provide insightful commentary, historical context, and personalized attention to make your sightseeing experiences truly memorable and educational."
+        "title": "Our Destinations",
+        "description": "From the pristine beaches of Hurghada, Marsa Alam, and Sharm El-Sheikh to the historical wonders of Cairo and Luxor – we cover all of Egypt. We take you to the most iconic landmarks and the hidden gems along the Nile."
       },
       "exploring": {
-        "title": "Exploring",
-        "description": "Discover hidden gems and off-the-beaten-path destinations with our curated exploration packages. From adventure activities to cultural immersion, we help you explore the world like never before."
+        "title": "Private Transfers",
+        "description": "Comfort begins upon arrival. We provide premium private transfers in modern, air-conditioned vehicles. Punctuality, safety, and professional drivers ensure a stress-free start to your holiday."
       },
       "luxury": {
-        "title": "Luxury",
-        "description": "Experience the pinnacle of comfort and elegance with our luxury travel services. From VIP airport lounges to five-star accommodations and exclusive experiences, we cater to discerning travelers seeking the best."
+        "title": "Why Choose Us?",
+        "description": "At Sphinx Reisen, your desires are our priority. Whether it's a tailor-made tour or reliable service, we ensure your Egyptian adventure is unforgettable. Your trust is our commitment."
       }
     },
     "latestTrips": {
@@ -277,20 +277,20 @@
     },
     "services": {
       "ancient": {
-        "title": "Ancient Tours",
-        "description": "Explore the wonders of ancient Egypt including the Pyramids of Giza, Luxor Temple, Valley of the Kings, and Abu Simbel with expert Egyptologist guides."
+        "title": "About Us",
+        "description": "Welcome to Sphinx Reisen. As your dedicated Egypt travel experts, we combine years of local expertise with a deep passion for our heritage. Our mission is to provide you with an authentic and comfortable journey through the wonders of Egypt."
       },
       "resorts": {
-        "title": "Hurghada Resorts",
-        "description": "Experience luxury beach resorts in Hurghada with stunning Red Sea views, water sports, diving excursions, and relaxing spa treatments."
+        "title": "Our Destinations",
+        "description": "From the pristine beaches of Hurghada, Marsa Alam, and Sharm El-Sheikh to the historical wonders of Cairo and Luxor – we cover all of Egypt. We take you to the most iconic landmarks and the hidden gems along the Nile."
       },
       "diving": {
-        "title": "Red Sea Diving",
-        "description": "Discover the underwater paradise of the Red Sea with world-class diving sites, colorful coral reefs, and exotic marine life in Hurghada."
+        "title": "Private Transfers",
+        "description": "Comfort begins upon arrival. We provide premium private transfers in modern, air-conditioned vehicles. Punctuality, safety, and professional drivers ensure a stress-free start to your holiday."
       },
       "cruises": {
-        "title": "Nile Cruises",
-        "description": "Sail along the legendary Nile River on luxury cruises from Luxor to Aswan, visiting ancient temples and experiencing timeless Egyptian culture."
+        "title": "Why Choose Us?",
+        "description": "At Sphinx Reisen, your desires are our priority. Whether it's a tailor-made tour or reliable service, we ensure your Egyptian adventure is unforgettable. Your trust is our commitment."
       }
     },
     "timeline": {

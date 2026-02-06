@@ -103,7 +103,8 @@
 
 .m-ticket > .ticket-logo :global(img) {
   width: auto;
-  height: 50px;
+  max-width: 100px;
+  height: 35px;
   object-fit: contain;
 }
 

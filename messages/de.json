@@ -186,20 +186,20 @@
     "services": {
       "title": "Unsere Dienstleistungen",
       "transportations": {
-        "title": "Transport",
-        "description": "Wir bieten zuverlässige und komfortable Transportleistungen – einschließlich Flughafentransfers, privater Mietwagen und luxuriöser Fahrzeugoptionen – damit Ihre Reise reibungslos und stressfrei verläuft."
+        "title": "Über uns",
+        "description": "Willkommen bei Sphinx Reisen. Als Ihr Experten-Team für Ägypten-Reisen kombinieren wir langjährige Erfahrung mit tiefer Leidenschaft für unser Land. Unser Ziel ist es, Ihnen die Schätze Ägyptens authentisch und komfortabel näherzubringen."
       },
       "guiding": {
-        "title": "Reiseleitung",
-        "description": "Unsere professionellen Guides sind ortskundige Experten und bieten spannende Einblicke, historische Hintergründe und persönliche Betreuung – für ein unvergessliches und lehrreiches Erlebnis."
+        "title": "Unsere Reiseziele",
+        "description": "Von den traumhaften Stränden in Hurghada, Marsa Alam und Sharm El-Sheikh bis hin zu den historischen Wundern in Kairo und Luxor – wir decken ganz Ägypten ab. Wir führen Sie zu den bekanntesten Sehenswürdigkeiten und versteckten Juwelen des Nils."
       },
       "exploring": {
-        "title": "Entdecken",
-        "description": "Entdecken Sie versteckte Highlights und Orte abseits der bekannten Wege mit unseren sorgfältig zusammengestellten Erkundungspaketen. Von Abenteuer bis Kultur – wir helfen Ihnen, die Welt neu zu erleben."
+        "title": "Exklusive Privat-Transfers",
+        "description": "Komfort beginnt bei der Ankunft. Wir bieten erstklassige Privat-Transfers in modernen, klimatisierten Fahrzeugen an. Pünktlichkeit, Sicherheit und professionelle Fahrer garantieren Ihnen einen stressfreien Start in Ihren Urlaub."
       },
       "luxury": {
-        "title": "Luxus",
-        "description": "Erleben Sie höchsten Komfort mit unseren Luxus-Services: von VIP-Lounges über Fünf-Sterne-Unterkünfte bis hin zu exklusiven Erlebnissen – perfekt für anspruchsvolle Reisende."
+        "title": "Warum wir?",
+        "description": "Bei Sphinx Reisen stehen Ihre Wünsche an erster Stelle. Ob maßgeschneiderte Touren oder zuverlässiger Service – wir sorgen dafür, dass Ihr Ägypten-Abenteuer unvergesslich wird. Ihr Vertrauen ist unser Anspruch."
       }
     },
     "latestTrips": {
@@ -277,20 +277,20 @@
     },
     "services": {
       "ancient": {
-        "title": "Antike Touren",
-        "description": "Erkunden Sie die Wunder des alten Ägypten, darunter die Pyramiden von Gizeh, den Luxor-Tempel, das Tal der Könige und Abu Simbel, mit erfahrenen Ägyptologen als Führern."
+        "title": "Über uns",
+        "description": "Willkommen bei Sphinx Reisen. Als Ihr Experten-Team für Ägypten-Reisen kombinieren wir langjährige Erfahrung mit tiefer Leidenschaft für unser Land. Unser Ziel ist es, Ihnen die Schätze Ägyptens authentisch und komfortabel näherzubringen."
       },
       "resorts": {
-        "title": "Hurghada Resorts",
-        "description": "Erleben Sie Luxus-Beachresorts in Hurghada mit atemberaubendem Blick auf das Rote Meer, Wassersport, Tauchausflügen und entspannenden Spa-Behandlungen."
+        "title": "Unsere Reiseziele",
+        "description": "Von den traumhaften Stränden in Hurghada, Marsa Alam und Sharm El-Sheikh bis hin zu den historischen Wundern in Kairo und Luxor – wir decken ganz Ägypten ab. Wir führen Sie zu den bekanntesten Sehenswürdigkeiten und versteckten Juwelen des Nils."
       },
       "diving": {
-        "title": "Rotes Meer Tauchen",
-        "description": "Entdecken Sie das Unterwasserparadies des Roten Meeres mit Weltklasse-Tauchplätzen, farbenfrohen Korallenriffen und exotischem Meeresleben in Hurghada."
+        "title": "Exklusive Privat-Transfers",
+        "description": "Komfort beginnt bei der Ankunft. Wir bieten erstklassige Privat-Transfers in modernen, klimatisierten Fahrzeugen an. Pünktlichkeit, Sicherheit und professionelle Fahrer garantieren Ihnen einen stressfreien Start in Ihren Urlaub."
       },
       "cruises": {
-        "title": "Nilkreuzfahrten",
-        "description": "Segeln Sie auf dem legendären Nil auf Luxuskreuzfahrten von Luxor nach Assuan, besuchen Sie antike Tempel und erleben Sie zeitlose ägyptische Kultur."
+        "title": "Warum wir?",
+        "description": "Bei Sphinx Reisen stehen Ihre Wünsche an erster Stelle. Ob maßgeschneiderte Touren oder zuverlässiger Service – wir sorgen dafür, dass Ihr Ägypten-Abenteuer unvergesslich wird. Ihr Vertrauen ist unser Anspruch."
       }
     },
     "timeline": {
