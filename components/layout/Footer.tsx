@@ -28,12 +28,12 @@ const socialLinks = [
     icon: <FaFacebookF />,
   },
   {
-    href: 'https://www.instagram.com/sphinxreisen/?igsh=OTgxaXB1dHNicDcy#',
+    href: 'https://www.instagram.com/sphinx.elite.reisen',
     label: 'Instagram',
     icon: <FaInstagram />,
   },
   {
-    href: 'https://www.tiktok.com/@sphinx.reisen?_r=1&_t=ZS-92Q1hv6Fys6',
+    href: 'https://www.tiktok.com/@sphinxelitereisen',
     label: 'TikTok',
     icon: <FaTiktok />,
   },

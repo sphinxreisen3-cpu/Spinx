@@ -32,7 +32,7 @@
       "adults": "Adults",
       "children": "Children",
       "infants": "Infants",
-      "travelDate": "Travel Date",
+      "travelDate": "trip date",
       "notes": "Special Requirements",
       "submit": "Confirm Booking"
     },
@@ -356,7 +356,7 @@
       "fullName": "Full Name",
       "email": "Email Address",
       "phone": "Phone Number",
-      "travelDate": "Travel Date",
+      "travelDate": "Trip Date",
       "adults": "Adults - standard",
       "children": "Children - Standard",
       "infants": "Infants - Standard",

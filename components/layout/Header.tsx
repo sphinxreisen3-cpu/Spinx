@@ -22,7 +22,7 @@ const socialLinks = [
   { label: 'Facebook', href: 'https://www.facebook.com/waelmohammed554', icon: <FaFacebookF /> },
   {
     label: 'Instagram',
-    href: 'https://www.instagram.com/sphinxreisen/?igsh=OTgxaXB1dHNicDcy#',
+    href: 'https://www.instagram.com/sphinx.elite.reisen',
     icon: <FaInstagram />,
   },
   {
@@ -141,7 +141,7 @@ export function Header() {
                 <FaFacebookF />
               </Link>
               <Link
-                href="https://www.instagram.com/sphinxreisen/?igsh=OTgxaXB1dHNicDcy#"
+                href="https://www.instagram.com/sphinx.elite.reisen"
                 target="_blank"
                 aria-label="Instagram"
                 className={styles.instagramLink}
@@ -149,7 +149,7 @@ export function Header() {
                 <FaInstagram />
               </Link>
               <Link
-                href="https://www.tiktok.com/@sphinx.reisen?_r=1&_t=ZS-92Q1hv6Fys6"
+                href="https://www.tiktok.com/@sphinxelitereisen"
                 target="_blank"
                 aria-label="TikTok"
                 className={styles.tiktokLink}

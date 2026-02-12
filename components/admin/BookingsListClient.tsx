@@ -254,7 +254,7 @@ export function BookingsListClient() {
     },
     {
       key: 'adults',
-      label: 'Travelers',
+      label: 'Customers',
       render: (booking) => (
         <span>
           {booking.adults} adult{booking.adults > 1 ? 's' : ''}
@@ -417,7 +417,7 @@ export function BookingsListClient() {
                   <span>{formatDate(selectedBooking.travelDate)}</span>
                 </div>
                 <div>
-                  <strong>Travelers:</strong> {selectedBooking.adults} adult
+                  <strong>Customers:</strong> {selectedBooking.adults} adult
                   {selectedBooking.adults > 1 ? 's' : ''}
                   {selectedBooking.children > 0 &&
                     `, ${selectedBooking.children} child${selectedBooking.children > 1 ? 'ren' : ''}`}
